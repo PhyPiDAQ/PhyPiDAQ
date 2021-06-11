@@ -676,7 +676,7 @@
   </widget>
  </widget>
  <resources>
-  <include location="../picoCosmo/images/open-folder.jpg"/>
+  <include location="images/open-folder.jpg"/>
  </resources>
  <connections/>
 </ui>

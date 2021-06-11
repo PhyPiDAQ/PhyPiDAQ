@@ -4,6 +4,7 @@ Release notes for PhyPiDAQ
 v1.0.1 11 June 2021
 
   - Moved the folder with the images for the user interface to /resources/images
+  - Fixed invalid image path
   - Removed non existing module BMP180Config in __init__.py
 
 v1.0dev
