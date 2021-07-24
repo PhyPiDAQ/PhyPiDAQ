@@ -170,10 +170,12 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
       self.pTE_DeviceConfig1.setLineWrapMode(0)
       
     def setHelp_DE(self):
-      self.TE_Help.setText(open('doc/Hilfe.html', 'r').read() ) 
+      # self.TE_Help.setText(open('doc/Hilfe.html', 'r').read() )
+      self.TE_Help.setText("Fehlt!")
 
     def setHelp_EN(self):
-      self.TE_Help.setText(open('doc/help.html', 'r').read() )
+      # self.TE_Help.setText(open('doc/help.html', 'r').read() )
+      self.TE_Help.setText("Missing!")
 
     def setDevConfig_fromFile(self, i, fname):
       try:
