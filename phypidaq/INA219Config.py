@@ -2,6 +2,8 @@
 from __future__ import print_function, division, unicode_literals
 from __future__ import absolute_import
 
+import sys
+
 import board
 from adafruit_ina219 import INA219, BusVoltageRange, ADCResolution, Gain
 
@@ -34,7 +36,8 @@ class INA219Config(object):
             3: Gain.DIV_8_320MV,
         }
 
-        if confdict == None: confdict = {}
+        if confdict == None:
+            confdict = {}
         if 'I2CADDR' in confdict:
             self.I2CADDR = confdict['I2CADDR']
             print(cname + ": I2C address set to %x " % self.I2CADDR)
