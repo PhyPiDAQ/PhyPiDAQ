@@ -32,7 +32,7 @@ if [ -d $DIR ]; then
 
   #copy python code
   cp -auv phypi.py $DIR
-  cp -auv doc/*.html $DIR/doc/
+  # cp -auv doc/*.html $DIR/doc/
   # cp -auv images $DIR
   cp -auv run_phypi.py $DIR
 
