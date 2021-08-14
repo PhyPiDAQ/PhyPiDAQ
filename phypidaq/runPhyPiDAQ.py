@@ -17,6 +17,7 @@ import yaml, numpy as np, threading, multiprocessing as mp
 # math module needed for formulae
 from math import *
 # interpolate needed for calibration
+from PyQt5 import QtWidgets
 from scipy import interpolate 
 
 # display module
@@ -431,19 +432,28 @@ class runPhyPiDAQ(object):
     NChannels = self.PhyPiConfDict['NChannels']
     DisplayModule = self.PhyPiConfDict['DisplayModule']
 
-    cmdQ =  mp.Queue(1) # Queue for command input
-    datQ =  mp.Queue(1) # Queue to spy on data transfer inside class Display
+    cmdQ = mp.Queue(1) # Queue for command input
+    datQ = mp.Queue(1) # Queue to spy on data transfer inside class Display
     if 'startActive' not in self.PhyPiConfDict:  
       self.PhyPiConfDict['startActive'] = False  # start in paused-mode
     if 'DAQCntrl' not in self.PhyPiConfDict:  
       self.PhyPiConfDict['DAQCntrl'] = True  # enable run control buttons
 
-    if DisplayModule is not None:  
+    if DisplayModule is not None:
+      app = QtWidgets.QApplication.instance()
+      if app is None:
+        # if it does not exist then a QApplication is created
+        app = QtWidgets.QApplication([])
+
       display = Display(interval = None, 
                     confdict = self.PhyPiConfDict, 
                     cmdQ = cmdQ,
                     datQ = datQ )
       display.init()
+      display.show()
+      #display.display()
+
+      app.exec_()
 
     self.ACTIVE = True #  background process(es) active
 
@@ -502,7 +512,7 @@ class runPhyPiDAQ(object):
 
         # display data
           if DisplayModule is not None:  
-            display.show(self.data[:NChannels])
+            display.showData(self.data[:NChannels])
 
         # store (latest) data in ring buffer as a list ...
           if self.RBuf is not None:
