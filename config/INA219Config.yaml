@@ -3,5 +3,22 @@
 DAQModule: INA219Config
 
 NChannels: 1  # 2: current and voltage; 3: current, voltage and power
-maxAmp: 0.5  # current range in A, max. 3.1999 
+maxAmp: 0.5  # current range in A, max. 3.1999
 maxVolt: 16. # alternative: 32.
+
+gainResolution: -1 # -1: Auto; 0: 1; 1: 1/2; 2: 1/4; 3: 1/8
+
+# Configuration options for the sensor
+#  0:  9bit,   1 sample,     84us (default)
+#  1: 10bit,   1 sample,    148us
+#  2: 11 bit,  1 sample,    276us
+#  3: 12 bit,  1 sample,    532us
+#  4: 12 bit,  2 samples,  1.06ms
+#  5: 12 bit,  4 samples,  2.13ms
+#  6: 12bit,   8 samples,  4.26ms
+#  7: 12bit,  16 samples,  8.51ms
+#  8: 12bit,  32 samples, 17.02ms
+#  9: 12bit,  64 samples, 34.05ms
+# 10: 12bit, 128 samples, 68.10ms
+busAdcResolution: 0
+shuntAdcResolution: 0
