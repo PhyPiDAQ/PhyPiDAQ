@@ -91,7 +91,7 @@ class INA219Config(object):
             sys.exit(1)
 
         i2c_bus = board.I2C()
-        if self.I2CADDR:
+        if hasattr(self, "I2CADDR"):
             self.sensor = INA219(i2c_bus, addr=self.I2CADDR)
         else:
             self.sensor = INA219(i2c_bus)
