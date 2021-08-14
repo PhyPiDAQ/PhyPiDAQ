@@ -32,8 +32,6 @@ if [ -d $DIR ]; then
 
   #copy python code
   cp -auv phypi.py $DIR
-  # cp -auv doc/*.html $DIR/doc/
-  # cp -auv images $DIR
   cp -auv run_phypi.py $DIR
 
   #copy config examples
@@ -41,5 +39,8 @@ if [ -d $DIR ]; then
   cp -auv *.daq $DIR
 
   # copy examples
-  # cp -auv examples/ $DIR
+  cp -auv examples/ $DIR
 fi
+
+echo "The full documentation (software, hardware and educational guidelines) can be found on GitHub:"
+echo "https://github.com/PhyPiDAQ"
