@@ -93,17 +93,15 @@ class Display(QMainWindow):
         self.setCentralWidget(self._main)
         layout = QtWidgets.QVBoxLayout(self._main)
 
-        fig = Figure(figsize=(5, 3))
-        dynamic_canvas = FigureCanvas(fig)
-        layout.addWidget(dynamic_canvas)
 
-        self._dynamic_ax = dynamic_canvas.figure.subplots()
-        t = np.linspace(0, 10, 101)
+
+        #self._dynamic_ax = dynamic_canvas.figure.subplots()
+        #t = np.linspace(0, 10, 101)
         # Set up a Line2D.
-        self._line, = self._dynamic_ax.plot(t, np.sin(t + time.time()))
+        #self._line, = self._dynamic_ax.plot(t, np.sin(t + time.time()))
 
-        self.animation = anim.FuncAnimation(fig, self._update_canvas, frames=200, interval=50, repeat=True, blit=True)
-        dynamic_canvas.draw()
+        #
+        #dynamic_canvas.draw()
 
         self.cmdQ = cmdQ
         self.datQ = datQ
@@ -152,6 +150,52 @@ class Display(QMainWindow):
         if 'DAQCntrl' not in self.confdict:  # no run control buttons
             self.confdict['DAQCntrl'] = False
 
+        ModuleName = self.confdict['DisplayModule']  # name of the display module
+
+        # TODO: Check if there are safer ways for doing this
+        # import relevant library
+        try:
+            cmnd = 'from .' + ModuleName + ' import *'
+            exec(cmnd, globals(), locals())
+        except Exception as e:
+            print(' !!! Display: failed to import module - exiting')
+            print(str(e))
+            sys.exit(1)
+
+        try:
+            cmnd = 'global DG; DG = ' + ModuleName + '(self.confdict)'
+            exec(cmnd, globals(), locals())
+        except Exception as e:
+            print(' !!! Display: failed to initialize module - exiting')
+            print(str(e))
+            sys.exit(1)
+
+        # Init the
+        DG.init()
+
+        dynamic_canvas = FigureCanvas(DG.fig)
+        layout.addWidget(dynamic_canvas)
+
+        def yieldEvt_fromQ():
+            # receive data via a Queue from package multiprocessing
+            cnt = 0
+
+            while True:
+                if not self.datQ.empty():
+                    data = self.datQ.get()
+                    print(cnt)
+                    if type(data) != np.ndarray:
+                        break  # received end event
+                    cnt += 1
+                    yield (cnt, data)
+                else:
+                    yield None  # send empty event if no new data
+
+            # end of yieldEvt_fromQ
+            sys.exit()
+
+        self.animation = anim.FuncAnimation(DG.fig, DG, yieldEvt_fromQ, interval=50, repeat=True, blit=True)
+
     def _update_canvas(self, i):
         t = np.linspace(0, 10, 101)
         # Shift the sinusoid as a function of time.
@@ -164,123 +208,12 @@ class Display(QMainWindow):
         if self.datQ == None:
             self.datQ = mp.Queue(1)  # Queue for data transfer to sub-process
         DisplayModule = self.confdict['DisplayModule']
-        #self.procs = []
-        #self.procs.append(mp.Process(name=DisplayModule,
-        #                             target=self.mpTkDisplay))
-
-        #for prc in self.procs:
-        #    prc.deamon = True
-        #    prc.start()
-            # print(' -> starting subprocess ', prc.name, ' PID=', prc.pid)
 
     def showData(self, dat):
         # send data to display process
+        print("New data!")
         self.datQ.put(dat)
         time.sleep(0.00005)  # !!! waiting time to make data transfer reliable
 
-    def close(self):
-        # shut-down sub-process(es)
-        for p in self.procs:
-            if p.is_alive():
-                p.terminate()
-                # print('    terminating ' + p.name)
-
-    def display(self):
-        ''' Tk background process for graphical display of data
-
-            data is passed via multiprocessing.Queue
-        '''
-
-        Q = self.datQ  # multiprocessing.Queue() for data
-        conf = self.confdict  # configuration
-        cmdQ = self.cmdQ  # Queue to send commands back to calling process
-
-        ModuleName = conf['DisplayModule']  # name of the display module
-
-        # TODO: Check if there are safer ways for doing this
-        # import relevant library
-        try:
-            cmnd = 'from .' + ModuleName + ' import *'
-            exec(cmnd, globals(), locals())
-        except Exception as e:
-            print(' !!! TkDisplay: failed to import module - exiting')
-            print(str(e))
-            sys.exit(1)
-
-        try:
-            cmnd = 'global DG; DG = ' + ModuleName + '(conf)'
-            exec(cmnd, globals(), locals())
-        except Exception as e:
-            print(' !!! TkDisplay: failed to initialize module - exiting')
-            print(str(e))
-            sys.exit(1)
-
-        # Generator to provide data to animation
-        def yieldEvt_fromQ():
-            # receive data via a Queue from package multiprocessing
-            cnt = 0
-            lagging = False
-            Tlast = time.time()
-
-            while True:
-                if not Q.empty():
-                    data = Q.get()
-                    if type(data) != np.ndarray:
-                        break  # received end event
-                    cnt += 1
-                    yield (cnt, data)
-                else:
-                    yield None  # send empty event if no new data
-
-                # check timing precision
-                T = time.time()
-                dt = T - Tlast
-                if dt - interval < interval * 0.01:
-                    if lagging:
-                        # LblStatus.config(text='')
-                        pass
-                    lagging = False
-                else:
-                    lagging = True
-                    # LblStatus.config(text='! lagging !', fg='red')
-                Tlast = T
-
-            # end of yieldEvt_fromQ
-            sys.exit()
-
-
-        interval = conf['Interval']
-        WaitTime = interval * 1000  # in ms
-
-        if 'startActive' in conf:
-            startActive = conf['startActive']  # start in active mode
-        else:
-            startActive = False
-
-        if 'DAQCntrl' in conf:  # enable control buttons
-            DAQCntrl = conf['DAQCntrl']
-        else:
-            DAQCntrl = True
-
-        figDG = DG.fig
-
-        print("Testing QT!")
-
-        # set initial state
-        #if not startActive and DAQCntrl:
-            #setInitialPaused()  # start in Paused mode
-
-        # Qt with Matplotlib
-        self.figureCanvas = FigureCanvasQTAgg(figDG)
-        self.mainLayout.addWidget(self.figureCanvas)
-
-
-        # set up matplotlib animation
-        tw = max(WaitTime - 100., 0.5)  # smaller than WaitTime to allow for processing
-        DGAnim = anim.FuncAnimation(figDG, DG, yieldEvt_fromQ,
-                                    interval=tw, init_func=DG.init,
-                                    blit=True, fargs=None, repeat=True, save_count=None)
-        # save_count=None is a (temporary) work-around
-        #     to fix memory leak in animate
-
-        # sys.exit()
+    def closeDisplay(self):
+        self.close()
