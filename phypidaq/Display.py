@@ -10,7 +10,7 @@ import numpy as np, time, sys
 import multiprocessing as mp
 
 import matplotlib
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtGui
 from matplotlib.figure import Figure
 
 matplotlib.use('Qt5Agg')
@@ -139,10 +139,6 @@ class Display(QMainWindow):
         dynamic_canvas = FigureCanvas(DG.fig)
         layout.addWidget(dynamic_canvas)
         layout.addLayout(self.button_layout)
-
-        # Connect the exit function to the window close event
-        self.actionExit = self.findChild(QtWidgets.QAction, "actionExit")
-        self.actionExit.triggered.connect(self.cmd_end)
 
         self.button_start = QPushButton("Start")
         self.button_start.clicked.connect(self.cmd_start)
@@ -276,6 +272,10 @@ class Display(QMainWindow):
     def display_time(self):
         diff = QtCore.QDateTime.currentSecsSinceEpoch() - self.start_time
         self.time_label.setText(f"{diff}s")
+
+    def closeEvent(self, event: QtGui.QCloseEvent) -> None:
+        self.cmd_end()
+        event.accept()
 
     def close_display(self):
         """
