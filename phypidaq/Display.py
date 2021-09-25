@@ -156,15 +156,6 @@ class Display(QMainWindow):
         button_end.clicked.connect(self.button_end_clicked)
         button_layout.addWidget(button_end)
 
-        def button_end_clicked():
-            self.cmd_queue.put('E')
-
-        def cmd_pause():
-            self.cmd_queue.put('P')
-
-        def button_start_clicked():
-            print("TODO!!!")
-
         def yield_event_from_queue():
             # receive data via a Queue from package multiprocessing
             cnt = 0
@@ -197,6 +188,15 @@ class Display(QMainWindow):
             sys.exit()
 
         self.animation = anim.FuncAnimation(DG.fig, DG, yield_event_from_queue, interval=50, repeat=True, blit=True)
+
+    def button_end_clicked(self):
+        self.cmd_queue.put('E')
+
+    def cmd_pause(self):
+        self.cmd_queue.put('P')
+
+    def button_start_clicked(self):
+        print("TODO!!!")
 
     def close_display(self):
         """
