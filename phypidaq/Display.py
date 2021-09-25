@@ -15,7 +15,7 @@ from matplotlib.figure import Figure
 
 matplotlib.use('Qt5Agg')
 
-from PyQt5.QtWidgets import QApplication, QMainWindow, QDesktopWidget
+from PyQt5.QtWidgets import QApplication, QMainWindow, QDesktopWidget, QPushButton
 from PyQt5 import QtCore
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -50,6 +50,7 @@ class Display(QMainWindow):
         self._main = QtWidgets.QWidget()
         self.setCentralWidget(self._main)
         layout = QtWidgets.QVBoxLayout(self._main)
+        button_layout = QtWidgets.QHBoxLayout()
 
         # Setup configuration
         self.cmd_queue = cmd_queue
@@ -132,21 +133,65 @@ class Display(QMainWindow):
         # Get the figure from the display module and add it to the widget of the window
         dynamic_canvas = FigureCanvas(DG.fig)
         layout.addWidget(dynamic_canvas)
+        layout.addLayout(button_layout)
+
+        button_start = QPushButton("Start")
+        # button_start.setEnabled(False)
+        button_start.clicked.connect(self.button_start_clicked)
+        button_layout.addWidget(button_start)
+
+        button_pause = QPushButton("Pause")
+        button_layout.addWidget(button_pause)
+
+        button_resume = QPushButton("Resume")
+        button_layout.addWidget(button_resume)
+
+        button_save_data = QPushButton("Save Data")
+        button_layout.addWidget(button_save_data)
+
+        button_save_graph = QPushButton("Save Graph")
+        button_layout.addWidget(button_save_graph)
+
+        button_end = QPushButton("End")
+        button_end.clicked.connect(self.button_end_clicked)
+        button_layout.addWidget(button_end)
+
+        def button_end_clicked():
+            self.cmd_queue.put('E')
+
+        def cmd_pause():
+            self.cmd_queue.put('P')
+
+        def button_start_clicked():
+            print("TODO!!!")
 
         def yield_event_from_queue():
             # receive data via a Queue from package multiprocessing
             cnt = 0
+            lagging = False
+            timestamp_last = time.time()
 
             while True:
                 if not self.data_queue.empty():
                     data = self.data_queue.get()
-                    print(cnt)
                     if type(data) != np.ndarray:
                         break  # received end event
                     cnt += 1
                     yield cnt, data
                 else:
                     yield None  # send empty event if no new data
+
+                # check timing precision
+                timestamp = time.time()
+                delta_time = timestamp - timestamp_last
+                if delta_time - interval < interval * 0.01:
+                    if lagging:
+                        lagging = False
+                else:
+                    if not lagging:
+                        lagging = True
+                # Update the timestamp
+                timestamp_last = timestamp
 
             # end of yieldEvt_fromQ
             sys.exit()
