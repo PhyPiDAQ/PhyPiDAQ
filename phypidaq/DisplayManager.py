@@ -40,8 +40,8 @@ class DisplayManager:
         print("Spawning new Window")
         app = QApplication([])
         display = Display(self.interval, self.config_dict, self.cmd_queue, self.data_queue)
-        #display.show()
-        #app.exec()
+        display.show()
+        app.exec()
 
     def showData(self, dat):
         # Send data to display process
