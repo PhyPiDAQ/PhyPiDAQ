@@ -22,7 +22,7 @@ from scipy import interpolate
 from PyQt5 import QtWidgets, QtCore
 
 # Display module
-from .Display import *
+from phypidaq.DisplayManager import DisplayManager
 
 from .DataRecorder import DataRecorder
 from .helpers import RingBuffer, DAQwait, generateCalibrationFunction
@@ -401,21 +401,11 @@ class runPhyPiDAQ(object):
             self.PhyPiConfDict['DAQCntrl'] = True  # enable run control buttons
 
         if DisplayModule is not None:
-            app = QtWidgets.QApplication.instance()
-            if app is None:
-                print("Creating new instance!")
-                # if it does not exist then a QApplication is created
-                app = QtWidgets.QApplication([])
-
-            display = Display(interval=None,
-                              confdict=self.PhyPiConfDict,
-                              cmdQ=cmdQ,
-                              datQ=datQ)
-            display.init()
-            display.show()
-            # display.display()
-
-            app.exec_()
+            display_manager = DisplayManager(interval=None,
+                                             config_dict=self.PhyPiConfDict,
+                                             cmd_queue=cmdQ,
+                                             data_queue=datQ)
+            display_manager.init()
 
         self.ACTIVE = True  # background process(es) active
 
@@ -427,11 +417,9 @@ class runPhyPiDAQ(object):
             print('  starting in Paused mode - type R to resume')
 
         # start keyboard control
-        #kbdthrd = threading.Thread(name='kbdInput', target=self.kbdInput,
-        #                           args=(cmdQ,))
-        #                                    Queue
-        #kbdthrd.daemon = True
-        #kbdthrd.start()
+        kbdthrd = threading.Thread(name='kbdInput', target=self.kbdInput, args=(cmdQ,))
+        kbdthrd.daemon = True
+        kbdthrd.start()
 
         # set up space for data
         self.data = np.zeros(max(NChannels, self.NHWChannels))
@@ -474,8 +462,7 @@ class runPhyPiDAQ(object):
 
                     # display data
                     if DisplayModule is not None:
-                        print("Test")
-                        display.showData(self.data[:NChannels])
+                        display_manager.showData(self.data[:NChannels])
 
                     # store (latest) data in ring buffer as a list ...
                     if self.RBuf is not None:
@@ -517,7 +504,7 @@ class runPhyPiDAQ(object):
             if self.DatRec: self.DatRec.close()
             for DEV in self.DEVs:
                 DEV.closeDevice()  # close down hardware device
-            if DisplayModule is not None: display.closeDisplay()
+            if DisplayModule is not None: display_manager.close()
             if self.RunLED is not None: self.RunLED.close()
             if self.ReadoutLED is not None: self.ReadoutLED.close()
             time.sleep(1.)
