@@ -33,9 +33,9 @@ class runPhyPiDAQ(object):
         self.verbose = verbose
 
     def kbdInput(self, cmdQ):
-        '''
-          read keyboard input, run as background-thread to aviod blocking
-        '''
+        """
+        Read keyboard input, run as background-thread to avoid blocking
+        """
         # 1st, remove pyhton 2 vs. python 3 incompatibility for keyboard input
         if sys.version_info[:2] <= (2, 7):
             get_input = raw_input
@@ -48,12 +48,12 @@ class runPhyPiDAQ(object):
             kbdtxt = ''
 
     def decodeCommand(self, cmdQ):
-        '''
+        """
           evaluate keyboard commands
           returns:  0 invalid command
                     1 status change
                     2 exit
-        '''
+        """
 
         cmd = cmdQ.get()
         rc = 0
@@ -87,8 +87,8 @@ class runPhyPiDAQ(object):
         bufRec.close()
 
     def setup(self):
-        '''
-          set up data source(s), display module and options
+        """
+          Set up data source(s), display module and options
 
           interval:            sampling interval
           PhyPiConfDict:       dictionary with config options
@@ -99,7 +99,7 @@ class runPhyPiDAQ(object):
           Formulae:            list of formulae to apply to hardware channels
           NFormulae:           number of formulae
           DatRec:              instance of DataRecorder
-        '''
+        """
 
         # check for / read command line arguments
         if len(sys.argv) >= 3:
@@ -297,7 +297,7 @@ class runPhyPiDAQ(object):
         else:
             self.RBuf = None
 
-        # configure a fifo for data output
+        # Configure a fifo for data output
         if 'DAQfifo' in PhyPiConfDict:
             self.DAQfifo = PhyPiConfDict['DAQfifo']
         else:
@@ -325,14 +325,14 @@ class runPhyPiDAQ(object):
         else:
             self.ReadoutLED = None
 
-        # print configuration
+        # Print configuration
         if self.verbose > 1:
             print('\nPhyPiDAQ Configuration:')
             print(yaml.dump(PhyPiConfDict))
         self.PhyPiConfDict = PhyPiConfDict
 
     def apply_calibs(self):
-        '''
+        """
           apply calibration functions to hardware channels
 
           input: Calibration Functions as calculated by
@@ -340,15 +340,15 @@ class runPhyPiDAQ(object):
                  values in calibration table calibData[]
 
           output: calibrated channel values
-        '''
+        """
 
         for i in range(self.NHWChannels):
             if self.CalibFuncts[i] is not None:
                 self.data[i] = self.CalibFuncts[i](self.data[i])
 
     def apply_formulae(self):
-        '''
-          calculate new quantities from hardware channels c0, c1, ...
+        """
+          Calculate new quantities from hardware channels c0, c1, ...
            replace entries in data by calculated quantities
 
           input:  - data from hardware channels
@@ -362,7 +362,7 @@ class runPhyPiDAQ(object):
                 f1(c0, c1 ...), f2(c0, c1, ...), ...
 
           number of formulae may exceed number of hardware channels
-        '''
+        """
 
         #  copy data from hardware channels
         # for ifc in range(self.NFormulae):
@@ -375,8 +375,10 @@ class runPhyPiDAQ(object):
                 self.data[ifc] = eval(self.Formulae[ifc])
 
     def run(self):
-        ''' run data acquisition as defined in configuration files
-        '''
+        """
+        Run data acquisition as defined in configuration files
+        :return:
+        """
 
         if self.verbose:
             print('*==* script ' + sys.argv[0] + ': data taking active \n')

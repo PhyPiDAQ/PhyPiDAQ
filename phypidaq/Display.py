@@ -170,8 +170,6 @@ class Display(QMainWindow):
         self.timer.setInterval(1000)
         self.timer.timeout.connect(self.display_time)
 
-        print(self.config_dict)
-
         # Start automatically, if there are no controls
         if self.config_dict['DAQCntrl'] is False:
             self.button_layout.addWidget(self.time_label)
@@ -208,6 +206,10 @@ class Display(QMainWindow):
         self.button_save_graph.setEnabled(True)
         self.button_end.setEnabled(True)
 
+        if self.config_dict['startActive'] is False:
+            # If the data acquisition wasn't active on window creation, then start it
+            self.cmd_queue.put('R')
+
         # Set the start time
         self.start_time = QtCore.QDateTime.currentSecsSinceEpoch()
 
@@ -215,7 +217,7 @@ class Display(QMainWindow):
         self.timer.start()
 
         def yield_event_from_queue():
-            # receive data via a Queue from package multiprocessing
+            # Receive data via a Queue from package multiprocessing
             cnt = 0
             lagging = False
             timestamp_last = time.time()
@@ -224,13 +226,13 @@ class Display(QMainWindow):
                 if not self.data_queue.empty():
                     data = self.data_queue.get()
                     if type(data) != np.ndarray:
-                        break  # received end event
+                        break  # Received end event
                     cnt += 1
                     yield cnt, data
                 else:
-                    yield None  # send empty event if no new data
+                    yield None  # Send empty event if no new data
 
-                # check timing precision
+                # Check timing precision
                 timestamp = time.time()
                 delta_time = timestamp - timestamp_last
                 if delta_time - self.interval < self.interval * 0.01:
@@ -242,7 +244,7 @@ class Display(QMainWindow):
                 # Update the timestamp
                 timestamp_last = timestamp
 
-            # end of yieldEvt_fromQ
+            # End of yieldEvt_fromQ
             sys.exit()
 
         self.animation = anim.FuncAnimation(DG.fig, DG, yield_event_from_queue, interval=50, repeat=True, blit=True)

@@ -20,8 +20,6 @@ class DisplayManager:
         else:
             self.config_dict = {}
 
-        print(self.config_dict)
-
     def init(self):
 
         # Create queue if not set
