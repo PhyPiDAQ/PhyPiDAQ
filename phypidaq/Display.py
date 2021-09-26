@@ -1,22 +1,23 @@
 # -*- coding: utf-8 -*-
 
-'''Class providing graphical display and, optionally, a control interface
-'''
+"""
+Class providing graphical display and, optionally, a control interface
+"""
 
 from __future__ import print_function, division, unicode_literals
 from __future__ import absolute_import
 
-import numpy as np, time, sys
+import numpy as np
+import time
+import sys
 import multiprocessing as mp
 
 import matplotlib
-from PyQt5 import QtWidgets, QtGui
-from matplotlib.figure import Figure
+from PyQt5 import QtWidgets, QtGui, QtCore
 
 matplotlib.use('Qt5Agg')
 
-from PyQt5.QtWidgets import QApplication, QMainWindow, QDesktopWidget, QPushButton, QLabel
-from PyQt5 import QtCore
+from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QPushButton, QLabel, QFileDialog
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt, matplotlib.animation as anim
@@ -139,6 +140,8 @@ class Display(QMainWindow):
         dynamic_canvas = FigureCanvas(DG.fig)
         layout.addWidget(dynamic_canvas)
         layout.addLayout(self.button_layout)
+
+        self.figure = DG.fig
 
         self.button_start = QPushButton("Start")
         self.button_start.clicked.connect(self.cmd_start)
@@ -266,14 +269,40 @@ class Display(QMainWindow):
         # Pause the plotting
         self.cmd_pause()
 
-        # TODO: Open file save dialog and save the file
-        print("Feature not implemented yet!")
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        file_name, _ = QFileDialog.getSaveFileName(self, "Save Graph", "plot.png", "PNG (*.png);;JPG (*.jpg *.jpeg)",
+                                                   options=options)
+
+        if file_name:
+            if not (file_name.endswith(".png") or file_name.endswith(".jpg") or file_name.endswith(".jpeg")):
+                # If the file extension doesn't match or isn't set, add it
+                file_name = file_name + ".png"
+
+            try:
+                self.figure.savefig(file_name)
+            except Exception as e:
+                print(str(e))
+                pass
+
+        else:
+            print("Aborting graph saving as no file was selected")
 
     def display_time(self):
         diff = QtCore.QDateTime.currentSecsSinceEpoch() - self.start_time
         self.time_label.setText(f"{diff}s")
 
     def closeEvent(self, event: QtGui.QCloseEvent) -> None:
+        """
+        Overriding the QMainWindow.closeEvent to handle the situations, when the users wants to close the window using
+        the default window button.
+
+        For further information on this method see:
+        https://stackoverflow.com/questions/9249500/pyside-pyqt-detect-if-user-trying-to-close-window
+
+        :param event: QtGui.QCloseEvent passed from the QApplication
+        :return: None
+        """
         self.cmd_end()
         event.accept()
 
