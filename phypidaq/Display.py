@@ -265,6 +265,7 @@ class Display(QMainWindow):
         self.button_pause.setEnabled(True)
         # Reset the start time and restart the time
         self.start_time = QtCore.QDateTime.currentSecsSinceEpoch()
+        self.time_label.setText("0s")
         self.timer.start()
 
     def cmd_save_data(self):
@@ -296,6 +297,10 @@ class Display(QMainWindow):
             print("Aborting graph saving as no file was selected")
 
     def display_time(self):
+        """
+        Method to update the passed time on the time label
+        :return: None
+        """
         diff = QtCore.QDateTime.currentSecsSinceEpoch() - self.start_time
         self.time_label.setText(f"{diff}s")
 
