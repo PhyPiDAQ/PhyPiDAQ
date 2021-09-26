@@ -256,13 +256,16 @@ class Display(QMainWindow):
         self.cmd_queue.put('P')
         self.button_pause.setEnabled(False)
         self.button_resume.setEnabled(True)
+        # Stop the timer
+        self.timer.stop()
 
     def cmd_resume(self):
         self.cmd_queue.put('R')
         self.button_resume.setEnabled(False)
         self.button_pause.setEnabled(True)
-        # Reset the start time
+        # Reset the start time and restart the time
         self.start_time = QtCore.QDateTime.currentSecsSinceEpoch()
+        self.timer.start()
 
     def cmd_save_data(self):
         self.cmd_queue.put('s')
