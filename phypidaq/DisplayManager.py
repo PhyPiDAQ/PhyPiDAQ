@@ -20,6 +20,8 @@ class DisplayManager:
         else:
             self.config_dict = {}
 
+        print(self.config_dict)
+
     def init(self):
 
         # Create queue if not set
@@ -37,7 +39,6 @@ class DisplayManager:
                 print('Starting subprocess ', prc.name, ' PID=', prc.pid)
 
     def spawnWindow(self):
-        print("Spawning new Window")
         app = QApplication([])
         display = Display(self.interval, self.config_dict, self.cmd_queue, self.data_queue)
         display.show()

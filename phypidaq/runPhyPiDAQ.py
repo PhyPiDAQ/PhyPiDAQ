@@ -18,20 +18,14 @@ import yaml, numpy as np, threading, multiprocessing as mp
 from math import *
 from scipy import interpolate
 
-# Import Qt library for window creation
-from PyQt5 import QtWidgets, QtCore
-
 # Display module
 from phypidaq.DisplayManager import DisplayManager
 
 from .DataRecorder import DataRecorder
 from .helpers import RingBuffer, DAQwait, generateCalibrationFunction
 
-# Enable high DPI support
-#QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
-#QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
-
 # ----- class for running data acquisition --------------------
+
 
 class runPhyPiDAQ(object):
 
@@ -486,7 +480,6 @@ class runPhyPiDAQ(object):
                 if not cmdQ.empty(): self.decodeCommand(cmdQ)
 
             # -- end while ACITVE
-
 
         except KeyboardInterrupt:
             self.DAQ_ACTIVE = False

@@ -89,9 +89,9 @@ class Display(QMainWindow):
         if 'DisplayModule' not in self.config_dict:
             self.config_dict['DisplayModule'] = 'DataLogger'
 
-        # Default mode is started
+        # Default mode is paused
         if 'startActive' not in self.config_dict:
-            self.config_dict['startActive'] = True
+            self.config_dict['startActive'] = False
 
         # No run control buttons by default
         if 'DAQCntrl' not in self.config_dict:
@@ -169,6 +169,8 @@ class Display(QMainWindow):
         self.timer = QtCore.QTimer(self)
         self.timer.setInterval(1000)
         self.timer.timeout.connect(self.display_time)
+
+        print(self.config_dict)
 
         # Start automatically, if there are no controls
         if self.config_dict['DAQCntrl'] is False:
