@@ -9,15 +9,15 @@ import adafruit_max31865
 
 
 class MAX31865Config(object):
-    '''RTD-to-Digital Converter - configuration and interface'''
+    """RTD-to-Digital Converter - configuration and interface"""
 
-    def __init__(self, confdict=None):
-        if confdict == None:
-            confdict = {}
+    def __init__(self, conf_dict=None):
+        if conf_dict is None:
+            conf_dict = {}
 
         # Number of channels
-        if 'NChannels' in confdict:
-            self.NChannels = confdict["NChannels"]
+        if 'NChannels' in conf_dict:
+            self.NChannels = conf_dict["NChannels"]
             if self.NChannels <= 0:
                 self.NChannels = 1
             elif self.NChannels > 2:
@@ -26,8 +26,8 @@ class MAX31865Config(object):
             self.NChannels = 1
 
         # -- number of wires PT100
-        if "NWires" in confdict:
-            self.NWires = confdict["NWires"]
+        if "NWires" in conf_dict:
+            self.NWires = conf_dict["NWires"]
         else:
             self.NWires = 3
 
@@ -35,14 +35,14 @@ class MAX31865Config(object):
         self.NChannels = 1
 
         # -- reference resistor
-        if 'Rref' in confdict:
-            self.Rref = confdict['Rref']
+        if 'Rref' in conf_dict:
+            self.Rref = conf_dict['Rref']
         else:
             self.Rref = 430.0
 
         # -- resistance of PT100 at 0°C
-        if 'R0' in confdict:
-            self.R0 = confdict['R0']
+        if 'R0' in conf_dict:
+            self.R0 = conf_dict['R0']
         else:
             self.R0 = 100.
 
