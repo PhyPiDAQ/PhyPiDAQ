@@ -44,3 +44,18 @@ The following requirements need to be met to work
 
 For further information on the installation process, additional sensor support and multiuser support refer to the 
 sections below. 
+
+## Supported sensors
+This is a brief summary of all sensors, that are currently supported. Next to the sensors you can find a very simple 
+list of dimensions, that can be measured. For more information  
+
+List of actively supported sensors
+
+- BME280 (temperature, pressure, altitude, relative_humidity)
+- BMP280 (temperature, pressure, altitude)
+- INA219 (current, voltage and power)
+- MAX31865 (temperature, resistance)
+
+Legacy support
+- BMP085 (temperature, pressure)
+- BMP180 (temperature, pressure)

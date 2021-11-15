@@ -51,7 +51,6 @@ class MAX31855Config(object):
  # provide configuration parameters
     self.ChanNams = ['MAX31855']
 
-      
   def acquireData(self, buf):
     if self.unit == "KELVIN": # temperature in Kelvin
        buf[0] = self.MAX31855.readTempC()+ 273.15
@@ -59,8 +58,6 @@ class MAX31855Config(object):
        buf[0] = (self.MAX31855.readTempC() * 1.8) + 32
     else:
        buf[0] = self.MAX31855.readTempC() # temperature in degrees Celsius
-    
-
 
   def closeDevice(self):
    # nothing to do here
