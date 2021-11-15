@@ -2,7 +2,6 @@
 
 DAQModule: MAX31865Config
 
-NChannels: 1      # number of channels (1: temperature; 2 temperature & resistance)
 
 NWires: 3         # numbers of wires PT100
 Rref: 430         # value reference resistor MAX31865

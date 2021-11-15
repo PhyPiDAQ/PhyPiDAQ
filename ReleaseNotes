@@ -1,6 +1,11 @@
 Release notes for PhyPiDAQ
 --------------------------
 
+v1.0.2 14 August 2021
+
+ - Changed driver for the INA219 implementation
+ - Moved the doc and images to the phypidaq folder
+
 v1.0.1 11 June 2021
 
   - Moved the folder with the images for the user interface to /resources/images
