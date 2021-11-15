@@ -30,6 +30,8 @@ The following requirements need to be met to work
    installation process you will be promoted, if you want to install the sensor drivers. They are not required to run 
    the demo, but helpful for further use. As some drivers work exclusively on the Raspberry Pi, we recommend answering 
    it only with `Y` if you are running on a Raspberry Pi and with `n` in all other cases. 
+   Additionally, you will be asked if you want to install the PicoScope drivers, where you need to enter a `Y` for yes 
+   or `n` for no.
 ```shell
   cd PhyPiDAQ
   ./installlibs.sh
