@@ -6,6 +6,7 @@ adafruit-circuitpython-mlx90393==2.0.6
 adafruit-circuitpython-register==1.9.5
 adafruit-circuitpython-bmp280==3.2.9
 adafruit-circuitpython-bme280==2.6.7
+adafruit-circuitpython-bme680==3.3.4
 Adafruit-PlatformDetect==3.15.3
 Adafruit-PureIO==1.1.9
 pkg-resources==0.0.0

@@ -1,0 +1,8 @@
+# example config for BME680 temperature and pressure sensor
+
+DAQModule: BME680Config
+# I2CADDR: 0x76 # 0x77 is default, 0x76 alternative
+# SeaLevelPressure: 1013.25
+# NChannels: 2 # Description 1 (temperature), 2 [Default] (temperature, pressure), 3 (temperature, pressure, altitude),
+#              # 4 (temperature, pressure, altitude, relative_humidity),
+#              # 5 (temperature, pressure, altitude, relative_humidity, resistance proportional to VOC particle amount)
