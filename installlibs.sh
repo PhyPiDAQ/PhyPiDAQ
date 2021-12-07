@@ -4,11 +4,11 @@
 #
 # -----------------------------------------------
 
-sudo apt-get install python3-yaml
-sudo apt-get install python3-scipy
-sudo apt-get install python3-matplotlib
-sudo apt-get install python3-pyqt5
-sudo apt-get install libatlas-base-dev # needed to build nupmy
+sudo apt-get -y install python3-yaml
+sudo apt-get -y install python3-scipy
+sudo apt-get -y install python3-matplotlib
+sudo apt-get -y install python3-pyqt5
+sudo apt-get -y install libatlas-base-dev # needed to build nupmy
 
 # some python packages for IO
 sudo pip3 install i2cdev
