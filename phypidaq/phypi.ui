@@ -304,6 +304,19 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout"/>
      </widget>
+     <widget class="QLabel" name="label_3">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>20</y>
+        <width>221</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Development for Pi OS 11</string>
+      </property>
+     </widget>
      <zorder>label_Picture</zorder>
      <zorder>label_caption</zorder>
      <zorder>label_DAQconfig</zorder>
@@ -316,6 +329,7 @@
      <zorder>label_2</zorder>
      <zorder>pB_abort</zorder>
      <zorder>verticalLayoutWidget</zorder>
+     <zorder>label_3</zorder>
     </widget>
     <widget class="QWidget" name="Tab_Config">
      <property name="toolTip">
