@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'phypi_new_4.ui'
+# Form implementation generated from reading ui file 'phypi.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.6
 #
@@ -37,10 +37,6 @@ class Ui_PhyPiWindow(object):
         self.Tab_Control.setObjectName("Tab_Control")
         self.verticalLayout_10 = QtWidgets.QVBoxLayout(self.Tab_Control)
         self.verticalLayout_10.setObjectName("verticalLayout_10")
-        self.label_3 = QtWidgets.QLabel(self.Tab_Control)
-        self.label_3.setText("")
-        self.label_3.setObjectName("label_3")
-        self.verticalLayout_10.addWidget(self.label_3)
         self.label_2 = QtWidgets.QLabel(self.Tab_Control)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
