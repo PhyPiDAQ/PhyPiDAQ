@@ -1,326 +1,326 @@
 # -*- coding: utf-8 -*-
 
-'''Class providing graphical display and, optionally, a control interface
-'''
+"""
+Class providing graphical display and, optionally, a control interface
+"""
 
 from __future__ import print_function, division, unicode_literals
 from __future__ import absolute_import
 
-import numpy as np, time, sys
+import numpy as np
+import time
+import sys
 import multiprocessing as mp
 
 import matplotlib
-matplotlib.use('TkAgg')
+from PyQt5 import QtWidgets, QtGui, QtCore
 
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-if sys.version_info[0] < 3:
-  import Tkinter as Tk
-  import tkMessageBox as mbox
-  from tkFileDialog import asksaveasfilename
-else:
-  import tkinter as Tk
-  from tkinter import messagebox as mbox
-  from tkinter.filedialog import asksaveasfilename
+matplotlib.use('Qt5Agg')
 
+from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QPushButton, QLabel, QFileDialog
+
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt, matplotlib.animation as anim
 
 
-class Display(object):
-  '''configure and control graphical data displays'''
+class Display(QMainWindow):
+    """
+    QWidget to display a dynamic matplotlib.pyplot in it
+    """
 
-  def __init__(self, interval = 0.1, confdict = None, cmdQ = None, datQ=None):
-    '''Args: 
-         interval:  logging interal, eventually overwritten by entry in confdict
-         confdict:  dictionary with configuration
-         cmdQ:      multiprocessing Queue for command transfer to caller
-         datQ:      multiprocessing Queue for data transfer
-    '''
+    def __init__(self, interval=0.1, config_dict=None, cmd_queue=None, data_queue=None):
+        """
+        :argument:
+             interval:    logging interval, eventually overwritten by entry in config_dict
+             config_dict: dictionary with configuration
+             cmd_queue:   multiprocessing Queue for command transfer to caller
+             data_queue:  multiprocessing Queue for data transfer
+        """
 
-    self.cmdQ = cmdQ
-    self.datQ = datQ
-    if confdict!=None: 
-      self.confdict = confdict      
-    else:
-      self.confdict={}
+        # Setup a basic window
+        super().__init__()
+        self.setWindowTitle("PhyPiDAQ Display")
+        self.setMinimumSize(500, 300)
 
-# set default options for graphical display
-    if 'Interval' not in self.confdict:
-      self.confdict['Interval'] = interval
-    else:
-      interval = self.confdict['Interval']
-    if interval < 0.05:
-      print(" !!! read-out intervals < 0.05 s not reliable, setting to 0.05 s")
-      self.confdict['Interval'] = 0.05
+        # Center the window on the window
+        qr = self.frameGeometry()
+        cp = QDesktopWidget().availableGeometry().center()
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
 
-    if 'XYmode' not in self.confdict:  # default is XY mode off
-      self.confdict['XYmode'] = False
+        self._main = QtWidgets.QWidget()
+        self.setCentralWidget(self._main)
+        layout = QtWidgets.QVBoxLayout(self._main)
+        self.button_layout = QtWidgets.QHBoxLayout()
 
-    if 'DisplayModule' not in self.confdict: # default display is DataLogger
-      self.confdict['DisplayModule'] = 'DataLogger'
+        # Setup configuration
+        self.cmd_queue = cmd_queue
 
-    if 'startActive' not in self.confdict:  # default is to start in Paused mode
-      self.confdict['startActive'] = False
-
-# set channel properties
-    if 'NChannels' not in self.confdict:  
-      self.confdict['NChannels'] = 1
-
-    NC = self.confdict['NChannels']
-    if 'ChanLimits' not in self.confdict:
-      self.confdict['ChanLimits'] = [ [0., 5.] ]*NC
-    if 'ChanNams' not in self.confdict:
-      self.confdict['ChanNams'] = ['']*NC 
-    if 'ChanUnits' not in self.confdict:
-      self.confdict['ChanUnits'] = ['V']*NC
-
-    if 'ChanLabels' not in self.confdict:
-      self.confdict['ChanLabesl'] = ['']*NC
-
-# set display control options
-    if 'startActive' not in self.confdict:  # start with active data taking
-      self.self.confdict['startActive'] = True
-
-    if 'DAQCntrl' not in self.confdict:  # no run control buttons
-      self.confdict['DAQCntrl'] = False
-
-  def init(self):
-    '''create data transfer queue and start display process'''
- 
-    if self.datQ == None: 
-      self.datQ = mp.Queue(1) # Queue for data transfer to sub-process
-    DisplayModule = self.confdict['DisplayModule']
-    self.procs=[]
-    self.procs.append(mp.Process(name=DisplayModule, 
-                                 target = self.mpTkDisplay) )
-
-    for prc in self.procs:
-      prc.deamon = True
-      prc.start()
-      # print(' -> starting subprocess ', prc.name, ' PID=', prc.pid)
-
-  def show(self, dat): 
-    # send data to display process 
-    self.datQ.put(dat)
-    time.sleep(0.00005) # !!! waiting time to make data transfer reliable
-    
-  def close(self):
-    # shut-down sub-process(es) 
-    for p in self.procs:
-      if p.is_alive():
-        p.terminate()
-        # print('    terminating ' + p.name)
-
-  def mpTkDisplay(self):
-    ''' Tk background process for graphical display of data
-
-        data is passed via multiprocessing.Queue
-    '''
-
-    Q = self.datQ    # multiprocessing.Queue() for data 
-    conf = self.confdict # configuration
-    cmdQ = self.cmdQ  # Queue to send commands back to calling process
- 
-    ModuleName = conf['DisplayModule'] # name of the display module
-
-    # import relevant library
-    try:
-      cmnd ='from .'+ ModuleName + ' import *' 
-      exec(cmnd, globals(), locals())
-    except Exception as e:
-      print(' !!! TkDisplay: failed to import module - exiting')
-      print(str(e))
-      sys.exit(1)
-
-    try:
-      cmnd = 'global DG; DG = ' + ModuleName +'(conf)'
-      exec(cmnd, globals(), locals()) 
-    except Exception as e: 
-      print(' !!! TkDisplay: failed to initialize module - exiting')
-      print(str(e))
-      sys.exit(1)
-
-
-    # Generator to provide data to animation
-    def yieldEvt_fromQ():
-  # receive data via a Queue from package mutiprocessing
-      cnt = 0
-      lagging = False
-      Tlast = time.time()
-      
-      while True:
-        if not Q.empty():
-          data = Q.get()
-          if type(data) != np.ndarray:
-            break # received end event
-          cnt+=1
-          yield (cnt, data)
+        # Check if the data_queue is initialised and create one, if it is none
+        if data_queue is None:
+            self.data_queue = mp.Queue(1)
         else:
-          yield None # send empty event if no new data
+            self.data_queue = data_queue
 
-  # check timing precision 
-        T = time.time()
-        dt = T - Tlast
-        if dt - interval < interval*0.01:
-          if lagging: 
-            LblStatus.config(text='')
-          lagging=False
+        if config_dict is not None:
+            self.config_dict = config_dict
         else:
-          lagging=True
-          LblStatus.config(text='! lagging !', fg='red')
-        Tlast = T
-        
-  # end of yieldEvt_fromQ
-      sys.exit()
+            self.config_dict = {}
 
-  # define bindings for graphical command buttons
-  # set initial state
-    def setInitialPaused(): # usually, start in Paused mode
-      buttonP.config(text='paused', fg='grey', state=Tk.DISABLED)
-      buttonR.config(state=Tk.NORMAL, text='Run')
+        # Define an empty animation
+        self.animation = None
 
-    def setPaused():
-      buttonP.config(text='paused', fg='grey', state=Tk.DISABLED)
-      buttonR.config(state=Tk.NORMAL, text='Resume')
+        # Set default options for graphical display
+        if 'Interval' not in self.config_dict:
+            self.config_dict['Interval'] = interval
+        else:
+            interval = self.config_dict['Interval']
+        if interval < 0.05:
+            print(" !!! read-out intervals < 0.05 s not reliable, setting to 0.05 s")
+            self.config_dict['Interval'] = 0.05
+            interval = 0.5
+        self.interval = interval
 
-    def setRunning():
-      buttonP.config(text='Pause', underline=0, fg='blue', state=Tk.NORMAL)
-      buttonR.config(state=Tk.DISABLED, text='Resume')
+        # XY mode is by default off
+        if 'XYmode' not in self.config_dict:
+            self.config_dict['XYmode'] = False
 
-    def cmdResume(_event=None):
-      cmdQ.put('R')
-      setRunning()
-      self.t0 = time.time()
+        # The default display is DataLogger
+        if 'DisplayModule' not in self.config_dict:
+            self.config_dict['DisplayModule'] = 'DataLogger'
 
-    def cmdPause(_event=None):
-      cmdQ.put('P')
-      setPaused() 
-   
-    def cmdEnd(_event=None):
-      cmdQ.put('E')
+        # Default mode is paused
+        if 'startActive' not in self.config_dict:
+            self.config_dict['startActive'] = False
 
-    def cmdSaveData(_event=None):
-      cmdQ.put('s')
-      setPaused() 
+        # No run control buttons by default
+        if 'DAQCntrl' not in self.config_dict:
+            self.config_dict['DAQCntrl'] = False
 
-    def cmdSaveGraph(_event=None):
-      cmdPause()
-      try:
-        filename = asksaveasfilename(initialdir='.', initialfile='DGraphs.png', 
-               title='select file name')
-        figDG.savefig(filename) 
-      except Exception as e:
-        print(str(e))
-        pass
+        # Set channel properties
+        if 'NChannels' not in self.config_dict:
+            self.config_dict['NChannels'] = 1
 
-   # a simple clock
-    def clkLabel(TkLabel):
-      self.t0=time.time()
-      def clkUpdate():
-        dt = int(time.time() - self.t0)
-        # datetime = time.strftime('%y/%m/%d %H:%M', time.localtime(t0))
-        TkLabel.config(text = ' ' + str(dt) + 's  ', fg='blue' )
-        TkLabel.after(1000, clkUpdate)
-      clkUpdate()
-   
-# ------- executable part -------- 
-  #  print(' -> mpTkDisplay starting')
+        NC = self.config_dict['NChannels']
+        if 'ChanLimits' not in self.config_dict:
+            self.config_dict['ChanLimits'] = [[0., 5.]] * NC
+        if 'ChanNams' not in self.config_dict:
+            self.config_dict['ChanNams'] = [''] * NC
+        if 'ChanUnits' not in self.config_dict:
+            self.config_dict['ChanUnits'] = ['V'] * NC
 
-    interval = conf['Interval']
-    WaitTime = interval * 1000 # in ms
-  
-    if 'startActive' in conf:
-      startActive = conf['startActive'] # start in active mode
-    else:
-      startActive = False
+        if 'ChanLabels' not in self.config_dict:
+            self.config_dict['ChanLabesl'] = [''] * NC
 
-    if 'DAQCntrl' in conf:       # enable control buttons
-      DAQCntrl = conf['DAQCntrl']
-    else:
-      DAQCntrl = True
+        # Name of the display module
+        module_name = self.config_dict['DisplayModule']
 
-    figDG = DG.fig
+        # TODO: Check if there are safer ways for doing this
+        # import relevant library
+        try:
+            command = 'from .' + module_name + ' import *'
+            exec(command, globals(), locals())
+        except Exception as e:
+            print(' !!! Display: failed to import module - exiting')
+            print(str(e))
+            sys.exit(1)
 
-  # generate a simple window for graphics display as a tk.DrawingArea
-    root = Tk.Tk()
-    root.wm_title(ModuleName)
+        try:
+            command = 'global DG; DG = ' + module_name + '(self.config_dict)'
+            exec(command, globals(), locals())
+        except Exception as e:
+            print(' !!! Display: failed to initialize module - exiting')
+            print(str(e))
+            sys.exit(1)
 
-  # handle destruction of top-level window
-    def _delete_window():
-      if mbox.askokcancel("Quit", "Really destroy  main window ?"):
-       print("Deleting main window")
-       root.destroy()
-    root.protocol("WM_DELETE_WINDOW", _delete_window)
+        # Init the imported display module
+        DG.init()
 
-  # initialize status and control field
-    frame = Tk.Frame(master=root)
-    frame.grid(row=0, column=9)
-    frame.pack(padx=5, side=Tk.BOTTOM)
-    if DAQCntrl:
-  # initialize Comand buttons
-      buttonE = Tk.Button(frame, text='End', underline=0, fg='red', command=cmdEnd)
-      buttonE.grid(row=0, column=8)
-      root.bind('E', cmdEnd)
+        # Get the figure from the display module and add it to the widget of the window
+        dynamic_canvas = FigureCanvas(DG.fig)
+        layout.addWidget(dynamic_canvas)
+        layout.addLayout(self.button_layout)
 
-      blank1 = Tk.Label(frame, width=5, text="")
-      blank1.grid(row=0, column=7)
+        self.figure = DG.fig
 
-      if 'bufferData' in self.confdict:
-       if self.confdict['bufferData'] != None:
-         buttonSvDa = Tk.Button(frame, width=7, text='saveData', 
-                        underline=0, fg='purple', command=cmdSaveData)
-         buttonSvDa.grid(row=0, column=6)
-         root.bind('s', cmdSaveData)
-      else:
-        blank2 = Tk.Label(frame, width=5, text="")
-        blank2.grid(row=0, column=6)
+        self.button_start = QPushButton("Start")
+        self.button_start.clicked.connect(self.cmd_start)
 
-      buttonSvGr = Tk.Button(frame, width=7, text='SaveGraph', underline=0, fg='purple',
-                           command=cmdSaveGraph)
-      buttonSvGr.grid(row=0, column=5)
-      root.bind('S', cmdSaveGraph)
+        self.button_pause = QPushButton("Pause")
+        self.button_pause.clicked.connect(self.cmd_pause)
 
-      blank3 = Tk.Label(frame, width=5, text="")
-      blank3.grid(row=0, column=4)
+        self.button_resume = QPushButton("Resume")
+        self.button_resume.clicked.connect(self.cmd_resume)
 
-      buttonP = Tk.Button(frame, width=7, text='Pause', underline=0,  fg='blue',
-                   command=cmdPause)
-      buttonP.grid(row=0, column=3)
-      root.bind('P', cmdPause)
+        self.button_save_data = QPushButton("Save Data")
+        self.button_save_data.clicked.connect(self.cmd_save_data)
 
-      buttonR = Tk.Button(frame, width=7, text='Resume', underline=0, fg='blue',
-                    command=cmdResume)
-      buttonR.grid(row=0, column=2)
-      buttonR.config(state=Tk.DISABLED)
-      root.bind('R', cmdResume)
+        self.button_save_graph = QPushButton("Save Graph")
+        self.button_save_graph.clicked.connect(self.cmd_save_graph)
 
-  # set up fields for status and clock
-    clock = Tk.Label(frame, width=10)
-    clock.grid(row=0, column=9)
-    LblStatus = Tk.Label(frame, width=13, text="")
-    LblStatus.grid(row=0, column=0)
+        self.button_end = QPushButton("End")
+        self.button_end.clicked.connect(self.cmd_end)
 
-  # set up window for graphics output
-    canvas = FigureCanvasTkAgg(figDG, master=root)
-    canvas.draw()
-    canvas.get_tk_widget().pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
-    canvas._tkcanvas.pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
+        # Create a label for the passed time
+        self.time_label = QLabel("0s")
+        # Set the start time to a default value
+        self.start_time = QtCore.QDateTime.currentSecsSinceEpoch()
 
-  # set initial state
-    if not startActive and DAQCntrl:
-      setInitialPaused() # start in Paused mode
+        self.timer = QtCore.QTimer(self)
+        self.timer.setInterval(1000)
+        self.timer.timeout.connect(self.display_time)
 
-  # set up matplotlib animation
-    tw = max(WaitTime-100., 0.5) # smaller than WaitTime to allow for processing
-    DGAnim = anim.FuncAnimation(figDG, DG, yieldEvt_fromQ,
-                         interval = tw, init_func = DG.init,
-                         blit=True, fargs=None, repeat=True, save_count=None)
-                       # save_count=None is a (temporary) work-around 
-                       #     to fix memory leak in animate
-    try:
-      clkLabel(clock) # start clock
+        # Start automatically, if there are no controls
+        if self.config_dict['DAQCntrl'] is False:
+            self.button_layout.addWidget(self.time_label)
+            self.cmd_start()
+        else:
+            # Add the buttons to the layout
+            self.button_layout.addWidget(self.button_start)
+            self.button_layout.addWidget(self.button_pause)
+            self.button_layout.addWidget(self.button_resume)
+            self.button_layout.addWidget(self.button_save_data)
+            self.button_layout.addWidget(self.button_save_graph)
+            self.button_layout.addWidget(self.button_end)
+            self.button_layout.addWidget(self.time_label)
 
-      Tk.mainloop()   # start event loop
-    except Exception as e:
-      print('*==* mpTkDisplay running ' + ModuleName + ': forced exit')
-      print(str(e))
-    sys.exit()
+            if self.config_dict['startActive']:
+                # Start the display
+                self.cmd_start()
+            else:
+                # Disable all buttons except the start button
+                self.button_pause.setEnabled(False)
+                self.button_resume.setEnabled(False)
+                self.button_save_data.setEnabled(False)
+                self.button_save_graph.setEnabled(False)
+                self.button_end.setEnabled(False)
+
+    def cmd_start(self):
+        # Disable the start button
+        self.button_start.setEnabled(False)
+        self.button_resume.setEnabled(False)
+
+        # Enable all other buttons
+        self.button_pause.setEnabled(True)
+        self.button_save_data.setEnabled(True)
+        self.button_save_graph.setEnabled(True)
+        self.button_end.setEnabled(True)
+
+        if self.config_dict['startActive'] is False:
+            # If the data acquisition wasn't active on window creation, then start it
+            self.cmd_queue.put('R')
+
+        # Set the start time
+        self.start_time = QtCore.QDateTime.currentSecsSinceEpoch()
+
+        # Start the timer to display the time
+        self.timer.start()
+
+        def yield_event_from_queue():
+            # Receive data via a Queue from package multiprocessing
+            cnt = 0
+            lagging = False
+            timestamp_last = time.time()
+
+            while True:
+                if not self.data_queue.empty():
+                    data = self.data_queue.get()
+                    if type(data) != np.ndarray:
+                        break  # Received end event
+                    cnt += 1
+                    yield cnt, data
+                else:
+                    yield None  # Send empty event if no new data
+
+                # Check timing precision
+                timestamp = time.time()
+                delta_time = timestamp - timestamp_last
+                if delta_time - self.interval < self.interval * 0.01:
+                    if lagging:
+                        lagging = False
+                else:
+                    if not lagging:
+                        lagging = True
+                # Update the timestamp
+                timestamp_last = timestamp
+
+            # End of yieldEvt_fromQ
+            sys.exit()
+
+        self.animation = anim.FuncAnimation(DG.fig, DG, yield_event_from_queue, interval=50, repeat=True, blit=True)
+
+    def cmd_end(self):
+        self.cmd_queue.put('E')
+
+    def cmd_pause(self):
+        self.cmd_queue.put('P')
+        self.button_pause.setEnabled(False)
+        self.button_resume.setEnabled(True)
+        # Stop the timer
+        self.timer.stop()
+
+    def cmd_resume(self):
+        self.cmd_queue.put('R')
+        self.button_resume.setEnabled(False)
+        self.button_pause.setEnabled(True)
+        # Reset the start time and restart the time
+        self.start_time = QtCore.QDateTime.currentSecsSinceEpoch()
+        self.time_label.setText("0s")
+        self.timer.start()
+
+    def cmd_save_data(self):
+        self.cmd_queue.put('s')
+        # Pause the plotting
+        self.cmd_pause()
+
+    def cmd_save_graph(self):
+        # Pause the plotting
+        self.cmd_pause()
+
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        file_name, _ = QFileDialog.getSaveFileName(self, "Save Graph", "plot.png", "PNG (*.png);;JPG (*.jpg *.jpeg)",
+                                                   options=options)
+
+        if file_name:
+            if not (file_name.endswith(".png") or file_name.endswith(".jpg") or file_name.endswith(".jpeg")):
+                # If the file extension doesn't match or isn't set, add it
+                file_name = file_name + ".png"
+
+            try:
+                self.figure.savefig(file_name)
+            except Exception as e:
+                print(str(e))
+                pass
+
+        else:
+            print("Aborting graph saving as no file was selected")
+
+    def display_time(self):
+        """
+        Method to update the passed time on the time label
+        :return: None
+        """
+        diff = QtCore.QDateTime.currentSecsSinceEpoch() - self.start_time
+        self.time_label.setText(f"{diff}s")
+
+    def closeEvent(self, event: QtGui.QCloseEvent) -> None:
+        """
+        Overriding the QMainWindow.closeEvent to handle the situations, when the users wants to close the window using
+        the default window button.
+
+        For further information on this method see:
+        https://stackoverflow.com/questions/9249500/pyside-pyqt-detect-if-user-trying-to-close-window
+
+        :param event: QtGui.QCloseEvent passed from the QApplication
+        :return: None
+        """
+        self.cmd_end()
+        event.accept()
+
+    def close_display(self):
+        """
+        Method to close the window
+        :return: None
+        """
+        self.close()
