@@ -4,35 +4,36 @@
 #
 # -----------------------------------------------
 
-sudo apt-get install python3-yaml
-sudo apt-get install python3-scipy
-sudo apt-get install python3-matplotlib
-sudo apt-get install python3-pyqt5
-sudo apt-get install libatlas-base-dev # needed to build nupmy
+sudo apt-get install python3-yaml --yes
+sudo apt-get install python3-scipy --yes
+sudo apt-get install python3-matplotlib --yes
+sudo apt-get install python3-pyqt5 --yes
+sudo apt-get install libatlas-base-dev --yes # needed to build numpy
 
-# some python packages for IO
-sudo pip3 install i2cdev
-sudo pip3 install spidev
-sudo pip3 install pyusb
-sudo pip3 install smbus2
+read -p "Do you want to install the sensor drivers (Y/n)?" -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  # some python packages for IO
+  sudo pip3 install i2cdev
+  sudo pip3 install spidev
+  sudo pip3 install pyusb
+  sudo pip3 install smbus2
 
+  sudo pip3 install installlibs/whl/*.whl # python wheels
 
-# adafruit libraries
-sudo pip3 install adafruit-circuitpython-busdevice
-sudo pip3 install adafruit-platformdetect
-sudo pip3 install adafruit-pureio
-sudo pip3 install adafruit-blinka
+  sudo pip3 install installlibs/tgz/*.tar.gz # python packages
 
-# some sensors supported by circuitpython
-sudo pip3 install adafruit-circuitpython-ina219
-sudo pip3 install adafruit-circuitpython-ina260
-sudo pip3 install adafruit-circuitpython-bmp280
-sudo pip3 install adafruit-circuitpython-bme280
-sudo pip3 install adafruit-circuitpython-mlx90393
+  # Install all sensor drivers specified in the
+  sudo pip3 install -r /requirements.txt
 
-sudo pip3 install installlibs/whl/*.whl # python wheels
-sudo pip3 install installlibs/tgz/*.tar.gz # python packages 
+  sudo usermod -a -G tty pi # grant access to USB for user pi
+fi
 
-sudo dpkg -i installlibs/picoscopelibs/*.deb # picoscope 
-sudo usermod -a -G tty pi # grant acces to USB for user pi
+read -p "Do you want to install the picoscope drivers (Y/n)?" -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+
+  sudo dpkg -i installlibs/picoscopelibs/*.deb # picoscope
+  sudo usermod -a -G tty pi # grant access to USB for user pi
+fi
 
