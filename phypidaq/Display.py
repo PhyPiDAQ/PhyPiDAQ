@@ -145,24 +145,35 @@ class Display(QMainWindow):
 
         self.button_start = QPushButton("Start")
         self.button_start.clicked.connect(self.cmd_start)
+        self.button_start.setFixedHeight(48)
 
         self.button_pause = QPushButton("Pause")
         self.button_pause.clicked.connect(self.cmd_pause)
+        self.button_pause.setFixedHeight(48)
 
         self.button_resume = QPushButton("Resume")
         self.button_resume.clicked.connect(self.cmd_resume)
+        self.button_resume.setFixedHeight(48)
 
         self.button_save_data = QPushButton("Save Data")
         self.button_save_data.clicked.connect(self.cmd_save_data)
+        self.button_save_data.setFixedHeight(48)
 
         self.button_save_graph = QPushButton("Save Graph")
         self.button_save_graph.clicked.connect(self.cmd_save_graph)
+        self.button_save_graph.setFixedHeight(48)
 
         self.button_end = QPushButton("End")
         self.button_end.clicked.connect(self.cmd_end)
+        self.button_end.setFixedHeight(48)
 
         # Create a label for the passed time
         self.time_label = QLabel("0s")
+        self.time_label.setFixedHeight(48)
+        self.lagging_label = QLabel("<b>Lagging</b>")
+        self.lagging_label.setStyleSheet("color: red")
+        self.lagging_label.setVisible(False)
+        self.lagging_label.setFixedHeight(48)
         # Set the start time to a default value
         self.start_time = QtCore.QDateTime.currentSecsSinceEpoch()
 
@@ -173,6 +184,7 @@ class Display(QMainWindow):
         # Start automatically, if there are no controls
         if self.config_dict['DAQCntrl'] is False:
             self.button_layout.addWidget(self.time_label)
+            self.button_layout.addWidget(self.lagging_label)
             self.cmd_start()
         else:
             # Add the buttons to the layout
@@ -183,6 +195,7 @@ class Display(QMainWindow):
             self.button_layout.addWidget(self.button_save_graph)
             self.button_layout.addWidget(self.button_end)
             self.button_layout.addWidget(self.time_label)
+            self.button_layout.addWidget(self.lagging_label)
 
             if self.config_dict['startActive']:
                 # Start the display
@@ -200,7 +213,7 @@ class Display(QMainWindow):
         self.button_start.setEnabled(False)
         self.button_resume.setEnabled(False)
 
-        # Enable all other buttons
+        # Enable all others buttons
         self.button_pause.setEnabled(True)
         self.button_save_data.setEnabled(True)
         self.button_save_graph.setEnabled(True)
@@ -238,9 +251,11 @@ class Display(QMainWindow):
                 if delta_time - self.interval < self.interval * 0.01:
                     if lagging:
                         lagging = False
+                        self.lagging_label.setVisible(lagging)
                 else:
                     if not lagging:
                         lagging = True
+                        self.lagging_label.setVisible(lagging)
                 # Update the timestamp
                 timestamp_last = timestamp
 
