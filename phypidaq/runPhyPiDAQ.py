@@ -1,18 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-'''Data visualisation
+"""  Data visualisation
      this script reads data samples from PicoScope and 
      displays data as effective voltage, history display and xy plot
 
      Usage: ./runPhyPiDAQ.py [<PhyPiConf_file>.daq] [Interval]
-'''
+"""
 
 from __future__ import print_function, division, unicode_literals
 from __future__ import absolute_import
 
-import sys, os, errno, time
-import yaml, numpy as np, threading, multiprocessing as mp
+# Package imports
+import sys
+import os
+import errno
+import time
+import yaml
+import numpy as np
+import threading
+import multiprocessing as mp
 
 # math module needed for formulae
 from math import *
