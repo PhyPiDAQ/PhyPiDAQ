@@ -16,7 +16,7 @@ class BME680Config(object):
                 self.NChannels = 1
         else:
             self.NChannels = 2
-        if 'SeaLevelPressure' is config_dict:
+        if 'SeaLevelPressure' in config_dict:
             self.SeaLevelPressure = config_dict['SeaLevelPressure']
 
             if self.SeaLevelPressure < 0:
