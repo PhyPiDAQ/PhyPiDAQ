@@ -25,7 +25,6 @@ print("Duration: 48h")
 
 start_time = int(time.time())
 duration = 2 * 1440
-print(start_time)
 
 # Loop to make the reading
 for i in range(duration):
@@ -35,7 +34,7 @@ for i in range(duration):
     bar_len = 60
     filled_len = int(round(bar_len * i / float(duration)))
 
-    percents = round(100.0 * i / float(duration), 1)
+    percents = 100.0 * i / float(duration)
     bar = '#' * filled_len + ' ' * (bar_len - filled_len)
 
     sys.stdout.write('[%s] %s%%\r' % (bar, percents))
