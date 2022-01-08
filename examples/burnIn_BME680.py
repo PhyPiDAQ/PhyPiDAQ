@@ -24,7 +24,7 @@ print("Starting burn-in-process for MOX to adjust.")
 print("Duration: 48h")
 
 start_time = int(time.time())
-duration = 2 * 1440
+duration = 2 * 86400
 
 # Loop to make the reading
 for i in range(duration):
@@ -39,7 +39,7 @@ for i in range(duration):
 
     sys.stdout.write('[%s] %.3g%%\r' % (bar, percents))
     sys.stdout.flush()
-    # Sleep a minute
-    time.sleep(60)
+    # Sleep a second
+    time.sleep(1)
 
 print("Finished!")
