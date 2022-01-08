@@ -52,6 +52,7 @@ list of dimensions, that can be measured. For more information
 List of actively supported sensors
 
 - BME280 (temperature, pressure, altitude, relative_humidity)
+- BME680 (temperature, pressure, altitude, relative_humidity; resistance proportional to VOC particle amount)
 - BMP280 (temperature, pressure, altitude)
 - INA219 (current, voltage and power)
 - MAX31865 (temperature, resistance)
