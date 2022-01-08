@@ -37,7 +37,7 @@ for i in range(duration):
     percents = 100.0 * i / float(duration)
     bar = '#' * filled_len + ' ' * (bar_len - filled_len)
 
-    sys.stdout.write('[%s] %s%%\r' % (bar, percents))
+    sys.stdout.write('[%s] %.3g%%\r' % (bar, percents))
     sys.stdout.flush()
     # Sleep a minute
     time.sleep(60)
