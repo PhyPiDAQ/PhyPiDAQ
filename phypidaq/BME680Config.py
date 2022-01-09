@@ -16,14 +16,14 @@ class BME680Config(object):
                 self.NChannels = 1
         else:
             self.NChannels = 2
-        if 'SeaLevelPressure' is config_dict:
+        if 'SeaLevelPressure' in config_dict:
             self.SeaLevelPressure = config_dict['SeaLevelPressure']
 
             if self.SeaLevelPressure < 0:
                 self.SeaLevelPressure = 1013.25
                 print("BMP280: sea level pressure set to %.3fA " % self.SeaLevelPressure)
 
-        self.ChanLims = [[-40., 85.], [300., 1100.], [0., 1000.], [0., 100.], [0, 20000]]
+        self.ChanLims = [[-40., 85.], [300., 1100.], [0., 1000.], [0., 100.], [0, 100000]]
         self.ChanNams = ['T', 'P', 'h', 'H', "R_VOC"]
         self.ChanUnits = ['°C', 'hPa', 'm', '%', "Ohm"]
 
