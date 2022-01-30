@@ -488,7 +488,7 @@ class runPhyPiDAQ(object):
                 # check for control input (from keyboard or display module)
                 if not cmdQ.empty(): self.decodeCommand(cmdQ)
 
-            # -- end while ACITVE
+            # -- end while ACTIVE
 
         except KeyboardInterrupt:
             self.DAQ_ACTIVE = False
