@@ -46,7 +46,7 @@ ChanFormula:
   - c0                 # chan2 reassign chan0
   - c1                 # chan3 reassign chan1
 
-startActive: true  # start in running mode
+startActive: false  # start in running mode if true
 
 # name of output file
 DataFile:   null                  # file name for output file 
