@@ -501,10 +501,10 @@ class runPhyPiDAQ(object):
                                        ['{0:.4g}'.format(d) for d in self.data[:NChannels]]),
                               file=self.fifo)
 
-                    # ... send to websocket
+                    # ... or send to websocket
                     if self.DAQwebsocket:
                       self.send_to_websocket(','.join(['{0:.3f}'.format(cnt * interval)] +
-                             ['{0:.4g}'.format(d) for d in self.data[:NChannels]]+['\n']))
+                        ['{0:.4g}'.format(d) for d in self.data[:NChannels]])+'\n')
 
                     wait()  #
 
