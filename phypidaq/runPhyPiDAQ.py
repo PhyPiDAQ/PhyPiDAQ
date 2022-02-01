@@ -27,8 +27,11 @@ from scipy import interpolate
 
 # Display module
 from phypidaq.DisplayManager import DisplayManager
-
+# Webserver
+from phypidaq.WebsocketManager import WebsocketManager
+# data recorder
 from .DataRecorder import DataRecorder
+# other hepler functions
 from .helpers import RingBuffer, DAQwait, generateCalibrationFunction
 
 # ----- class for running data acquisition --------------------
@@ -67,6 +70,7 @@ class runPhyPiDAQ(object):
         if cmd == 'E':
             if self.verbose > 1:
                 print('\n' + sys.argv[0] + ': End command received')
+            print('')
             self.ACTIVE = False
             rc = 2
         elif cmd == 'P':
@@ -320,6 +324,23 @@ class runPhyPiDAQ(object):
         else:
             self.fifo = None
 
+        # Configure a websocket for data transfer
+        if 'DAQwebsocket' in PhyPiConfDict:
+            self.DAQwebsocket = PhyPiConfDict['DAQwebsocket']
+        else:
+            self.DAQwebsocket = None
+            PhyPiConfDict['DAQwebsocket'] = self.DAQwebsocket
+        if self.DAQwebsocket:
+            print('PhyPiDAQ: opening websocket')
+            try:
+              self.send_to_websocket = WebsocketManager(
+                          interval=self.interval,
+                          config_dict=PhyPiConfDict)
+            except Exception as e:
+              print("!!! failed to set up websocket !!!")  
+              print(e)
+              exit(1)
+              
         # LED indicators on GPIO pins
         if 'RunLED' in PhyPiConfDict or 'ReadoutLED' in PhyPiConfDict:
             from .pulseGPIO import pulseGPIO
@@ -474,11 +495,16 @@ class runPhyPiDAQ(object):
                     # ... and record all data to disc ...
                     if self.DatRec: self.DatRec(self.data[:NChannels])
 
-                    # ... and write to fifo
+                    # ... write to fifo ...
                     if self.fifo:
                         print(','.join(['{0:.3f}'.format(cnt * interval)] +
                                        ['{0:.4g}'.format(d) for d in self.data[:NChannels]]),
                               file=self.fifo)
+
+                    # ... send to websocket
+                    if self.DAQwebsocket:
+                      self.send_to_websocket(','.join(['{0:.3f}'.format(cnt * interval)] +
+                             ['{0:.4g}'.format(d) for d in self.data[:NChannels]]+['\n']))
 
                     wait()  #
 
@@ -505,8 +531,12 @@ class runPhyPiDAQ(object):
             if self.RunLED is not None: self.RunLED.pulse(-1)  # RunLED off
             if self.DatRec: self.DatRec.close()
             if self.fifo:
-              print('', file = self.fifo) # emty record to inform clients
+              print('', file = self.fifo) # empty record to inform clients
               self.fifo.close()
+            if self.DAQwebsocket:
+              self.send_to_websocket('\n') # empty record to inform clients
+              time.sleep(0.1)
+              self.send_to_websocket.close()
             for DEV in self.DEVs:
                 DEV.closeDevice()  # close down hardware device
             if DisplayModule is not None: display_manager.close()
