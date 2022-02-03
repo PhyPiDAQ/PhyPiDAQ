@@ -144,29 +144,33 @@ class Display(QMainWindow):
         self.figure = DG.fig
 
         button_h = 24
-        self.button_start = QPushButton("Start")
-        self.button_start.clicked.connect(self.cmd_start)
-        self.button_start.setFixedHeight(button_h)
+        if self.config_dict['startActive']:
+           self.button_resume = QPushButton("Resume")
+        else:
+           self.button_resume = QPushButton("Run")
+        self.button_resume.clicked.connect(self.cmd_resume)
+        self.button_resume.setFixedHeight(button_h)
+        self.button_resume.setShortcut('Shift+r')
 
         self.button_pause = QPushButton("Pause")
         self.button_pause.clicked.connect(self.cmd_pause)
         self.button_pause.setFixedHeight(button_h)
-
-        self.button_resume = QPushButton("Resume")
-        self.button_resume.clicked.connect(self.cmd_resume)
-        self.button_resume.setFixedHeight(button_h)
+        self.button_pause.setShortcut('Shift+p')
 
         self.button_save_data = QPushButton("Save Data")
         self.button_save_data.clicked.connect(self.cmd_save_data)
         self.button_save_data.setFixedHeight(button_h)
+        self.button_save_data.setShortcut('s')
 
         self.button_save_graph = QPushButton("Save Graph")
         self.button_save_graph.clicked.connect(self.cmd_save_graph)
         self.button_save_graph.setFixedHeight(button_h)
+        self.button_save_graph.setShortcut('Shift+s')
 
         self.button_end = QPushButton("End")
         self.button_end.clicked.connect(self.cmd_end)
         self.button_end.setFixedHeight(button_h)
+        self.button_end.setShortcut('Shift+e')
 
         # Create a label for the passed time
         self.time_label = QLabel("0s")
@@ -183,15 +187,15 @@ class Display(QMainWindow):
         self.timer.timeout.connect(self.display_time)
 
         # Start automatically, if there are no controls
+        self.started = False
         if self.config_dict['DAQCntrl'] is False:
             self.button_layout.addWidget(self.time_label)
             self.button_layout.addWidget(self.lagging_label)
             self.cmd_start()
         else:
             # Add the buttons to the layout
-            self.button_layout.addWidget(self.button_start)
-            self.button_layout.addWidget(self.button_pause)
             self.button_layout.addWidget(self.button_resume)
+            self.button_layout.addWidget(self.button_pause)
             self.button_layout.addWidget(self.button_save_data)
             self.button_layout.addWidget(self.button_save_graph)
             self.button_layout.addWidget(self.button_end)
@@ -202,17 +206,18 @@ class Display(QMainWindow):
                 # Start the display
                 self.cmd_start()
             else:
-                # Disable all buttons except the start button
+                # Disable all buttons except the Run/Resume button
+                self.button_resume.setEnabled(True)
                 self.button_pause.setEnabled(False)
-                self.button_resume.setEnabled(False)
                 self.button_save_data.setEnabled(False)
                 self.button_save_graph.setEnabled(False)
                 self.button_end.setEnabled(False)
 
     def cmd_start(self):
-        # Disable the start button
-        self.button_start.setEnabled(False)
+        self.started = True
+        # Disable the Run/Resume button and rename it from Run to Resume
         self.button_resume.setEnabled(False)
+        self.button_resume.setText("Resume")
 
         # Enable all others buttons
         self.button_pause.setEnabled(True)
@@ -276,13 +281,16 @@ class Display(QMainWindow):
         self.timer.stop()
 
     def cmd_resume(self):
-        self.cmd_queue.put('R')
-        self.button_resume.setEnabled(False)
-        self.button_pause.setEnabled(True)
-        # Reset the start time and restart the time
-        self.start_time = QtCore.QDateTime.currentSecsSinceEpoch()
-        self.time_label.setText("0s")
-        self.timer.start()
+        if self.started:
+          self.cmd_queue.put('R')
+          self.button_resume.setEnabled(False)
+          self.button_pause.setEnabled(True)
+          # Reset the start time and restart the time
+          self.start_time = QtCore.QDateTime.currentSecsSinceEpoch()
+          self.time_label.setText("0s")
+          self.timer.start()
+        else:
+          self.cmd_start()
 
     def cmd_save_data(self):
         self.cmd_queue.put('s')
