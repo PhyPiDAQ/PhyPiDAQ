@@ -143,37 +143,38 @@ class Display(QMainWindow):
 
         self.figure = DG.fig
 
+        button_h = 24
         self.button_start = QPushButton("Start")
         self.button_start.clicked.connect(self.cmd_start)
-        self.button_start.setFixedHeight(48)
+        self.button_start.setFixedHeight(button_h)
 
         self.button_pause = QPushButton("Pause")
         self.button_pause.clicked.connect(self.cmd_pause)
-        self.button_pause.setFixedHeight(48)
+        self.button_pause.setFixedHeight(button_h)
 
         self.button_resume = QPushButton("Resume")
         self.button_resume.clicked.connect(self.cmd_resume)
-        self.button_resume.setFixedHeight(48)
+        self.button_resume.setFixedHeight(button_h)
 
         self.button_save_data = QPushButton("Save Data")
         self.button_save_data.clicked.connect(self.cmd_save_data)
-        self.button_save_data.setFixedHeight(48)
+        self.button_save_data.setFixedHeight(button_h)
 
         self.button_save_graph = QPushButton("Save Graph")
         self.button_save_graph.clicked.connect(self.cmd_save_graph)
-        self.button_save_graph.setFixedHeight(48)
+        self.button_save_graph.setFixedHeight(button_h)
 
         self.button_end = QPushButton("End")
         self.button_end.clicked.connect(self.cmd_end)
-        self.button_end.setFixedHeight(48)
+        self.button_end.setFixedHeight(button_h)
 
         # Create a label for the passed time
         self.time_label = QLabel("0s")
-        self.time_label.setFixedHeight(48)
+        self.time_label.setFixedHeight(button_h)
         self.lagging_label = QLabel("<b>Lagging</b>")
         self.lagging_label.setStyleSheet("color: red")
         self.lagging_label.setVisible(False)
-        self.lagging_label.setFixedHeight(48)
+        self.lagging_label.setFixedHeight(button_h)
         # Set the start time to a default value
         self.start_time = QtCore.QDateTime.currentSecsSinceEpoch()
 

@@ -1,5 +1,6 @@
 import multiprocessing as mp
 import time
+import sys
 
 from PyQt5.QtWidgets import QApplication
 
@@ -37,7 +38,7 @@ class DisplayManager:
                 print('Starting subprocess ', prc.name, ' PID=', prc.pid)
 
     def spawnWindow(self):
-        app = QApplication([])
+        app = QApplication([None])
         display = Display(self.interval, self.config_dict, self.cmd_queue, self.data_queue)
         display.show()
         app.exec()
