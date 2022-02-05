@@ -2,7 +2,7 @@
 from __future__ import print_function, division, unicode_literals
 from __future__ import absolute_import
 
-import sys, time, numpy as np
+import os, sys, errno, time, numpy as np
 from scipy import interpolate 
 
 def generateCalibrationFunction(calibd):
@@ -124,3 +124,31 @@ class RingBuffer(object):
       return self.B[self.k : ] + self.B[ : self.k]
     else:
       return self.B[ : self.k]
+
+class fifoManager(object):
+  '''open a fifo (linux pipe) to transfer data to external process
+  '''
+
+  def __init__(self, fname):
+    '''open fifo
+      fname: name of fifo
+    '''
+         
+    try:
+      os.mkfifo(fname)
+    except OSError as e:
+      if e.errno != errno.EEXIST:
+        print("!!! failed to open fifi !!!")
+        print(e)
+        raise
+
+    self.fifo = open(fname, 'w', 1)
+      
+  def __call__(self, d):
+    print(d, end='', file=self.fifo)
+
+  def close(self):
+    self.fifo.close()
+
+
+                

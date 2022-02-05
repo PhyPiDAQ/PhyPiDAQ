@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""  Data visualisation
-     this script reads data samples from PicoScope and 
-     displays data as effective voltage, history display and xy plot
+"""run data acquitiion 
+    
+     calass collects data samples from varoius sensors, (re-)formats 
+     and sends them to a display module, a file, a pipe or a websocket
 
      Usage: ./runPhyPiDAQ.py [<PhyPiConf_file>.daq] [Interval]
 """
@@ -45,20 +46,47 @@ class runPhyPiDAQ(object):
     def __init__(self, verbose=1):
         self.verbose = verbose
 
+    def prompt(self):
+        """print status and prompt for command"""
+
+        class tc:
+          """define terminal color codes"""
+          r = '\033[1;31;48m'
+          g =  '\033[1;32;48m'  # green color
+          b = '\033[1;34;48m'
+          k = '\033[1;30;48m'
+          y = '\033[1;33;48m'   # yellow color
+          p = '\033[1;35;48m'
+          c = '\033[1;36;48m'
+          B = '\033[1;37;48m'   # bold
+          U = '\033[4;37;48m'   # underline
+          E = '\033[1;37;0m'    # end color
+          # promt for user input
+          prompt =  '   type -> P(ause), R(esume), E(nd) or s(ave) + <ret> '
+                     
+        status = tc.b+tc.g+'Running'+tc.E if self.DAQ_ACTIVE else tc.b+tc.y+'Paused '+tc.E
+        print('\r'+ 5*' ' + status + 5*' ' + tc.prompt , end='')
+
+        
     def kbdInput(self, cmdQ):
         """
         Read keyboard input, run as background-thread to avoid blocking
         """
+
         # 1st, remove pyhton 2 vs. python 3 incompatibility for keyboard input
         if sys.version_info[:2] <= (2, 7):
             get_input = raw_input
         else:
             get_input = input
 
+        first=True    
         while self.ACTIVE:
-            kbdtxt = get_input(20 * ' ' + 'type -> P(ause), R(esume), E(nd) or s(ave) + <ret> ')
-            cmdQ.put(kbdtxt)
+            if first:
+                self.prompt()
+                first=False
+            cmdQ.put(get_input())
             kbdtxt = ''
+
 
     def decodeCommand(self, cmdQ):
         """
@@ -92,6 +120,7 @@ class runPhyPiDAQ(object):
                 print('\n buffer storage not active - no action')
             rc = 1
 
+        self.prompt() # update status    
         return rc
 
     def storeBufferData(self, fnam):
@@ -321,13 +350,9 @@ class runPhyPiDAQ(object):
             PhyPiConfDict['DAQfifo'] = self.DAQfifo
         if self.DAQfifo:
             print('PhyPiDAQ: opening fifo ', self.DAQfifo)
-            try:
-                os.mkfifo(self.DAQfifo)
-            except OSError as e:
-                if e.errno != errno.EEXIST: raise
-            self.fifo = open(self.DAQfifo, 'w', 1)
-        else:
-            self.fifo = None
+            print('   start process reading from fifo')            
+            from .helpers import fifoManager
+            self.send_to_fifo = fifoManager(self.DAQfifo)
 
         # Configure a websocket for data transfer
         if 'DAQwebsocket' in PhyPiConfDict:
@@ -336,8 +361,9 @@ class runPhyPiDAQ(object):
             self.DAQwebsocket = None
             PhyPiConfDict['DAQwebsocket'] = self.DAQwebsocket
         if self.DAQwebsocket:
-            from phypidaq.WebsocketManager import WebsocketManager
+            from .WebsocketManager import WebsocketManager
             print('PhyPiDAQ: opening websocket')
+            print('   start process reading websocket')            
             try:
               self.send_to_websocket = WebsocketManager(
                           interval=self.interval,
@@ -431,7 +457,7 @@ class runPhyPiDAQ(object):
             self.PhyPiConfDict['DAQCntrl'] = True  # enable run control buttons
 
         if DisplayModule is not None:
-            from phypidaq.DisplayManager import DisplayManager
+            from .DisplayManager import DisplayManager
             display_manager = DisplayManager(interval=None,
                                              config_dict=self.PhyPiConfDict,
                                              cmd_queue=cmdQ,
@@ -500,19 +526,21 @@ class runPhyPiDAQ(object):
                         self.RBuf.store(self.data[:NChannels].tolist())
 
                     # ... and record all data to disc ...
-                    if self.DatRec: self.DatRec(self.data[:NChannels])
+                    if self.DatRec:
+                        self.DatRec(self.data[:NChannels])
 
-                    # ... write to fifo ...
-                    if self.fifo:
-                        print(','.join(['{0:.3f}'.format(cnt * interval)] +
-                                       ['{0:.4g}'.format(d) for d in self.data[:NChannels]]),
-                              file=self.fifo)
-
+                    if self.DAQfifo is not None or self.DAQwebsocket is not None:
+                      # transform data to csv format
+                        csv_data = ','.join(['{0:.3f}'.format(cnt * interval)] +
+                                   ['{0:.4g}'.format(d) for d in self.data[:NChannels]])+'\n'
+                      # ... write to fifo ...
+                        if self.DAQfifo is not None:
+                            self.send_to_fifo(csv_data)
                     # ... or send to websocket
-                    if self.DAQwebsocket:
-                      self.send_to_websocket(','.join(['{0:.3f}'.format(cnt * interval)] +
-                        ['{0:.4g}'.format(d) for d in self.data[:NChannels]])+'\n')
+                        if self.DAQwebsocket is not None:
+                           self.send_to_websocket(csv_data)
 
+                    # system time-corrected wait  
                     wait()  #
 
                 else:  # paused mode
@@ -537,9 +565,9 @@ class runPhyPiDAQ(object):
             self.ACTIVE = False
             if self.RunLED is not None: self.RunLED.pulse(-1)  # RunLED off
             if self.DatRec: self.DatRec.close()
-            if self.fifo:
-              print('', file = self.fifo) # empty record to inform clients
-              self.fifo.close()
+            if self.DAQfifo:
+              self.send_to_fifo('') # empty record to inform clients
+              self.send_to_fifo.close()
             if self.DAQwebsocket:
               self.send_to_websocket('\n') # empty record to inform clients
               time.sleep(0.1)
