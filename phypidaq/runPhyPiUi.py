@@ -232,7 +232,7 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
       path2File = QtWidgets.QFileDialog.getOpenFileName(None,
          'PhyPi config', self.ConfDir, 'DAQ(*.daq)')
       FileName = str(path2File[0]).strip()
-      if FileName is not '' :
+      if FileName != '' :
         # print('selected File ' + str(FileName) )
       # remember new config directory
         self.ConfDir = os.path.dirname(FileName)
@@ -242,7 +242,7 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
       path2File = QtWidgets.QFileDialog.getOpenFileName(None,
           'Device config', self.ConfDir, 'yaml(*.yaml)')
       FileName = str(path2File[0]).strip()
-      if FileName is not '' :
+      if FileName != '' :
         # print('selected File ' + str(FileName) )
         self.setDevConfig_fromFile(0, FileName)
 
@@ -250,7 +250,7 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
       path2File = QtWidgets.QFileDialog.getOpenFileName(None,
           'Device config', self.ConfDir, 'yaml(*.yaml)')
       FileName = str(path2File[0]).strip()
-      if FileName is not '' :
+      if FileName != '' :
         # print('selected File ' + str(FileName) )
         self.setDevConfig_fromFile(1, FileName)
 
@@ -258,14 +258,14 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
       path2File = QtWidgets.QFileDialog.getOpenFileName(None,
           'Device config', self.ConfDir, 'yaml(*.yaml)')
       FileName = str(path2File[0]).strip()
-      if FileName is not '' :
+      if FileName != '' :
         # print('selected File ' + str(FileName) )
         self.setDevConfig_fromFile(2, FileName)
 
     def selectWD(self):
       path2WD = QtWidgets.QFileDialog.getExistingDirectory(None, '~')
       WDname = str(path2WD).strip()
-      if WDname is not '' :
+      if WDname != '' :
         # print('selected Directory' + WDname )
          self.lE_WorkDir.setText(WDname)
          self.WDname = WDname
@@ -380,7 +380,7 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
       path2File = QtWidgets.QFileDialog.getSaveFileName(None,
          'save configuration as', _file, 'daq(*.daq)')
       fullDAQfile = str(path2File[0]).strip()
-      if  fullDAQfile is not '' :
+      if  fullDAQfile != '' :
       # remember new config directory
         self.ConfDir = os.path.dirname(fullDAQfile)
         DAQfile = os.path.basename(fullDAQfile)
