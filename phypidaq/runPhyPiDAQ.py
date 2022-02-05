@@ -26,13 +26,16 @@ from math import *
 from scipy import interpolate
 
 # Display module
-from phypidaq.DisplayManager import DisplayManager
+## only imported if needed: phypidaq.DisplayManager import DisplayManager
 # Webserver
-from phypidaq.WebsocketManager import WebsocketManager
+## module .WebsocketManager only imported if needed
 # data recorder
 from .DataRecorder import DataRecorder
 # other hepler functions
-from .helpers import RingBuffer, DAQwait, generateCalibrationFunction
+from .helpers import DAQwait
+# modules imported only if needed
+## from .helpers import generateCalibrationFunction
+## from .helpers import RingBuffer
 
 # ----- class for running data acquisition --------------------
 
@@ -227,6 +230,7 @@ class runPhyPiDAQ(object):
         # set up calibration Functions
         CalibFuncts = None
         if 'ChanCalib' in PhyPiConfDict:
+            from .helpers import generateCalibrationFunction
             CalibFuncts = [None] * NHWChannels
             calibData = PhyPiConfDict['ChanCalib']
             if self.verbose > 1:
@@ -304,6 +308,7 @@ class runPhyPiDAQ(object):
             PhyPiConfDict['bufferData'] = self.bufferFile
             # set-up a ring buffer
         if self.bufferFile is not None:
+            from .helpers import RingBuffer
             self.RBuf = RingBuffer(PhyPiConfDict['NHistoryPoints'])
         else:
             self.RBuf = None
@@ -331,6 +336,7 @@ class runPhyPiDAQ(object):
             self.DAQwebsocket = None
             PhyPiConfDict['DAQwebsocket'] = self.DAQwebsocket
         if self.DAQwebsocket:
+            from phypidaq.WebsocketManager import WebsocketManager
             print('PhyPiDAQ: opening websocket')
             try:
               self.send_to_websocket = WebsocketManager(
@@ -425,6 +431,7 @@ class runPhyPiDAQ(object):
             self.PhyPiConfDict['DAQCntrl'] = True  # enable run control buttons
 
         if DisplayModule is not None:
+            from phypidaq.DisplayManager import DisplayManager
             display_manager = DisplayManager(interval=None,
                                              config_dict=self.PhyPiConfDict,
                                              cmd_queue=cmdQ,
