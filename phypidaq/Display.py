@@ -40,7 +40,7 @@ class Display(QMainWindow):
         # Setup a basic window
         super().__init__()
         self.setWindowTitle("PhyPiDAQ Display")
-        self.setMinimumSize(500, 300)
+        self.setMinimumSize(600, 300)
 
         # Center the window on the window
         qr = self.frameGeometry()
@@ -52,6 +52,7 @@ class Display(QMainWindow):
         self.setCentralWidget(self._main)
         layout = QtWidgets.QVBoxLayout(self._main)
         self.button_layout = QtWidgets.QHBoxLayout()
+
 
         # Setup configuration
         self.cmd_queue = cmd_queue
@@ -144,41 +145,50 @@ class Display(QMainWindow):
         self.figure = DG.fig
 
         button_h = 24
+        button_w = 100
         if self.config_dict['startActive']:
-           self.button_resume = QPushButton("Resume")
+           self.button_resume = QPushButton("&Resume")
         else:
-           self.button_resume = QPushButton("Run")
+           self.button_resume = QPushButton("&Run")
         self.button_resume.clicked.connect(self.cmd_resume)
         self.button_resume.setFixedHeight(button_h)
+        self.button_resume.setFixedWidth(button_w)
         self.button_resume.setShortcut('Shift+r')
+        self.button_resume.setShortcut('r')
 
-        self.button_pause = QPushButton("Pause")
+        self.button_pause = QPushButton("&Pause")
         self.button_pause.clicked.connect(self.cmd_pause)
         self.button_pause.setFixedHeight(button_h)
+        self.button_pause.setFixedWidth(button_w)
         self.button_pause.setShortcut('Shift+p')
 
-        self.button_save_data = QPushButton("Save Data")
+        self.button_save_data = QPushButton("&Save Data")
         self.button_save_data.clicked.connect(self.cmd_save_data)
         self.button_save_data.setFixedHeight(button_h)
-        self.button_save_data.setShortcut('s')
+        self.button_save_data.setFixedWidth(button_w)
+        self.button_save_data.setShortcut('S')
 
-        self.button_save_graph = QPushButton("Save Graph")
+        self.button_save_graph = QPushButton("&save Graph")
         self.button_save_graph.clicked.connect(self.cmd_save_graph)
         self.button_save_graph.setFixedHeight(button_h)
-        self.button_save_graph.setShortcut('Shift+s')
+        self.button_save_graph.setFixedWidth(button_w)
+        self.button_save_graph.setShortcut('s')
 
-        self.button_end = QPushButton("End")
+        self.button_end = QPushButton("&End")
         self.button_end.clicked.connect(self.cmd_end)
         self.button_end.setFixedHeight(button_h)
+        self.button_end.setFixedWidth(button_w)
         self.button_end.setShortcut('Shift+e')
+        self.button_end.setShortcut('e')
 
         # Create a label for the passed time
         self.time_label = QLabel("0s")
         self.time_label.setFixedHeight(button_h)
-        self.lagging_label = QLabel("<b>Lagging</b>")
+        self.time_label.setFixedWidth(button_w)
+        self.lagging_label = QLabel('')
         self.lagging_label.setStyleSheet("color: red")
-        self.lagging_label.setVisible(False)
         self.lagging_label.setFixedHeight(button_h)
+        self.lagging_label.setFixedWidth(button_w)
         # Set the start time to a default value
         self.start_time = QtCore.QDateTime.currentSecsSinceEpoch()
 
@@ -194,13 +204,20 @@ class Display(QMainWindow):
             self.cmd_start()
         else:
             # Add the buttons to the layout
-            self.button_layout.addWidget(self.button_resume)
-            self.button_layout.addWidget(self.button_pause)
-            self.button_layout.addWidget(self.button_save_data)
-            self.button_layout.addWidget(self.button_save_graph)
-            self.button_layout.addWidget(self.button_end)
-            self.button_layout.addWidget(self.time_label)
-            self.button_layout.addWidget(self.lagging_label)
+            self.button_layout.addWidget(self.button_resume,
+                                         alignment=QtCore.Qt.AlignLeft)
+            self.button_layout.addWidget(self.button_pause,
+                                         alignment=QtCore.Qt.AlignLeft)
+            self.button_layout.addWidget(self.button_save_data,
+                                         alignment=QtCore.Qt.AlignLeft)
+            self.button_layout.addWidget(self.button_save_graph,
+                                         alignment=QtCore.Qt.AlignLeft)
+            self.button_layout.addWidget(self.button_end,
+                                         alignment=QtCore.Qt.AlignLeft)
+            self.button_layout.addWidget(self.time_label,
+                                         alignment=QtCore.Qt.AlignLeft)
+            self.button_layout.addWidget(self.lagging_label,
+                                         alignment=QtCore.Qt.AlignRight)
 
             if self.config_dict['startActive']:
                 # Start the display
@@ -257,18 +274,19 @@ class Display(QMainWindow):
                 if delta_time - self.interval < self.interval * 0.01:
                     if lagging:
                         lagging = False
-                        self.lagging_label.setVisible(lagging)
+                        self.lagging_label.setText('')
                 else:
                     if not lagging:
                         lagging = True
-                        self.lagging_label.setVisible(lagging)
+                        self.lagging_label.setText('! lagging !')
                 # Update the timestamp
                 timestamp_last = timestamp
 
             # End of yieldEvt_fromQ
             sys.exit()
 
-        self.animation = anim.FuncAnimation(DG.fig, DG, yield_event_from_queue, interval=50, repeat=True, blit=True)
+        self.animation = anim.FuncAnimation(DG.fig, DG, yield_event_from_queue,
+                                            interval=50, repeat=True, blit=True)
 
     def cmd_end(self):
         self.cmd_queue.put('E')
