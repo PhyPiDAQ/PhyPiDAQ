@@ -1,0 +1,20 @@
+name: Python Code Check
+on: [push, pull_request]
+jobs:
+  check_linting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - name: Display Python version
+        run: python --version
+      - name: Install linting package
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8
+      - name: Run linting
+        run: flake8 --count --show-source --statistics --max-line-length=120 --extend-ignore=F403,F405,F821
