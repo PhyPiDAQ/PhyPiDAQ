@@ -2,6 +2,7 @@ name: Python Code Check
 on: [push, pull_request]
 jobs:
   check_linting:
+    name: Check Python linting
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
