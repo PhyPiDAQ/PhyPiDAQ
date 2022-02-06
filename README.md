@@ -1,6 +1,6 @@
 # PhyPiDAQ
 
-**Summary in English language**
+### Summary in English language
 
 The PhyPiDAQ project aims to provide student access to state-of-the-art measurement technology and data acquisition
 tools. As it is based on standardized protocols and hardware, it can not only be cheaper to set up than similar offers
@@ -13,7 +13,7 @@ school it is also an amazing base for STEM based competitions like
 This is the software package for data acquisition and its documentation. If you are looking for hardware guides, build
 instructions or educational concepts, please check out our other [repositories](https://github.com/PhyPiDAQ).
 
-**Übersicht in Deutscher Sprache**
+### Übersicht in Deutscher Sprache
 
 Das PhyPiDAQ-Projekt zielt darauf ab, Studierenden und SchülerInnen Zugang zu modernster Messtechnik und Datenerfassung
 zu verschaffen. Da es auf offenen, standardisierten Protokollen und und leicht verfügbarer Hardware basiert, kann es
@@ -30,12 +30,12 @@ Hardware-Beschreibungen, Bauanleitungen oder pädagogischen Konzepten suchen, sc
 ## Quickstart
 
 This is a quickstart guide on how to install the software package and run the demo.
-The following requirements need to be met to work 
+The following requirements need to be met to work
 
- - Linux/Unix operating system
- - Python3 runtime
- - `git`-package installed
- - If you want to use the sensor, you need a Raspberry Pi
+- Linux/Unix operating system
+- Python3 runtime
+- `git`-package installed
+- If you want to use the sensor, you need a Raspberry Pi
 
 1. Open a terminal and go to the folder, where the software should be installed.
 2. Download the latest release using the following command
@@ -45,11 +45,11 @@ The following requirements need to be met to work
 ```
 
 3. Now we need to install all required dependencies. Access the folder and execute the `installlibs.sh`. During the
-   installation process you will be promoted, if you want to install the sensor drivers. They are not required to run
-   the demo, but helpful for further use. As some drivers work exclusively on the Raspberry Pi, we recommend answering
-   it only with `Y` if you are running on a Raspberry Pi and with `n` in all other cases.
-   Additionally, you will be asked if you want to install the PicoScope drivers, where you need to enter a `Y` for yes
-   or `n` for no.
+ installation process you will be promoted, if you want to install the sensor drivers. They are not required to run
+ the demo, but helpful for further use. As some drivers work exclusively on the Raspberry Pi, we recommend answering
+ it only with `Y` if you are running on a Raspberry Pi and with `n` in all other cases.
+ Additionally, you will be asked if you want to install the PicoScope drivers, where you need to enter a `Y` for yes
+ or `n` for no.
 
 ```shell
   cd PhyPiDAQ
@@ -57,7 +57,7 @@ The following requirements need to be met to work
 ```
 
 4. Run the demo by starting the `run_phypi.py`. It will start the application and replay some recorded data in a window,
-   as specified in the `PhyPiDemo.daq`.
+ as specified in the `PhyPiDemo.daq`.
 
 ```shell
   ./run_phypi.py
@@ -72,6 +72,7 @@ This is a brief summary of all sensors, that are currently supported. Next to th
 list of dimensions, that can be measured. For more information
 
 List of actively supported sensors
+
 - ADS1115 4 channel, 16 bit Analog-to-Digital Converter
 - MCP3009 10 bit Analog-to-Digital Converter
 - MCP3208 12 bit Analog-to-Digital Converter
@@ -95,6 +96,7 @@ List of actively supported sensors
 - rate measurements via GPIO pins
 
 Legacy support
+
 - BMP085 temperature, pressure
 - BMP180 temperature, pressure
 
