@@ -12,7 +12,7 @@ class MAX31855Config(object):
   ''' MAX31855 configuration and interface'''
 
   def __init__(self, confdict = None):
-    if confdict==None: confdict={}
+    if confdict is None: confdict={}
           
 # -- number of Channels
     self.NChannels = 1

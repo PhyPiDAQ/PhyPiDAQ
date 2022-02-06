@@ -11,7 +11,7 @@ class ReplayConfig(object):
   '''
 
   def __init__(self, confdict = None):
-    if confdict==None: confdict={}
+    if confdict is None: confdict={}
           
     if "csvFile" in confdict:
       self.csvFile = confdict["csvFile"]
@@ -33,7 +33,7 @@ class ReplayConfig(object):
   def init(self):
 
 # open data file
-    if self.csvFile == None:
+    if self.csvFile is None:
       d = pkgutil.get_data('phypidaq', 'PhyPiDemoData.csv').decode('utf-8')
     else:      
       f = open(os.path.expanduser(self.csvFile),'r')
@@ -44,7 +44,7 @@ class ReplayConfig(object):
     h0 = rdata[0][1:] # remove leading '#'
     h1 = rdata[1][1:]
     tags = rdata[2][1:].split(self.csvSeparator)
-    if self.NChannels == None: self.NChannels = len(tags)
+    if self.NChannels is None: self.NChannels = len(tags)
 
     self.data = np.loadtxt(rdata, dtype=np.float32,
                            delimiter=self.csvSeparator,

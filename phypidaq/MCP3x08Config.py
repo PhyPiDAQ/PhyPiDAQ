@@ -14,7 +14,7 @@ class MCP3x08Config(object):
   '''ADC MCP3008/3208 configuration and interface'''
 
   def __init__(self, confdict = None):
-    if confdict==None: confdict={}
+    if confdict is None: confdict={}
 
     if 'ADCChannels' in confdict:
       self.ADCChannels = confdict['ADCChannels']

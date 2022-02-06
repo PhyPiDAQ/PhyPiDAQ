@@ -31,7 +31,7 @@ class pulseGPIO(object):
     '''Args: pin: GPIO pin number
              cmdQ: multiprocessing queue'''
     gpio.setmode(gpio.BCM)
-    if pin == None:
+    if pin is None:
       print("pulseGPIO config error: no GPIO Pin specified - exiting")
       sys.exit(1)
     self.pin = pin
@@ -57,7 +57,7 @@ class pulseGPIO(object):
     #    ton > 0: pin on for ton sec
     #    ton = 0: pin on
     #    ton < 0: pin off
-    if ton==None: ton = 0.05
+    if ton is None: ton = 0.05
     if self.Q.empty(): self.Q.put(ton)
     
   def close(self):

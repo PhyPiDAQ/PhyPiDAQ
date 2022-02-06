@@ -13,7 +13,7 @@ class groveADCConfig(object):
   '''grove ADC configuration and interface'''
 
   def __init__(self, confdict = None):
-    if confdict==None: confdict={}
+    if confdict is None: confdict={}
 
     if 'ADCChannels' in confdict:
       self.ADCChannels = confdict['ADCChannels']

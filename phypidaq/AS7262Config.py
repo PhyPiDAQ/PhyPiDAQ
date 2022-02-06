@@ -15,7 +15,7 @@ class AS7262Config(object):
   ''' AS7262 configuration and interface'''
 
   def __init__(self, confdict = None):
-    if confdict == None: confdict={}
+    if confdict is None: confdict={}
           
 # -- number of Channels
     self.NChannels = 6

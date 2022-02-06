@@ -24,7 +24,7 @@ class GDK101Config(object):
   
   def __init__(self, confdict = None):
     self.I2CADDR = I2CADDR
-    if confdict==None: confdict={}
+    if confdict is None: confdict={}
     if 'I2CADDR' in confdict:
       self.I2CADDR = confdict['I2CADDR']
       print("GDK101: I2C address set to %x "%(self.I2CADDR) )

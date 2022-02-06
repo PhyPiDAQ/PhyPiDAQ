@@ -11,7 +11,7 @@ class GPIOCount(object):
   '''Pulse Counting on GPIO pins, configuration and interface'''
 
   def __init__(self, confdict = None):
-    if confdict==None: confdict={}
+    if confdict is None: confdict={}
 
     if 'GPIOpins' in confdict:
       self.GPIOpins = confdict['GPIOpins']

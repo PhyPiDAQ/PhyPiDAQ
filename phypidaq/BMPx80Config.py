@@ -20,7 +20,7 @@ class BMPx80Config(object):
   '''digital thermometer DS18B20Config configuration and interface'''
   def __init__(self, confdict = None):
     self.BMP_I2CADDR = BMP_I2CADDR
-    if confdict==None: confdict={}
+    if confdict is None: confdict={}
     if 'I2CADDR' in confdict:
       self.BMP_I2CADDR = confdict['I2CADDR']
       print("BMPx80: I2C address set to %x "%(self.BMP_I2CADDR) )
@@ -460,7 +460,7 @@ class BME280(object):
   def __init__(self, address=BMP_I2CADDR, i2c=None):
     self.DEVICE = address
 
-    if i2c==None:
+    if i2c is None:
       self.bus = smbus.SMBus(1) # Rev 2 Pi, Pi 2 & Pi 3 uses bus 1
                                 # Rev 1 Pi uses bus 0
     else:

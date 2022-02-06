@@ -13,7 +13,7 @@ class MLX90393Config(object):
   '''digital magnetometer MLX90393 configuration and interface'''
 
   def __init__(self, confdict = None):
-    if confdict==None: confdict={}
+    if confdict is None: confdict={}
   # -- number of Channels
     self.NChannels = 3
     self.ChanNams = ['Bx','By','Bz']

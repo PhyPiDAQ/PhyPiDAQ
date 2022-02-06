@@ -13,7 +13,7 @@ class ADS1115Config(object):
   '''ADC ADS1115Config configuration and interface'''
 
   def __init__(self, confdict = None):
-    if confdict==None: confdict={}
+    if confdict is None: confdict={}
 
 # -- i2c address
     if 'I2CADDR' in confdict:

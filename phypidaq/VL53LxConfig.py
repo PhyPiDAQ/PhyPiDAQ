@@ -16,7 +16,7 @@ class VL53LxConfig(object):
   ''' VL53L1X and FL53L0X configuration and interface'''
 
   def __init__(self, confdict = None):
-    if confdict == None: confdict={}
+    if confdict is None: confdict={}
           
 # -- number of Channels
 #    if 'NChannels' in confdict:

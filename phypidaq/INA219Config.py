@@ -36,7 +36,7 @@ class INA219Config(object):
             3: Gain.DIV_8_320MV,
         }
 
-        if confdict == None:
+        if confdict is None:
             confdict = {}
         if 'I2CADDR' in confdict:
             self.I2CADDR = confdict['I2CADDR']

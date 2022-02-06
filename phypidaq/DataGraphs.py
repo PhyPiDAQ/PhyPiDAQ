@@ -237,7 +237,7 @@ class DataGraphs(object):
 
   def __call__( self, data ):
     # update graphics with actual data
-    if data != None: 
+    if data is not None: 
       n, dat = data
 
       k = (n-1) % self.Npoints
@@ -268,7 +268,7 @@ class DataGraphs(object):
           i1 = max(0, self.Npoints - n)           
           self.XYgraphs[i].set_data( self.h[cx, i1:],
                                      self.h[cy, i1:] )
-    # -- end if != None
+    # -- end if is not None
     return self.bgraphs + self.graphs + self.XYgraphs + (self.animtxt,)  
 #- -end def DataGraphs.__call__
 #-end class DataGraphs

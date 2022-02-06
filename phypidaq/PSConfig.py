@@ -11,7 +11,7 @@ class PSConfig(object):
   '''PicoScope configuration and interface'''
 
   def __init__(self, confdict = None):
-    if confdict == None:
+    if confdict is None:
       print('No configuration specified for PicoScope - exiting')
       sys.exit(1) 
     self.confdict = confdict

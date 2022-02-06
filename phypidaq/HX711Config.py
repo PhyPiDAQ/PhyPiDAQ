@@ -8,7 +8,7 @@ class HX711Config(object):
   '''ADC HX711Config configuration and interface'''
 
   def __init__(self, confdict = None):
-    if confdict==None: confdict={}
+    if confdict is None: confdict={}
 
     self.OFFSET = 0
     self.GAIN = 0

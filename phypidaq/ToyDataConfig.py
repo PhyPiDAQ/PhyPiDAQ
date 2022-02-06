@@ -9,7 +9,7 @@ class ToyDataConfig(object):
   '''
 
   def __init__(self, confdict = None):
-    if confdict==None: confdict={}
+    if confdict is None: confdict={}
           
 # -- number of Channels
     if "NChannels" in confdict:

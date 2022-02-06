@@ -55,7 +55,7 @@ def kbdwait(prompt = None):
   else: 
     get_input = input
  #  wait for input
-  if prompt == None:
+  if prompt is None:
     return get_input(50*' '+'type <ret> to exit -> ')
   else:
     return get_input(prompt)
@@ -78,7 +78,7 @@ class DAQwait(object):
          TO:   start time of action to be timed     
                  if not given, take end-time of last wait
     '''
-    if T0 != None: self.T0 = T0    
+    if T0 is not None: self.T0 = T0    
     dtcor = self.dt - time.time() + self.T0
     if dtcor > 0. :  
       time.sleep(dtcor) 
