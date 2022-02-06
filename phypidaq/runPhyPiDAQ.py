@@ -563,6 +563,7 @@ class runPhyPiDAQ(object):
 
         finally:
             self.ACTIVE = False
+            print("\n*==* PhyPiDAQ Terminating ...")
             if self.RunLED is not None: self.RunLED.pulse(-1)  # RunLED off
             if self.DatRec: self.DatRec.close()
             if self.DAQfifo:
