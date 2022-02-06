@@ -30,5 +30,5 @@ T0 = time.time()
 while True:
     device.acquireData(data)
     dT = time.time() - T0
-    print('%.2g, %.4g°C %.6ghPa %.4gm %.2g%% %.2gOhm' %(dT, data[0], data[1], data[2], data[3], data[4]))
+    print('%.2g, %.4g°C %.6ghPa %.4gm %.2g%% %.2gOhm' % (dT, data[0], data[1], data[2], data[3], data[4]))
     time.sleep(dt)

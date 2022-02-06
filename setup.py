@@ -27,6 +27,7 @@ class PyTest(TestCommand):
         errcode = pytest.main(self.pytest_args)
         sys.exit(errcode)
 
+
 setup(
     name='phypidaq',
     version=phypidaq.__version__,
@@ -36,18 +37,18 @@ setup(
     package_data={'phypidaq': ['PhyPiDemoData.csv']},
     scripts=[],
     classifiers=[
-    'Development Status :: 5 - stable',
-    # Specify the Python versions you support here. In particular, ensure
-    # that you indicate whether you support Python 2, Python 3 or both.
-    'Programming Language :: Python :: 2.7',
-    'Programming Language :: Python :: 3.5',
+        'Development Status :: 5 - stable',
+        # Specify the Python versions you support here. In particular, ensure
+        # that you indicate whether you support Python 2, Python 3 or both.
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.5',
     ],
     url='https://github.com/PhyPiDAQ',
     license='MIT BSD 2-Clause',
     description='Data AcQuisition and analysis for Physics education with Raspberry Pi',
     long_description=open('README.md').read(),
-    setup_requires=[\
+    setup_requires=[
         "NumPy >= 1.13.3",
         "SciPy >= 0.18.1",
-        "matplotlib >= 2.0.0",]
+        "matplotlib >= 2.0.0"]
 )

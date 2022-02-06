@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""run data acquitiion 
-    
-     calass collects data samples from varoius sensors, (re-)formats 
+"""run data acquisition
+
+     class collects data samples from various sensors, (re-)formats
      and sends them to a display module, a file, a pipe or a websocket
 
      Usage: ./runPhyPiDAQ.py [<PhyPiConf_file>.daq] [Interval]
@@ -32,7 +32,7 @@ from scipy import interpolate
 ## module .WebsocketManager only imported if needed
 # data recorder
 from .DataRecorder import DataRecorder
-# other hepler functions
+# other helper functions
 from .helpers import DAQwait
 # modules imported only if needed
 ## from .helpers import generateCalibrationFunction
@@ -50,28 +50,25 @@ class runPhyPiDAQ(object):
         """print status and prompt for command"""
 
         class tc:
-          """define terminal color codes"""
-          r = '\033[1;31;48m'
-          g =  '\033[1;32;48m'  # green color
-          b = '\033[1;34;48m'
-          k = '\033[1;30;48m'
-          y = '\033[1;33;48m'   # yellow color
-          p = '\033[1;35;48m'
-          c = '\033[1;36;48m'
-          B = '\033[1;37;48m'   # bold
-          U = '\033[4;37;48m'   # underline
-          E = '\033[1;37;0m'    # end color
-          # promt for user input
-          prompt =  '   type -> P(ause), R(esume), E(nd) or s(ave) + <ret> '
-                     
-        status = tc.b+tc.g+'Running'+tc.E if self.DAQ_ACTIVE else tc.b+tc.y+'Paused '+tc.E
-        print('\r'+ 5*' ' + status + 5*' ' + tc.prompt , end='')
+            """define terminal color codes"""
+            r = '\033[1;31;48m'
+            g = '\033[1;32;48m'  # green color
+            b = '\033[1;34;48m'
+            k = '\033[1;30;48m'
+            y = '\033[1;33;48m'   # yellow color
+            p = '\033[1;35;48m'
+            c = '\033[1;36;48m'
+            B = '\033[1;37;48m'   # bold
+            U = '\033[4;37;48m'   # underline
+            E = '\033[1;37;0m'    # end color
+            # prompt for user input
+            prompt = '   type -> P(ause), R(esume), E(nd) or s(ave) + <ret> '
 
-        
+        status = tc.b+tc.g+'Running'+tc.E if self.DAQ_ACTIVE else tc.b+tc.y+'Paused '+tc.E
+        print('\r' + 5*' ' + status + 5*' ' + tc.prompt, end='')
+
     def kbdInput(self, cmdQ):
-        """
-        Read keyboard input, run as background-thread to avoid blocking
-        """
+        """ Read keyboard input, run as background-thread to avoid blocking """
 
         # 1st, remove pyhton 2 vs. python 3 incompatibility for keyboard input
         if sys.version_info[:2] <= (2, 7):
@@ -79,14 +76,13 @@ class runPhyPiDAQ(object):
         else:
             get_input = input
 
-        first=True    
+        first = True
         while self.ACTIVE:
             if first:
                 self.prompt()
-                first=False
+                first = False
             cmdQ.put(get_input())
             kbdtxt = ''
-
 
     def decodeCommand(self, cmdQ):
         """
@@ -120,7 +116,7 @@ class runPhyPiDAQ(object):
                 print('\n buffer storage not active - no action')
             rc = 1
 
-        self.prompt() # update status    
+        self.prompt()  # update status
         return rc
 
     def storeBufferData(self, fnam):
@@ -278,9 +274,10 @@ class runPhyPiDAQ(object):
             Formulae = PhyPiConfDict['ChanFormula']
             NFormulae = len(Formulae)
             if self.verbose > 1:
-                print('applying fromulae:')
+                print('applying formulae:')
                 for ifc in range(NFormulae):
-                    if Formulae[ifc]: print('   FChan ', ifc, '   ', Formulae[ifc])
+                    if Formulae[ifc]:
+                        print('   FChan ', ifc, '   ', Formulae[ifc])
         self.Formulae = Formulae
         self.NFormulae = NFormulae
         # re-set number of Channels if Formulae are defined
@@ -294,7 +291,8 @@ class runPhyPiDAQ(object):
             else:
                 self.ChanNams = self.ChanNams[:nc]
             for ifc in range(NFormulae):
-                if Formulae[ifc]: self.ChanNams[ifc] = 'F' + str(ifc)
+                if Formulae[ifc]:
+                    self.ChanNams[ifc] = 'F' + str(ifc)
             PhyPiConfDict['ChanNams'] = self.ChanNams
 
         if 'ChanUnits' not in PhyPiConfDict:
@@ -324,12 +322,13 @@ class runPhyPiDAQ(object):
         if PhyPiConfDict['DataFile'] is not None:
             FName = PhyPiConfDict['DataFile']
             self.DatRec = DataRecorder(FName, PhyPiConfDict)
-            if self.verbose:  print('  storing data to file ', FName)
+            if self.verbose:
+                print('  storing data to file ', FName)
         else:
             self.DatRec = None
             PhyPiConfDict['DataFile'] = self.DatRec
 
-        # buffer latest data (number of data points given by NHistoryPoints)
+        # buffer the latest data (number of data points given by NHistoryPoints)
         if 'bufferData' in PhyPiConfDict:
             self.bufferFile = PhyPiConfDict['bufferData']
         else:
@@ -350,7 +349,7 @@ class runPhyPiDAQ(object):
             PhyPiConfDict['DAQfifo'] = self.DAQfifo
         if self.DAQfifo:
             print('PhyPiDAQ: opening fifo ', self.DAQfifo)
-            print('   start process reading from fifo')            
+            print('   start process reading from fifo')
             from .helpers import fifoManager
             self.send_to_fifo = fifoManager(self.DAQfifo)
 
@@ -363,16 +362,14 @@ class runPhyPiDAQ(object):
         if self.DAQwebsocket:
             from .WebsocketManager import WebsocketManager
             print('PhyPiDAQ: opening websocket')
-            print('   start process reading websocket')            
+            print('   start process reading websocket')
             try:
-              self.send_to_websocket = WebsocketManager(
-                          interval=self.interval,
-                          config_dict=PhyPiConfDict)
+                self.send_to_websocket = WebsocketManager(interval=self.interval, config_dict=PhyPiConfDict)
             except Exception as e:
-              print("!!! failed to set up websocket !!!")  
-              print(e)
-              exit(1)
-              
+                print("!!! failed to set up websocket !!!")
+                print(e)
+                exit(1)
+
         # LED indicators on GPIO pins
         if 'RunLED' in PhyPiConfDict or 'ReadoutLED' in PhyPiConfDict:
             from .pulseGPIO import pulseGPIO
@@ -482,7 +479,9 @@ class runPhyPiDAQ(object):
         self.data = np.zeros(max(NChannels, self.NHWChannels))
 
         tflash = min(0.2, interval / 2.)  # pulse duration for readout LED
-        if self.RunLED: self.RunLED.pulse(0)  # switch on status LED
+        if self.RunLED:
+            self.RunLED.pulse(0)  # switch on status LED
+
         # -- LOOP
         try:
             cnt = 0
@@ -499,9 +498,11 @@ class runPhyPiDAQ(object):
                     while not datQ.empty():  # check for command input
                         if not cmdQ.empty():
                             cmd = self.decodeCommand(cmdQ)
-                            if cmd: break  # got valid command
+                            if cmd:
+                                break  # got valid command
                         time.sleep(longInterval / 300.)
-                    if cmd >= 2: break  # end command received
+                    if cmd >= 2:
+                        break  # end command received
 
                 if self.DAQ_ACTIVE:
                     cnt += 1
@@ -509,13 +510,16 @@ class runPhyPiDAQ(object):
                     for i, DEV in enumerate(self.DEVs):
                         DEV.acquireData(self.data[self.ChanIdx_ofDevice[i]:])
 
-                    if self.ReadoutLED: self.ReadoutLED.pulse(tflash)  # pulse readout LED
+                    if self.ReadoutLED:
+                        self.ReadoutLED.pulse(tflash)  # pulse readout LED
 
                     # eventually calibrate raw readings
-                    if self.CalibFuncts: self.apply_calibs()
+                    if self.CalibFuncts:
+                        self.apply_calibs()
 
-                    # eventualy apply fromula(e)
-                    if self.Formulae: self.apply_formulae()
+                    # eventually apply formula(e)
+                    if self.Formulae:
+                        self.apply_formulae()
 
                     # display data
                     if DisplayModule is not None:
@@ -530,24 +534,25 @@ class runPhyPiDAQ(object):
                         self.DatRec(self.data[:NChannels])
 
                     if self.DAQfifo is not None or self.DAQwebsocket is not None:
-                      # transform data to csv format
+                        # transform data to csv format
                         csv_data = ','.join(['{0:.3f}'.format(cnt * interval)] +
                                    ['{0:.4g}'.format(d) for d in self.data[:NChannels]])+'\n'
-                      # ... write to fifo ...
+                        # ... write to fifo ...
                         if self.DAQfifo is not None:
                             self.send_to_fifo(csv_data)
-                    # ... or send to websocket
+                        # ... or send to websocket
                         if self.DAQwebsocket is not None:
-                           self.send_to_websocket(csv_data)
+                            self.send_to_websocket(csv_data)
 
-                    # system time-corrected wait  
-                    wait()  #
+                    # system time-corrected wait
+                    wait()
 
                 else:  # paused mode
                     time.sleep(min(interval / 10., 0.2))
 
                 # check for control input (from keyboard or display module)
-                if not cmdQ.empty(): self.decodeCommand(cmdQ)
+                if not cmdQ.empty():
+                    self.decodeCommand(cmdQ)
 
             # -- end while ACTIVE
 
@@ -564,20 +569,25 @@ class runPhyPiDAQ(object):
         finally:
             self.ACTIVE = False
             print("\n*==* PhyPiDAQ Terminating ...")
-            if self.RunLED is not None: self.RunLED.pulse(-1)  # RunLED off
-            if self.DatRec: self.DatRec.close()
+            if self.RunLED is not None:
+                self.RunLED.pulse(-1)  # RunLED off
+            if self.DatRec:
+                self.DatRec.close()
             if self.DAQfifo:
-              self.send_to_fifo('') # empty record to inform clients
-              self.send_to_fifo.close()
+                self.send_to_fifo('')  # empty record to inform clients
+                self.send_to_fifo.close()
             if self.DAQwebsocket:
-              self.send_to_websocket('\n') # empty record to inform clients
-              time.sleep(0.1)
-              self.send_to_websocket.close()
+                self.send_to_websocket('\n')  # empty record to inform clients
+                time.sleep(0.1)
+                self.send_to_websocket.close()
             for DEV in self.DEVs:
                 DEV.closeDevice()  # close down hardware device
-            if DisplayModule is not None: display_manager.close()
-            if self.RunLED is not None: self.RunLED.close()
-            if self.ReadoutLED is not None: self.ReadoutLED.close()
+            if DisplayModule is not None:
+                display_manager.close()
+            if self.RunLED is not None:
+                self.RunLED.close()
+            if self.ReadoutLED is not None:
+                self.ReadoutLED.close()
             time.sleep(1.)
 
             if self.verbose:

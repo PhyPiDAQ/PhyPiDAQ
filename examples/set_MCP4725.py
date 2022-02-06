@@ -18,12 +18,12 @@ if len(sys.argv) > 1:
 
 VB = 5.
 
-print('setting Voltage=%.2f' %(V) )
+print('setting Voltage=%.2f' % V)
 try:
-    dac.set_voltage( int(V/VB * 4095))  # 
+    dac.set_voltage(int(V/VB * 4095))
 
-except  KeyboardInterrupt:
-    print ("error setting Voltage")
+except KeyboardInterrupt:
+    print("error setting Voltage")
 
 finally:
   sys.exit(0)

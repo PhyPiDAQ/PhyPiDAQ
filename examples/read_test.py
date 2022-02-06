@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-'''very simple and minimalistic example to read data from a sensor 
+"""very simple and minimalistic example to read data from a sensor
    and send output to stdout
-'''
+"""
 
 from random import randint
 from time import time, sleep
@@ -12,6 +12,7 @@ from math import sin
 from phypidaq.ToyDataConfig import *
 
 ERROR = -9999.0
+
 
 class Config:
     def __init__(self):
@@ -39,7 +40,7 @@ class Sinus(Config):
 
 
 def main():
-#    device = Sinus()     # simple alternative to class ToyData
+    # device = Sinus()     # simple alternative to class ToyData
     device = ToyDataConfig()
     device.init()
 
@@ -56,7 +57,7 @@ def main():
             print(f'{dT:.2f}, {dat[0]:.3f}')
             sleep(dt)
     except:
-        print(f'{dT+1:.2f}, {ERROR:.3f}')
+        print(f'{dT + 1:.2f}, {ERROR:.3f}')
     finally:
         device.close()
 

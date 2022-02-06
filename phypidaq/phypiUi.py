@@ -8,6 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+
 class Ui_PhyPiWindow(object):
     def setupUi(self, PhyPiWindow):
         PhyPiWindow.setObjectName("PhyPiWindow")
@@ -281,4 +282,3 @@ class Ui_PhyPiWindow(object):
         self.lE_RunTag.setText(_translate("PhyPiWindow", "phypi"))
         self.pB_SaveDefault.setToolTip(_translate("PhyPiWindow", "<html><head/><body><p>save all config files</p></body></html>"))
         self.pB_SaveDefault.setText(_translate("PhyPiWindow", "Save Config"))
-
