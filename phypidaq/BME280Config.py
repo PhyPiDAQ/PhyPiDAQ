@@ -1,4 +1,3 @@
-import time
 import board
 
 from adafruit_bme280.basic import Adafruit_BME280_I2C

@@ -49,7 +49,8 @@ class MAX31865Config(object):
     def init(self):
         spi = board.SPI()
         cs = digitalio.DigitalInOut(board.D5)
-        self.sensor = adafruit_max31865.MAX31865(spi, cs, wires=self.NWires, rtd_nominal=self.R0, ref_resistor=self.Rref)
+        self.sensor = adafruit_max31865.MAX31865(spi, cs, wires=self.NWires, rtd_nominal=self.R0,
+                                                 ref_resistor=self.Rref)
 
         # Provide configuration parameters
         self.ChanLims = [[-10., 110.]]

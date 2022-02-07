@@ -2,70 +2,72 @@
 from __future__ import print_function, division, unicode_literals
 from __future__ import absolute_import
 
-import numpy as np, time, sys
+import time
+import sys
+import smbus
+import RPi.GPIO as GPIO
 
 # code for MMA8451 accelerometer contained below
 
+
 class MMA8451Config(object):
-  '''digital accelerometer MMA8451 configuration and interface'''
+    """digital accelerometer MMA8451 configuration and interface"""
 
-  def __init__(self, confdict = None):
-    if confdict is None: confdict={}
-          
-# -- number of Channels
-    self.NChannels = 3
-    self.ChanNams = ['x','y','z']
-    self.ChanUnits= ['m/s²','m/s²', 'm/s²']
+    def __init__(self, confdict=None):
+        if confdict is None:
+            confdict = {}
 
-    if 'Range' in confdict:
-     self.range = confdict['Range']
-    else:
-     self.range = '2G'
-    if self.range == '2G':
-      r = 2
-    elif self.range == '4G':
-      r = 4
-    elif self.range == '8G':
-      r = 8
-    else:
-      # invalid range, set to 2
-      self.range ='2G'
-      r = 2     
-      print("MMA8451: invalid range - set to 2G")
+        # -- number of Channels
+        self.NChannels = 3
+        self.ChanNams = ['x', 'y', 'z']
+        self.ChanUnits = ['m/s²', 'm/s²', 'm/s²']
 
-    self.ChanLims = [[-r*10., r*10.],[-r*10., r*10.], [-r*10., r*10.]]
+        if 'Range' in confdict:
+            self.range = confdict['Range']
+        else:
+            self.range = '2G'
+        if self.range == '2G':
+            r = 2
+        elif self.range == '4G':
+            r = 4
+        elif self.range == '8G':
+            r = 8
+        else:
+            # invalid range, set to 2
+            self.range = '2G'
+            r = 2
+            print("MMA8451: invalid range - set to 2G")
 
-  def init(self):
-    try:
-      self.sensor = MMA8451(self.range)
-    except Exception as e:      
-      print("MMA8451: Error setting up device - exit")
-      print(str(e))
-      sys.exit(1)
-    try:
-      self.sensor.init()     
-    except Exception as e:      
-      print("MMA8451: Error initialising device - exit")
-      print(str(e))
-      sys.exit(1)
-      
-  def acquireData(self, buf):
-    buf[0],buf[1], buf[2] = self.sensor.getAxisValue()
+        self.ChanLims = [[-r * 10., r * 10.], [-r * 10., r * 10.], [-r * 10., r * 10.]]
 
-  def closeDevice(self):
-   # nothing to do here
-    pass
+    def init(self):
+        try:
+            self.sensor = MMA8451(self.range)
+        except Exception as e:
+            print("MMA8451: Error setting up device - exit")
+            print(str(e))
+            sys.exit(1)
+        try:
+            self.sensor.init()
+        except Exception as e:
+            print("MMA8451: Error initialising device - exit")
+            print(str(e))
+            sys.exit(1)
+
+    def acquireData(self, buf):
+        buf[0], buf[1], buf[2] = self.sensor.getAxisValue()
+
+    def closeDevice(self):
+        # nothing to do here
+        pass
 
 
 """code to configure and read out Adafruit MMA8451 3-axis Accelerometer
 
-   strip-down version of original code by Massimo Di Primo 
+   strip-down version of original code by Massimo Di Primo
       (see https://github.com/Massixone/mma8451)
    into a library
 """
-
-import os, smbus, time
-import RPi.GPIO as GPIO
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Application Definition Constants (ADC)
@@ -135,7 +137,7 @@ DATARATE_12_5_HZ = 0x28  # 12.5Hz
 DATARATE_6_25HZ = 0x30  # 6.25Hz
 DATARATE_1_56_HZ = 0x38  # 1.56Hz
 
-# Orientation labeling 
+# Orientation labeling
 PL_PUF = 0
 PL_PUB = 1
 PL_PDF = 2
@@ -288,10 +290,10 @@ FLAG_PL_CFG_PL_EN = 0x40  # Portrait/Landscape Detection Enable (0: P/L Detectio
 # +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
 # |      -       |      -       |      -       |     ELE      |   ZTEFE      |   YTEFE      |   XTEFE      |  HPF_BYP     |
 # +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-FLAG_TRANSIENT_CFG_ELE = 0x10      # Transient event flags (0: Event flag latch disabled; 1: Event flag latch enabled)
-FLAG_TRANSIENT_CFG_ZTEFE = 0x08    # Event flag enable on Z (0: Event detection disabled; 1: Raise event flag)
-FLAG_TRANSIENT_CFG_YTEFE = 0x04    # Event flag enable on Y (0: Event detection disabled; 1: Raise event flag)
-FLAG_TRANSIENT_CFG_XTEFE = 0x02    # Event flag enable on X (0: Event detection disabled; 1: Raise event flag)
+FLAG_TRANSIENT_CFG_ELE = 0x10  # Transient event flags (0: Event flag latch disabled; 1: Event flag latch enabled)
+FLAG_TRANSIENT_CFG_ZTEFE = 0x08  # Event flag enable on Z (0: Event detection disabled; 1: Raise event flag)
+FLAG_TRANSIENT_CFG_YTEFE = 0x04  # Event flag enable on Y (0: Event detection disabled; 1: Raise event flag)
+FLAG_TRANSIENT_CFG_XTEFE = 0x02  # Event flag enable on X (0: Event detection disabled; 1: Raise event flag)
 FLAG_TRANSIENT_CFG_HPF_BYP = 0x01  # Bypass High-Pass filter/Motion Detection
 
 # Register TRANSIENT_SCR (0x01e) R/O - TRANSIENT_SRC Register
@@ -300,13 +302,14 @@ FLAG_TRANSIENT_CFG_HPF_BYP = 0x01  # Bypass High-Pass filter/Motion Detection
 # +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
 # |       -      |      EA      |   ZTRANSE    | Z_Trans_Pol  |   YTRANSE    | Y_Trans_Pol  |   XTRANSE    | X_Trans_Pol  |
 # +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-FLAG_TRANSIENT_SCR_EA = 0x40       # Event Active Flag (0: no event flag has been asserted; 1: one or more event flag has been asserted)
+FLAG_TRANSIENT_SCR_EA = 0x40  # Event Active Flag (0: no event flag has been asserted; 1: one or more event flag has been asserted)
 FLAG_TRANSIENT_SCR_ZTRANSE = 0x20  # Z transient event (0: no interrupt, 1: Z Transient acceleration > than TRANSIENT_THS event has occurred
 FLAG_TRANSIENT_SCR_ZTR_POL = 0x10  # Polarity of Z Transient Event that triggered interrupt (0: Z event Positive g, 1: Z event Negative g)
 FLAG_TRANSIENT_SCR_YTRANSE = 0x08  # Y transient event (0: no interrupt, 1: Y Transient acceleration > than TRANSIENT_THS event has occurred
 FLAG_TRANSIENT_SCR_YTR_POL = 0x04  # Polarity of Y Transient Event that triggered interrupt (0: Y event Positive g, 1: Y event Negative g)
 FLAG_TRANSIENT_SCR_XTRANSE = 0x02  # X transient event (0: no interrupt, 1: X Transient acceleration > than TRANSIENT_THS event has occurred
 FLAG_TRANSIENT_SCR_XTR_POL = 0x01  # Polarity of X Transient Event that triggered interrupt (0: X event Positive g, 1: X event Negative g)
+
 
 # Register FF_MT_THS (0x017) R/W - Freefall and Motion Threshold Register
 # +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
@@ -320,9 +323,9 @@ FLAG_TRANSIENT_SCR_XTR_POL = 0x01  # Polarity of X Transient Event that triggere
 # Define MMA8541 config class
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-class MMA8451():
-    raspiBus = -1               # The Raspberry Pi Bus (dpends on hardware model)
-    raspiInfo = ""              # Raspberry Pi Info
+class MMA8451:
+    raspiBus = -1  # The Raspberry Pi Bus (depends on hardware model)
+    raspiInfo = ""  # Raspberry Pi Info
 
     def __init__(self, range='4G'):
 
@@ -334,7 +337,7 @@ class MMA8451():
             myBus = 0
         else:
             myBus = 1
-        #print('myBus=' + str(myBus))
+        # print('myBus=' + str(myBus))
         self.raspiBus = myBus
 
         self.b = smbus.SMBus(myBus)  # 0 = /dev/i2c-0 (port I2C0), 1 = /dev/i2c-1 (port I2C1)
@@ -343,16 +346,15 @@ class MMA8451():
 
         # Set up sensor resolution
         if range == '2G':
-          self.sensor_range = RANGE_2_G
-          self.flag_range = FLAG_XYZ_DATA_BIT_FS_2G
+            self.sensor_range = RANGE_2_G
+            self.flag_range = FLAG_XYZ_DATA_BIT_FS_2G
         elif range == '8G':
-          self.sensor_range = RANGE_8_G
-          self.flag_range = FLAG_XYZ_DATA_BIT_FS_8G
+            self.sensor_range = RANGE_8_G
+            self.flag_range = FLAG_XYZ_DATA_BIT_FS_8G
         else:
-          self.sensor_range = RANGE_4_G
-          self.flag_range = FLAG_XYZ_DATA_BIT_FS_4G
+            self.sensor_range = RANGE_4_G
+            self.flag_range = FLAG_XYZ_DATA_BIT_FS_4G
         self.raspiInfo = GPIO.RPI_INFO
-
 
     def whoAmI(self):
         return self.b.read_byte_data(i2caddr, REG_WHOAMI)
@@ -362,9 +364,11 @@ class MMA8451():
         self.writeRegister(REG_CTRL_REG2, self.readRegister(REG_CTRL_REG2) | FLAG_RESET)  # Reset
         # self.writeRegister(REG_CTRL_REG2, self.readRegister(REG_CTRL_REG2) FLAG_STEST)   # SelfTest
         self.writeRegister(REG_CTRL_REG1, self.readRegister(REG_CTRL_REG1) & ~FLAG_ACTIVE)  # Put the device in Standby
-        self.writeRegister(REG_CTRL_REG1, self.readRegister(REG_CTRL_REG1) & ~FLAG_F_READ)  # No Fast-Read (14-bits), Fast-Read (8-Bits)
+        self.writeRegister(REG_CTRL_REG1, self.readRegister(
+            REG_CTRL_REG1) & ~FLAG_F_READ)  # No Fast-Read (14-bits), Fast-Read (8-Bits)
         self.writeRegister(REG_CTRL_REG1, self.readRegister(REG_CTRL_REG1) | FLAG_ODR_50_HZ)  # Data Rate
-        self.writeRegister(REG_XYZ_DATA_CFG, self.readRegister(REG_XYZ_DATA_CFG) | self.flag_range) # Range 2g, 4g or 8g
+        self.writeRegister(REG_XYZ_DATA_CFG,
+                           self.readRegister(REG_XYZ_DATA_CFG) | self.flag_range)  # Range 2g, 4g or 8g
         self.writeRegister(REG_CTRL_REG1, self.readRegister(REG_CTRL_REG1) | FLAG_LNOISE)  # Low Noise
         self.writeRegister(REG_CTRL_REG2, self.readRegister(REG_CTRL_REG2) & ~FLAG_SLPE)  # No Auto-Sleep
         self.writeRegister(REG_CTRL_REG2, self.readRegister(REG_CTRL_REG2) | FLAG_SMODS_HR)  # High Resolution
@@ -416,13 +420,13 @@ class MMA8451():
     def getAxisValue(self):
         """
         Retrieves axis values and converts into a readable format (i.e. m/s2)
-        :return:  ax, ay, az acceleration 
+        :return:  ax, ay, az acceleration
         """
-#        # Make sure F_READ and F_MODE are disabled.
-#        f_read = self.b.read_byte_data(self.a, REG_CTRL_REG1) & FLAG_F_READ
-#        assert f_read == 0, 'F_READ mode is not disabled. : %s' % (f_read)
-#        f_mode = self.b.read_byte_data(self.a, REG_F_SETUP) & FLAG_F_MODE_FIFO_TRIGGER
-#        assert f_mode == 0, 'F_MODE mode is not disabled. : %s' % (f_mode)
+        #  # Make sure F_READ and F_MODE are disabled.
+        #  f_read = self.b.read_byte_data(self.a, REG_CTRL_REG1) & FLAG_F_READ
+        #  assert f_read == 0, 'F_READ mode is not disabled. : %s' % (f_read)
+        #  f_mode = self.b.read_byte_data(self.a, REG_F_SETUP) & FLAG_F_MODE_FIFO_TRIGGER
+        #  assert f_mode == 0, 'F_MODE mode is not disabled. : %s' % (f_mode)
 
         #
         self.xyzdata = self.block_read(REG_OUT_X_MSB, 6)
@@ -450,22 +454,32 @@ class MMA8451():
         return (x, y, z)
 
     def debugShowRpiInfo(self):
-        #print("Raspberry Info      = " + str(GPIO.RPI_INFO))
+        # print("Raspberry Info      = " + str(GPIO.RPI_INFO))
         print("Raspberry Info      = " + str(self.raspiInfo))
 
     def debugShowRegisters(self):
-        print("REG_STATUS       (0x00):" + str(format(self.readRegister(REG_STATUS), '#04x')) + " | Binary: " + format(self.readRegister(REG_STATUS), 'b').zfill(8))
-        print("REG_WHOAMI       (0x0d):" + str(format(self.readRegister(REG_WHOAMI), '#04x')) + " | Binary: " + format(self.readRegister(REG_WHOAMI), 'b').zfill(8))
-        print("REG_F_SETUP      (0x09):" + str(format(self.readRegister(REG_F_SETUP), '#04x')) + " | Binary: " + format(self.readRegister(REG_F_SETUP), 'b').zfill(8))
-        print("REG_XYZ_DATA_CFG (0x0e):" + str(format(self.readRegister(REG_XYZ_DATA_CFG), '#04x')) + " | Binary: " + format(self.readRegister(REG_XYZ_DATA_CFG), 'b').zfill(8))
-        print("REG_CTRL_REG1    (0x2a):" + str(format(self.readRegister(REG_CTRL_REG1), '#04x')) + " | Binary: " + format(self.readRegister(REG_CTRL_REG1), 'b').zfill(8))
-        print("REG_CTRL_REG2    (0x2b):" + str(format(self.readRegister(REG_CTRL_REG2), '#04x')) + " | Binary: " + format(self.readRegister(REG_CTRL_REG2), 'b').zfill(8))
-        print("REG_CTRL_REG3    (0x2c):" + str(format(self.readRegister(REG_CTRL_REG3), '#04x')) + " | Binary: " + format(self.readRegister(REG_CTRL_REG3), 'b').zfill(8))
-        print("REG_CTRL_REG4    (0x2d):" + str(format(self.readRegister(REG_CTRL_REG4), '#04x')) + " | Binary: " + format(self.readRegister(REG_CTRL_REG4), 'b').zfill(8))
-        print("REG_CTRL_REG5    (0x2e):" + str(format(self.readRegister(REG_CTRL_REG5), '#04x')) + " | Binary: " + format(self.readRegister(REG_CTRL_REG5), 'b').zfill(8))
-        print("REG_PL_STATUS    (0x10):" + str(format(self.readRegister(REG_PL_STATUS), '#04x')) + " | Binary: " + format(self.readRegister(REG_PL_STATUS), 'b').zfill(8))
-        print ("debugRealTime    " + str(runTimeConfigObject.debugRealTime))
-        print ("NumInterrupts    " + str(runTimeConfigObject.NumInterrupts))
+        print("REG_STATUS       (0x00):" + str(format(self.readRegister(REG_STATUS), '#04x'))
+              + " | Binary: " + format(self.readRegister(REG_STATUS), 'b').zfill(8))
+        print("REG_WHOAMI       (0x0d):" + str(format(self.readRegister(REG_WHOAMI), '#04x'))
+              + " | Binary: " + format(self.readRegister(REG_WHOAMI), 'b').zfill(8))
+        print("REG_F_SETUP      (0x09):" + str(format(self.readRegister(REG_F_SETUP), '#04x'))
+              + " | Binary: " + format(self.readRegister(REG_F_SETUP), 'b').zfill(8))
+        print("REG_XYZ_DATA_CFG (0x0e):" + str(format(self.readRegister(REG_XYZ_DATA_CFG), '#04x'))
+              + " | Binary: " + format(self.readRegister(REG_XYZ_DATA_CFG), 'b').zfill(8))
+        print("REG_CTRL_REG1    (0x2a):" + str(format(self.readRegister(REG_CTRL_REG1), '#04x'))
+              + " | Binary: " + format(self.readRegister(REG_CTRL_REG1), 'b').zfill(8))
+        print("REG_CTRL_REG2    (0x2b):" + str(format(self.readRegister(REG_CTRL_REG2), '#04x'))
+              + " | Binary: " + format(self.readRegister(REG_CTRL_REG2), 'b').zfill(8))
+        print("REG_CTRL_REG3    (0x2c):" + str(format(self.readRegister(REG_CTRL_REG3), '#04x'))
+              + " | Binary: " + format(self.readRegister(REG_CTRL_REG3), 'b').zfill(8))
+        print("REG_CTRL_REG4    (0x2d):" + str(format(self.readRegister(REG_CTRL_REG4), '#04x'))
+              + " | Binary: " + format(self.readRegister(REG_CTRL_REG4), 'b').zfill(8))
+        print("REG_CTRL_REG5    (0x2e):" + str(format(self.readRegister(REG_CTRL_REG5), '#04x'))
+              + " | Binary: " + format(self.readRegister(REG_CTRL_REG5), 'b').zfill(8))
+        print("REG_PL_STATUS    (0x10):" + str(format(self.readRegister(REG_PL_STATUS), '#04x'))
+              + " | Binary: " + format(self.readRegister(REG_PL_STATUS), 'b').zfill(8))
+        print("debugRealTime    " + str(runTimeConfigObject.debugRealTime))
+        print("NumInterrupts    " + str(runTimeConfigObject.NumInterrupts))
 
     def debugShowOrientation(self):
         print("Position = %d" % (self.get_orientation()))
@@ -474,4 +488,3 @@ class MMA8451():
         print("   x (m/s2)= %+.3f" % (xaccel))
         print("   y (m/s2)= %+.3f" % (yaccel))
         print("   z (m/s2)= %+.3f" % (zaccel))
-

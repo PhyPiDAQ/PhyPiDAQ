@@ -1,4 +1,3 @@
-import time
 import board
 
 from adafruit_bmp280 import Adafruit_BMP280_I2C

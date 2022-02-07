@@ -7,7 +7,8 @@
     INA219 Current & Voltage sensor
 """
 
-import time, numpy as np
+import time
+import numpy as np
 
 # import module controlling readout device
 from phypidaq.INA219Config import *

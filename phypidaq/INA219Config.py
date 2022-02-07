@@ -26,7 +26,7 @@ class INA219Config(object):
             7: ADCResolution.ADCRES_12BIT_16S,
             8: ADCResolution.ADCRES_12BIT_32S,
             9: ADCResolution.ADCRES_12BIT_64S,
-           10: ADCResolution.ADCRES_12BIT_128S,
+            10: ADCResolution.ADCRES_12BIT_128S,
         }
 
         self.gainSwitch = {

@@ -2,93 +2,100 @@
 from __future__ import print_function, division, unicode_literals
 from __future__ import absolute_import
 
-import numpy as np, time, sys, smbus
+import time
+import sys
+import smbus
+from ctypes import c_short
 
 # default addresses and ChipIDs of Bosch BMP 085/180 and BMP/E 280 sensors
-BMP_I2CADDR  = 0x77
+BMP_I2CADDR = 0x77
 BMP_I2CADDR2 = 0x76
-#BMP_I2CADDR = 0x76 # alternative device I2C address
+# BMP_I2CADDR = 0x76 # alternative device I2C address
 BMP180_CHIPID = 0x55
 BMP280_CHIPID = 0x58
 BME280_CHIPID = 0x60
 # ID register:
 REG_ID = 0xD0
 
+
 # code of driver classes included below
 
 class BMPx80Config(object):
-  '''digital thermometer DS18B20Config configuration and interface'''
-  def __init__(self, confdict = None):
-    self.BMP_I2CADDR = BMP_I2CADDR
-    if confdict is None: confdict={}
-    if 'I2CADDR' in confdict:
-      self.BMP_I2CADDR = confdict['I2CADDR']
-      print("BMPx80: I2C address set to %x "%(self.BMP_I2CADDR) )
-    if 'NChannels' in confdict:
-      self.NChannels = confdict["NChannels"]
-    else:
-      self.NChannels = 2
-    self.ChanLims = [[-40., 85.],[300., 1100.], [0., 100.]]
-    self.ChanNams = ['T','P', 'H']
-    self.ChanUnits= ['°C','hPa', '%']
+    """digital thermometer DS18B20Config configuration and interface"""
 
-  def init(self):
-    try:
-      # set up I2C bus
-      busnum = 1
-      bus = smbus.SMBus(busnum) # Rev 2 Pi, Pi 2 & Pi 3 uses bus 1
-                                # Rev 1 Pi uses bus 0
-    except Exception as e:      
-       print("BMPx80: Error initialising I2C bus - exit")
-       print(str(e))
-       sys.exit(1)
+    def __init__(self, confdict=None):
+        self.BMP_I2CADDR = BMP_I2CADDR
+        if confdict is None:
+            confdict = {}
+        if 'I2CADDR' in confdict:
+            self.BMP_I2CADDR = confdict['I2CADDR']
+            print("BMPx80: I2C address set to %x " % self.BMP_I2CADDR)
+        if 'NChannels' in confdict:
+            self.NChannels = confdict["NChannels"]
+        else:
+            self.NChannels = 2
+        self.ChanLims = [[-40., 85.], [300., 1100.], [0., 100.]]
+        self.ChanNams = ['T', 'P', 'H']
+        self.ChanUnits = ['°C', 'hPa', '%']
 
-    try:
-      try:
-      # find out which sensor we have:
-        (self.chipID,) = bus.read_i2c_block_data(self.BMP_I2CADDR, REG_ID, 1)
-      except:
-      # try secondary address (BMP280)
-        print("BMPx80: trying secondary address %x "%(BMP_I2CADDR2) )
-        (self.chipID,) = bus.read_i2c_block_data(BMP_I2CADDR2, REG_ID, 1)
-        self.BMP_I2CADDR = BMP_I2CADDR2
+    def init(self):
+        try:
+            # set up I2C bus
+            busnum = 1
+            bus = smbus.SMBus(busnum)  # Rev 2 Pi, Pi 2 & Pi 3 uses bus 1
+            # Rev 1 Pi uses bus 0
+        except Exception as e:
+            print("BMPx80: Error initialising I2C bus - exit")
+            print(str(e))
+            sys.exit(1)
 
-      # set up sensor
-      print("BMPx80: ChipID %x "%(self.chipID) )
-      if self.chipID == BMP180_CHIPID:
-        self.sensor = BMP085(address=self.BMP_I2CADDR, busnum=busnum, i2c_interface=smbus.SMBus)
-      elif self.chipID == BMP280_CHIPID:
-        self.sensor = BMP280(address=self.BMP_I2CADDR, busnum=busnum, i2c_interface=smbus.SMBus)
-      elif self.chipID == BME280_CHIPID:
-        self.sensor = BME280(address=self.BMP_I2CADDR, i2c = bus)
-      else:
-       print("BMPx80: unknown chip ID - exiting")
-       sys.exit(1)
-    except Exception as e:      
-       print("BMPx80: Error setting up device - exit")
-       print(str(e))
-       sys.exit(1)
-      
-  def acquireData(self, buf):
+        try:
+            try:
+                # find out which sensor we have:
+                (self.chipID,) = bus.read_i2c_block_data(self.BMP_I2CADDR, REG_ID, 1)
+            except:
+                # try secondary address (BMP280)
+                print("BMPx80: trying secondary address %x " % BMP_I2CADDR2)
+                (self.chipID,) = bus.read_i2c_block_data(BMP_I2CADDR2, REG_ID, 1)
+                self.BMP_I2CADDR = BMP_I2CADDR2
 
-    if self.chipID == BME280_CHIPID:
-      buf[0], p, h = self.sensor.readAll() # temp., press., hum.
-      if self.NChannels > 1:
-        buf[1] = p
-      if self.NChannels > 2:
-        buf[2] = h
-    else:
-      buf[0] = self.sensor.read_temperature() # in degC
-      if self.NChannels > 1:
-        buf[1] = self.sensor.read_pressure()/100. # in hPa
+            # set up sensor
+            print("BMPx80: ChipID %x " % self.chipID)
+            if self.chipID == BMP180_CHIPID:
+                self.sensor = BMP085(address=self.BMP_I2CADDR, busnum=busnum, i2c_interface=smbus.SMBus)
+            elif self.chipID == BMP280_CHIPID:
+                self.sensor = BMP280(address=self.BMP_I2CADDR, busnum=busnum, i2c_interface=smbus.SMBus)
+            elif self.chipID == BME280_CHIPID:
+                self.sensor = BME280(address=self.BMP_I2CADDR, i2c=bus)
+            else:
+                print("BMPx80: unknown chip ID - exiting")
+                sys.exit(1)
+        except Exception as e:
+            print("BMPx80: Error setting up device - exit")
+            print(str(e))
+            sys.exit(1)
 
-  def closeDevice(self):
-   # nothing to do here
-    pass
+    def acquireData(self, buf):
 
-## ----- driver section -----------
+        if self.chipID == BME280_CHIPID:
+            buf[0], p, h = self.sensor.readAll()  # temp., press., hum.
+            if self.NChannels > 1:
+                buf[1] = p
+            if self.NChannels > 2:
+                buf[2] = h
+        else:
+            buf[0] = self.sensor.read_temperature()  # in degC
+            if self.NChannels > 1:
+                buf[1] = self.sensor.read_pressure() / 100.  # in hPa
 
-# driver code for BMP085/180, 
+    def closeDevice(self):
+        # nothing to do here
+        pass
+
+
+# ----- driver section -----------
+
+# driver code for BMP085/180,
 #   adapted from original code by Tony DiCola, (c) Adafruit Industries
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -110,38 +117,38 @@ class BMPx80Config(object):
 # THE SOFTWARE.
 
 # Operating Modes
-BMP085_ULTRALOWPOWER     = 0
-BMP085_STANDARD          = 1
-BMP085_HIGHRES           = 2
-BMP085_ULTRAHIGHRES      = 3
+BMP085_ULTRALOWPOWER = 0
+BMP085_STANDARD = 1
+BMP085_HIGHRES = 2
+BMP085_ULTRAHIGHRES = 3
 
 # BMP085 Registers
-BMP085_CAL_AC1           = 0xAA  # R   Calibration data (16 bits)
-BMP085_CAL_AC2           = 0xAC  # R   Calibration data (16 bits)
-BMP085_CAL_AC3           = 0xAE  # R   Calibration data (16 bits)
-BMP085_CAL_AC4           = 0xB0  # R   Calibration data (16 bits)
-BMP085_CAL_AC5           = 0xB2  # R   Calibration data (16 bits)
-BMP085_CAL_AC6           = 0xB4  # R   Calibration data (16 bits)
-BMP085_CAL_B1            = 0xB6  # R   Calibration data (16 bits)
-BMP085_CAL_B2            = 0xB8  # R   Calibration data (16 bits)
-BMP085_CAL_MB            = 0xBA  # R   Calibration data (16 bits)
-BMP085_CAL_MC            = 0xBC  # R   Calibration data (16 bits)
-BMP085_CAL_MD            = 0xBE  # R   Calibration data (16 bits)
-BMP085_CONTROL           = 0xF4
-BMP085_TEMPDATA          = 0xF6
-BMP085_PRESSUREDATA      = 0xF6
+BMP085_CAL_AC1 = 0xAA  # R   Calibration data (16 bits)
+BMP085_CAL_AC2 = 0xAC  # R   Calibration data (16 bits)
+BMP085_CAL_AC3 = 0xAE  # R   Calibration data (16 bits)
+BMP085_CAL_AC4 = 0xB0  # R   Calibration data (16 bits)
+BMP085_CAL_AC5 = 0xB2  # R   Calibration data (16 bits)
+BMP085_CAL_AC6 = 0xB4  # R   Calibration data (16 bits)
+BMP085_CAL_B1 = 0xB6  # R   Calibration data (16 bits)
+BMP085_CAL_B2 = 0xB8  # R   Calibration data (16 bits)
+BMP085_CAL_MB = 0xBA  # R   Calibration data (16 bits)
+BMP085_CAL_MC = 0xBC  # R   Calibration data (16 bits)
+BMP085_CAL_MD = 0xBE  # R   Calibration data (16 bits)
+BMP085_CONTROL = 0xF4
+BMP085_TEMPDATA = 0xF6
+BMP085_PRESSUREDATA = 0xF6
 
 # Commands
-BMP085_READTEMPCMD       = 0x2E
-BMP085_READPRESSURECMD   = 0x34
+BMP085_READTEMPCMD = 0x2E
+BMP085_READPRESSURECMD = 0x34
 
 
 class BMP085(object):
     def __init__(self, mode=BMP085_STANDARD, address=BMP_I2CADDR, i2c=None, busnum=1, i2c_interface=None):
         # Check that mode is valid.
         if mode not in [BMP085_ULTRALOWPOWER, BMP085_STANDARD, BMP085_HIGHRES, BMP085_ULTRAHIGHRES]:
-            raise ValueError('Unexpected mode value {0}.  Set mode to one of ' + 
-              'BMP085_ULTRALOWPOWER, BMP085_STANDARD, BMP085_HIGHRES, or BMP085_ULTRAHIGHRES'.format(mode))
+            raise ValueError(f'Unexpected mode value {mode}.  Set mode to one of ' +
+                             'BMP085_ULTRALOWPOWER, BMP085_STANDARD, BMP085_HIGHRES, or BMP085_ULTRAHIGHRES')
         self._mode = mode
         # Create I2C device.
         if i2c is None:
@@ -153,17 +160,17 @@ class BMP085(object):
         self._load_calibration()
 
     def _load_calibration(self):
-        self.cal_AC1 = self._device.readS16BE(BMP085_CAL_AC1)   # INT16
-        self.cal_AC2 = self._device.readS16BE(BMP085_CAL_AC2)   # INT16
-        self.cal_AC3 = self._device.readS16BE(BMP085_CAL_AC3)   # INT16
-        self.cal_AC4 = self._device.readU16BE(BMP085_CAL_AC4)   # UINT16
-        self.cal_AC5 = self._device.readU16BE(BMP085_CAL_AC5)   # UINT16
-        self.cal_AC6 = self._device.readU16BE(BMP085_CAL_AC6)   # UINT16
-        self.cal_B1 = self._device.readS16BE(BMP085_CAL_B1)     # INT16
-        self.cal_B2 = self._device.readS16BE(BMP085_CAL_B2)     # INT16
-        self.cal_MB = self._device.readS16BE(BMP085_CAL_MB)     # INT16
-        self.cal_MC = self._device.readS16BE(BMP085_CAL_MC)     # INT16
-        self.cal_MD = self._device.readS16BE(BMP085_CAL_MD)     # INT16
+        self.cal_AC1 = self._device.readS16BE(BMP085_CAL_AC1)  # INT16
+        self.cal_AC2 = self._device.readS16BE(BMP085_CAL_AC2)  # INT16
+        self.cal_AC3 = self._device.readS16BE(BMP085_CAL_AC3)  # INT16
+        self.cal_AC4 = self._device.readU16BE(BMP085_CAL_AC4)  # UINT16
+        self.cal_AC5 = self._device.readU16BE(BMP085_CAL_AC5)  # UINT16
+        self.cal_AC6 = self._device.readU16BE(BMP085_CAL_AC6)  # UINT16
+        self.cal_B1 = self._device.readS16BE(BMP085_CAL_B1)  # INT16
+        self.cal_B2 = self._device.readS16BE(BMP085_CAL_B2)  # INT16
+        self.cal_MB = self._device.readS16BE(BMP085_CAL_MB)  # INT16
+        self.cal_MC = self._device.readS16BE(BMP085_CAL_MC)  # INT16
+        self.cal_MD = self._device.readS16BE(BMP085_CAL_MD)  # INT16
 
     def _load_datasheet_calibration(self):
         # Set calibration from values in the datasheet example.  Useful for debugging the
@@ -199,8 +206,8 @@ class BMP085(object):
         else:
             time.sleep(0.008)
         msb = self._device.readU8(BMP085_PRESSUREDATA)
-        lsb = self._device.readU8(BMP085_PRESSUREDATA+1)
-        xlsb = self._device.readU8(BMP085_PRESSUREDATA+2)
+        lsb = self._device.readU8(BMP085_PRESSUREDATA + 1)
+        xlsb = self._device.readU8(BMP085_PRESSUREDATA + 2)
         raw = ((msb << 16) + (lsb << 8) + xlsb) >> (8 - self._mode)
         return raw
 
@@ -208,7 +215,7 @@ class BMP085(object):
         """Gets the compensated temperature in degrees celsius."""
         UT = self.read_raw_temp()
         # Datasheet value for debugging:
-        #UT = 27898
+        # UT = 27898
         # Calculations below are taken straight from section 3.5 of the datasheet.
         X1 = ((UT - self.cal_AC6) * self.cal_AC5) >> 15
         X2 = (self.cal_MC << 11) // (X1 + self.cal_MD)
@@ -221,8 +228,8 @@ class BMP085(object):
         UT = self.read_raw_temp()
         UP = self.read_raw_pressure()
         # Datasheet values for debugging:
-        #UT = 27898
-        #UP = 23843
+        # UT = 27898
+        # UP = 23843
         # Calculations below are taken straight from section 3.5 of the datasheet.
         # Calculate true temperature coefficient B5.
         X1 = ((UT - self.cal_AC6) * self.cal_AC5) >> 15
@@ -253,15 +260,16 @@ class BMP085(object):
         """Calculates the altitude in meters."""
         # Calculation taken straight from section 3.6 of the datasheet.
         pressure = float(self.read_pressure())
-        altitude = 44330.0 * (1.0 - pow(pressure / sealevel_pa, (1.0/5.255)))
+        altitude = 44330.0 * (1.0 - pow(pressure / sealevel_pa, (1.0 / 5.255)))
         return altitude
 
     def read_sealevel_pressure(self, altitude_m=0.0):
         """Calculates the pressure at sealevel when given a known altitude in
         meters. Returns a value in Pascals."""
         pressure = float(self.read_pressure())
-        p0 = pressure / pow(1.0 - altitude_m/44330.0, 5.255)
+        p0 = pressure / pow(1.0 - altitude_m / 44330.0, 5.255)
         return p0
+
 
 # driver code for BMP280  (Guenter Quast, 2018)
 #  adapted vom code by Bastien Wirtz <bastien.wirtz@gmail.com>
@@ -294,15 +302,15 @@ BMP280_TEMPDATA = 0xFA
 
 
 class BMP280(object):
-    def __init__(self, address=BMP_I2CADDR, i2c=None, busnum=1, i2c_interface= None):
+    def __init__(self, address=BMP_I2CADDR, i2c=None, busnum=1, i2c_interface=None):
 
         # Adadfruit I2C interface
         if i2c is None:
             import Adafruit_GPIO.I2C as I2C
             i2c = I2C
 
-        self._device = i2c.get_i2c_device(address, 
-                         busnum = busnum, i2c_interface = i2c_interface)
+        self._device = i2c.get_i2c_device(address,
+                                          busnum=busnum, i2c_interface=i2c_interface)
 
         if self._device.readU8(REG_ID) != BMP280_CHIPID:
             raise Exception('Unsupported chip')
@@ -351,13 +359,8 @@ class BMP280(object):
 
     def _compensate_temp(self, raw_temp):
         """ Compensate temperature """
-        t1 = (((raw_temp >> 3) - (self.cal_t1 << 1)) *
-              (self.cal_t2)) >> 11
-
-        t2 = (((((raw_temp >> 4) - (self.cal_t1)) *
-                ((raw_temp >> 4) - (self.cal_t1))) >> 12) *
-              (self.cal_t3)) >> 14
-
+        t1 = (((raw_temp >> 3) - (self.cal_t1 << 1)) * (self.cal_t2)) >> 11
+        t2 = (((((raw_temp >> 4) - (self.cal_t1)) * ((raw_temp >> 4) - (self.cal_t1))) >> 12) * (self.cal_t3)) >> 14
         return t1 + t2
 
     def read_temperature(self):
@@ -372,7 +375,7 @@ class BMP280(object):
         raw_temp = self.read_raw(BMP280_TEMPDATA)
         compensated_temp = self._compensate_temp(raw_temp)
         raw_pressure = self.read_raw(BMP280_PRESSUREDATA)
-        
+
         p1 = compensated_temp - 128000
         p2 = p1 * p1 * self.cal_p6
         p2 += (p1 * self.cal_p5) << 17
@@ -399,47 +402,48 @@ class BMP280(object):
         return altitude
 
     def read_sealevel_pressure(self, altitude_m=0.0):
-        """Calculates the pressure at sealevel when given a known altitude in
+        """Calculates the pressure at sea-level when given a known altitude in
         meters. Returns a value in Pascals."""
         pressure = float(self.read_pressure())
         p0 = pressure // pow(1.0 - altitude_m // 44330.0, 5.255)
         return p0
 
 
-# driver code for BMP/E280, 
-#   adapted from original code by Matt Hawkins
+# driver code for BMP/E280,
+# adapted from original code by Matt Hawkins
 
-#--------------------------------------
-## import smbus
-from ctypes import c_short
-from ctypes import c_byte
-from ctypes import c_ubyte
+# --------------------------------------
+
 
 # some helper functions
 def getShort(data, index):
-  # return two bytes from data as a signed 16-bit value
-  return c_short((data[index+1] << 8) + data[index]).value
+    # return two bytes from data as a signed 16-bit value
+    return c_short((data[index + 1] << 8) + data[index]).value
+
 
 def getUShort(data, index):
-  # return two bytes from data as an unsigned 16-bit value
-  return (data[index+1] << 8) + data[index]
+    # return two bytes from data as an unsigned 16-bit value
+    return (data[index + 1] << 8) + data[index]
 
-def getChar(data,index):
-  # return one byte from data as a signed char
-  result = data[index]
-  if result > 127:
-    result -= 256
-  return result
 
-def getUChar(data,index):
-  # return one byte from data as an unsigned char
-  result =  data[index] & 0xFF
-  return result
+def getChar(data, index):
+    # return one byte from data as a signed char
+    result = data[index]
+    if result > 127:
+        result -= 256
+    return result
+
+
+def getUChar(data, index):
+    # return one byte from data as an unsigned char
+    result = data[index] & 0xFF
+    return result
+
 
 # Register Addresses
 REG_DATA = 0xF7
 REG_CONTROL = 0xF4
-REG_CONFIG  = 0xF5
+REG_CONFIG = 0xF5
 
 REG_CONTROL_HUM = 0xF2
 REG_HUM_MSB = 0xFD
@@ -453,102 +457,104 @@ MODE = 1
 # Oversample setting for humidity register - page 26
 OVERSAMPLE_HUM = 2
 
+
 class BME280(object):
-  """Class to represent the Bosch BMP280 temperature and pressure sensor
-  """
+    """Class to represent the Bosch BMP280 temperature and pressure sensor
+    """
 
-  def __init__(self, address=BMP_I2CADDR, i2c=None):
-    self.DEVICE = address
+    def __init__(self, address=BMP_I2CADDR, i2c=None):
+        self.DEVICE = address
 
-    if i2c is None:
-      self.bus = smbus.SMBus(1) # Rev 2 Pi, Pi 2 & Pi 3 uses bus 1
-                                # Rev 1 Pi uses bus 0
-    else:
-      self.bus = i2c
-  # initialise calibration constants from device
-    self.init()
+        if i2c is None:
+            self.bus = smbus.SMBus(1)  # Rev 2 Pi, Pi 2 & Pi 3 uses bus 1
+            # Rev 1 Pi uses bus 0
+        else:
+            self.bus = i2c
+        # initialise calibration constants from device
+        self.init()
 
-  def init(self):
+    def init(self):
 
-    self.bus.write_byte_data(self.DEVICE, REG_CONTROL_HUM, OVERSAMPLE_HUM)
+        self.bus.write_byte_data(self.DEVICE, REG_CONTROL_HUM, OVERSAMPLE_HUM)
 
-    control = OVERSAMPLE_TEMP<<5 | OVERSAMPLE_PRES<<2 | MODE
-    self.bus.write_byte_data(self.DEVICE, REG_CONTROL, control)
+        control = OVERSAMPLE_TEMP << 5 | OVERSAMPLE_PRES << 2 | MODE
+        self.bus.write_byte_data(self.DEVICE, REG_CONTROL, control)
 
-    # Read blocks of calibration data from EEPROM
-    # See Page 22 data sheet
-    cal1 = self.bus.read_i2c_block_data(self.DEVICE, 0x88, 24)
-    cal2 = self.bus.read_i2c_block_data(self.DEVICE, 0xA1, 1)
-    cal3 = self.bus.read_i2c_block_data(self.DEVICE, 0xE1, 7)
+        # Read blocks of calibration data from EEPROM
+        # See Page 22 data sheet
+        cal1 = self.bus.read_i2c_block_data(self.DEVICE, 0x88, 24)
+        cal2 = self.bus.read_i2c_block_data(self.DEVICE, 0xA1, 1)
+        cal3 = self.bus.read_i2c_block_data(self.DEVICE, 0xE1, 7)
 
-    # Convert byte data to word values
-    self.dig_T1 = getUShort(cal1, 0)
-    self.dig_T2 = getShort(cal1, 2)
-    self.dig_T3 = getShort(cal1, 4)
+        # Convert byte data to word values
+        self.dig_T1 = getUShort(cal1, 0)
+        self.dig_T2 = getShort(cal1, 2)
+        self.dig_T3 = getShort(cal1, 4)
 
-    self.dig_P1 = getUShort(cal1, 6)
-    self.dig_P2 = getShort(cal1, 8)
-    self.dig_P3 = getShort(cal1, 10)
-    self.dig_P4 = getShort(cal1, 12)
-    self.dig_P5 = getShort(cal1, 14)
-    self.dig_P6 = getShort(cal1, 16)
-    self.dig_P7 = getShort(cal1, 18)
-    self.dig_P8 = getShort(cal1, 20)
-    self.dig_P9 = getShort(cal1, 22)
+        self.dig_P1 = getUShort(cal1, 6)
+        self.dig_P2 = getShort(cal1, 8)
+        self.dig_P3 = getShort(cal1, 10)
+        self.dig_P4 = getShort(cal1, 12)
+        self.dig_P5 = getShort(cal1, 14)
+        self.dig_P6 = getShort(cal1, 16)
+        self.dig_P7 = getShort(cal1, 18)
+        self.dig_P8 = getShort(cal1, 20)
+        self.dig_P9 = getShort(cal1, 22)
 
-    self.dig_H1 = getUChar(cal2, 0)
-    self.dig_H2 = getShort(cal3, 0)
-    self.dig_H3 = getUChar(cal3, 2)
-    self.dig_H4 = getChar(cal3, 3)
-    self.dig_H4 = (self.dig_H4 << 24) >> 20
-    self.dig_H4 = self.dig_H4 | (getChar(cal3, 4) & 0x0F)
-    self.dig_H5 = getChar(cal3, 5)
-    self.dig_H5 = (self.dig_H5 << 24) >> 20
-    self.dig_H5 = self.dig_H5 | (getUChar(cal3, 4) >> 4 & 0x0F)
-    self.dig_H6 = getChar(cal3, 6)
+        self.dig_H1 = getUChar(cal2, 0)
+        self.dig_H2 = getShort(cal3, 0)
+        self.dig_H3 = getUChar(cal3, 2)
+        self.dig_H4 = getChar(cal3, 3)
+        self.dig_H4 = (self.dig_H4 << 24) >> 20
+        self.dig_H4 = self.dig_H4 | (getChar(cal3, 4) & 0x0F)
+        self.dig_H5 = getChar(cal3, 5)
+        self.dig_H5 = (self.dig_H5 << 24) >> 20
+        self.dig_H5 = self.dig_H5 | (getUChar(cal3, 4) >> 4 & 0x0F)
+        self.dig_H6 = getChar(cal3, 6)
 
-    # Wait in ms (Datasheet Appendix B: Measurement time and current calculation)
-    wait_time = 1.25 + (2.3 * OVERSAMPLE_TEMP) + ((2.3 * OVERSAMPLE_PRES) + 0.575) + ((2.3 * OVERSAMPLE_HUM)+0.575)
-    time.sleep(wait_time/1000)  # Wait the required time  
+        # Wait in ms (Datasheet Appendix B: Measurement time and current calculation)
+        wait_time = 1.25 + (2.3 * OVERSAMPLE_TEMP) + ((2.3 * OVERSAMPLE_PRES) + 0.575) + (
+                    (2.3 * OVERSAMPLE_HUM) + 0.575)
+        time.sleep(wait_time / 1000)  # Wait the required time
 
-  def readAll(self):
+    def readAll(self):
 
-    # Read temperature/pressure/humidity
-    data = self.bus.read_i2c_block_data(self.DEVICE, REG_DATA, 8)
-    pres_raw = (data[0] << 12) | (data[1] << 4) | (data[2] >> 4)
-    temp_raw = (data[3] << 12) | (data[4] << 4) | (data[5] >> 4)
-    hum_raw = (data[6] << 8) | data[7]
+        # Read temperature/pressure/humidity
+        data = self.bus.read_i2c_block_data(self.DEVICE, REG_DATA, 8)
+        pres_raw = (data[0] << 12) | (data[1] << 4) | (data[2] >> 4)
+        temp_raw = (data[3] << 12) | (data[4] << 4) | (data[5] >> 4)
+        hum_raw = (data[6] << 8) | data[7]
 
-    #Refine temperature
-    var1 = ((((temp_raw>>3)-(self.dig_T1<<1)))*(self.dig_T2)) >> 11
-    var2 = (((((temp_raw>>4) - (self.dig_T1)) * ((temp_raw>>4) - (self.dig_T1))) >> 12) * (self.dig_T3)) >> 14
-    t_fine = var1+var2
-    t = float(((t_fine * 5) + 128) >> 8);
+        # Refine temperature
+        var1 = ((((temp_raw >> 3) - (self.dig_T1 << 1))) * (self.dig_T2)) >> 11
+        var2 = (((((temp_raw >> 4) - (self.dig_T1)) * ((temp_raw >> 4) - (self.dig_T1))) >> 12) * (self.dig_T3)) >> 14
+        t_fine = var1 + var2
+        t = float(((t_fine * 5) + 128) >> 8)
 
-    # Refine pressure and adjust for temperature
-    var1 = t_fine / 2.0 - 64000.0
-    var2 = var1 * var1 * self.dig_P6 / 32768.0
-    var2 = var2 + var1 * self.dig_P5 * 2.0
-    var2 = var2 / 4.0 + self.dig_P4 * 65536.0
-    var1 = (self.dig_P3 * var1 * var1 / 524288.0 + self.dig_P2 * var1) / 524288.0
-    var1 = (1.0 + var1 / 32768.0) * self.dig_P1
-    if var1 == 0:
-      p=0
-    else:
-      p = 1048576.0 - pres_raw
-      p = ((p - var2 / 4096.0) * 6250.0) / var1
-      var1 = self.dig_P9 * p * p / 2147483648.0
-      var2 = p * self.dig_P8 / 32768.0
-      p = p + (var1 + var2 + self.dig_P7) / 16.0
+        # Refine pressure and adjust for temperature
+        var1 = t_fine / 2.0 - 64000.0
+        var2 = var1 * var1 * self.dig_P6 / 32768.0
+        var2 = var2 + var1 * self.dig_P5 * 2.0
+        var2 = var2 / 4.0 + self.dig_P4 * 65536.0
+        var1 = (self.dig_P3 * var1 * var1 / 524288.0 + self.dig_P2 * var1) / 524288.0
+        var1 = (1.0 + var1 / 32768.0) * self.dig_P1
+        if var1 == 0:
+            p = 0
+        else:
+            p = 1048576.0 - pres_raw
+            p = ((p - var2 / 4096.0) * 6250.0) / var1
+            var1 = self.dig_P9 * p * p / 2147483648.0
+            var2 = p * self.dig_P8 / 32768.0
+            p = p + (var1 + var2 + self.dig_P7) / 16.0
 
-    # Refine humidity
-    h = t_fine - 76800.0
-    h = (hum_raw - (self.dig_H4 * 64.0 + self.dig_H5 / 16384.0 * h)) 
-    h = h * (self.dig_H2 / 65536.0 * (1.0 + self.dig_H6 / 67108864.0 * h * (1.0 + self.dig_H3 / 67108864.0 * h)))
-    h = h * (1.0 - self.dig_H1 * h / 524288.0)
-    if h > 100:
-      h = 100
-    elif h < 0:
-      h = 0.
+        # Refine humidity
+        h = t_fine - 76800.0
+        h = (hum_raw - (self.dig_H4 * 64.0 + self.dig_H5 / 16384.0 * h))
+        h = h * (self.dig_H2 / 65536.0 * (1.0 + self.dig_H6 / 67108864.0 * h * (1.0 + self.dig_H3 / 67108864.0 * h)))
+        h = h * (1.0 - self.dig_H1 * h / 524288.0)
+        if h > 100:
+            h = 100
+        elif h < 0:
+            h = 0.
 
-    return t/100.0, p/100, h
+        return t / 100.0, p / 100, h

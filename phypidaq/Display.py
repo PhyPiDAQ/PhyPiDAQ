@@ -20,7 +20,7 @@ matplotlib.use('Qt5Agg')
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QPushButton, QLabel, QFileDialog
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-import matplotlib.pyplot as plt, matplotlib.animation as anim
+import matplotlib.animation as anim
 
 
 class Display(QMainWindow):
@@ -52,7 +52,6 @@ class Display(QMainWindow):
         self.setCentralWidget(self._main)
         layout = QtWidgets.QVBoxLayout(self._main)
         self.button_layout = QtWidgets.QHBoxLayout()
-
 
         # Setup configuration
         self.cmd_queue = cmd_queue
@@ -147,9 +146,9 @@ class Display(QMainWindow):
         button_h = 24
         button_w = 100
         if self.config_dict['startActive']:
-           self.button_resume = QPushButton("&Resume")
+            self.button_resume = QPushButton("&Resume")
         else:
-           self.button_resume = QPushButton("&Run")
+            self.button_resume = QPushButton("&Run")
         self.button_resume.clicked.connect(self.cmd_resume)
         self.button_resume.setFixedHeight(button_h)
         self.button_resume.setFixedWidth(button_w)
@@ -300,15 +299,15 @@ class Display(QMainWindow):
 
     def cmd_resume(self):
         if self.started:
-          self.cmd_queue.put('R')
-          self.button_resume.setEnabled(False)
-          self.button_pause.setEnabled(True)
-          # Reset the start time and restart the time
-          self.start_time = QtCore.QDateTime.currentSecsSinceEpoch()
-          self.time_label.setText("0s")
-          self.timer.start()
+            self.cmd_queue.put('R')
+            self.button_resume.setEnabled(False)
+            self.button_pause.setEnabled(True)
+            # Reset the start time and restart the time
+            self.start_time = QtCore.QDateTime.currentSecsSinceEpoch()
+            self.time_label.setText("0s")
+            self.timer.start()
         else:
-          self.cmd_start()
+            self.cmd_start()
 
     def cmd_save_data(self):
         self.cmd_queue.put('s')

@@ -6,7 +6,8 @@
     (BMP180 Temperature and Pressure Sensor)
 """
 
-import time, numpy as np
+import time
+import numpy as np
 
 # import module controlling readout device
 from phypidaq.BMPx80Config import *
@@ -27,7 +28,7 @@ dt = 2.
 # start time
 T0 = time.time()
 
-# readout loop, stop with <crtl>-C
+# readout loop, stop with <ctrl>-C
 while True:
     device.acquireData(dat)
     dT = time.time() - T0

@@ -1,0 +1,17 @@
+name: Markdown Code Check
+on: [push, pull_request]
+jobs:
+  check_markdown_formatting:
+    name: Check Markdown formatting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - name: Install markdown linter
+        run: npm install -g markdownlint-cli
+      - name: Run markdown linter
+        run: markdownlint "**/*.md" --config ".github/config/.markdownlint.json"
