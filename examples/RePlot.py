@@ -10,9 +10,7 @@ from __future__ import print_function, division, unicode_literals
 from __future__ import absolute_import
 
 import numpy as np
-import time
 import sys
-import os
 import matplotlib.pyplot as plt
 
 if len(sys.argv) >= 2:
@@ -29,7 +27,7 @@ if len(sys.argv) >= 3:
 # read data from file
 f = open(fnam)
 txtdata = f.read().splitlines()
-f.close
+f.close()
 
 # read and analyze header
 h0 = txtdata[0][2:]  # remove leading '#'

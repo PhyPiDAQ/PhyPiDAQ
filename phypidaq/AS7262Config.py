@@ -2,9 +2,12 @@
 from __future__ import print_function, division, unicode_literals
 from __future__ import absolute_import
 
-import numpy as np
 import time
 import sys
+import struct
+import smbus
+from i2cdevice import Device, Register, BitField, _int_to_bytes
+from i2cdevice.adapter import Adapter, LookupAdapter
 
 # code of driver classes included below
 
@@ -82,11 +85,6 @@ class AS7262Config(object):
 
 # - - - modified pimoroni driver code - - -
 #                         implemented as a class
-
-import struct
-import smbus
-from i2cdevice import Device, Register, BitField, _int_to_bytes
-from i2cdevice.adapter import Adapter, LookupAdapter
 
 
 class as7262VirtualRegisterBus:

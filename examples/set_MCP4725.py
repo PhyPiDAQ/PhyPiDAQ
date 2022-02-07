@@ -5,7 +5,6 @@
 from __future__ import print_function, division, unicode_literals
 from __future__ import absolute_import
 
-import time
 import sys
 # Import the MCP4725 module.
 import Adafruit_MCP4725

@@ -2,8 +2,6 @@
 """Read data in CSV format from websocket
 """
 
-import numpy
-import time
 import sys
 import asyncio
 import websockets

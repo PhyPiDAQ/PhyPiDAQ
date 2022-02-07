@@ -12,8 +12,6 @@ from __future__ import absolute_import
 
 import time
 import sys
-import math
-import random
 import threading
 import RPi.GPIO as gpio
 gpio.setmode(gpio.BCM)

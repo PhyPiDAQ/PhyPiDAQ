@@ -2,7 +2,6 @@
 from __future__ import print_function, division, unicode_literals
 from __future__ import absolute_import
 
-import numpy as np
 import time
 import sys
 import smbus2
@@ -12,7 +11,7 @@ import smbus2
 
 # import relevant pieces from adafruit
 
-class groveADCConfig(object):
+class GroveADCConfig(object):
     """grove ADC configuration and interface"""
 
     def __init__(self, confdict=None):
@@ -120,7 +119,7 @@ class Bus:
         return getattr(self.instance, name)
 
 
-class groveADC(object):
+class GroveADC(object):
     """
     Class groveADC for the ADC unit on Grove Base Hat for RPi.
 
@@ -226,9 +225,7 @@ class groveADC(object):
 
 
 if __name__ == '__main__':
-    import time
-
-    adc = ADC()
+    adc = GroveADC()
     while True:
         print(adc.read_voltage(0))
         time.sleep(1)

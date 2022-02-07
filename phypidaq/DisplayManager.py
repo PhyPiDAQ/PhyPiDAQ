@@ -1,6 +1,5 @@
 import multiprocessing as mp
 import time
-import sys
 
 from PyQt5.QtWidgets import QApplication
 

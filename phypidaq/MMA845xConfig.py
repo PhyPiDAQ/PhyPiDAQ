@@ -2,9 +2,9 @@
 from __future__ import print_function, division, unicode_literals
 from __future__ import absolute_import
 
-import numpy as np
-import time
 import sys
+import smbus
+import RPi.GPIO as GPIO
 
 # code for MMA8451 accelerometer contained below
 
@@ -76,11 +76,6 @@ class MMA845xConfig(object):
       (see https://github.com/Massixone/mma8451)
    into a library
 """
-
-import os
-import smbus
-import time
-import RPi.GPIO as GPIO
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Application Definition Constants (ADC)

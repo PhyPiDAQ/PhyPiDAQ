@@ -8,8 +8,6 @@ from __future__ import absolute_import
     attention: I²C interface needs level shifter 5.0 <-> 3.3 V
 """
 
-import numpy as np
-import time
 import sys
 from smbus2 import SMBus
 

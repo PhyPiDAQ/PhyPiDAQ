@@ -6,7 +6,6 @@ import os
 import sys
 import errno
 import time
-import numpy as np
 from scipy import interpolate
 
 

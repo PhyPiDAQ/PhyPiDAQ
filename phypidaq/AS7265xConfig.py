@@ -4,6 +4,7 @@ from __future__ import absolute_import
 import numpy as np
 import time
 import sys
+from smbus import SMBus  # Module for I2C
 
 # code of driver classes included below
 
@@ -138,10 +139,6 @@ class AS7265xConfig(object):
 # Feb 2019. Version 1
 
 
-from smbus import SMBus  # Module for I2C
-import time
-
-
 class AS7265x(object):
     def __init__(self, busnum, i2caddr):
         self.I2C_ADDR = i2caddr  # 0x49
@@ -161,22 +158,23 @@ class AS7265x(object):
     # Returns: data (int)
     def readReg(self, addr):
 
-        status = self.i2c.read_byte_data(self.I2C_ADDR,
-                                         self.STATUS_REG)  # Do a dummy read to ensure FIFO queue is empty
+        # Do a dummy read to ensure FIFO queue is empty
+        status = self.i2c.read_byte_data(self.I2C_ADDR, self.STATUS_REG)
         if (status & self.RX_VALID) != 0:  # There is data to be read
             incoming = self.i2c.read_byte_data(self.I2C_ADDR, self.READ_REG)  # Read it to clear the queue and dump it
 
         while 1:
 
-            status = self.i2c.read_byte_data(self.I2C_ADDR, self.STATUS_REG)  # Poll Slave Status register
+            # Poll Slave Status register
+            status = self.i2c.read_byte_data(self.I2C_ADDR, self.STATUS_REG)
 
             if (status & self.TX_VALID) == 0:  # Wait for OK to transmit
                 break
 
             time.sleep(self.POLLING_DELAY)  # Polling delay to avoid drowning Slave
 
-        self.i2c.write_byte_data(self.I2C_ADDR, self.WRITE_REG,
-                                 addr)  # send to Write register the Virtual Register address
+        # send to Write register the Virtual Register address
+        self.i2c.write_byte_data(self.I2C_ADDR, self.WRITE_REG, addr)
 
         while 1:
             status = self.i2c.read_byte_data(self.I2C_ADDR, self.STATUS_REG)  # Poll Slave Status register
@@ -185,7 +183,7 @@ class AS7265x(object):
                 break
             time.sleep(0.05)  # Polling delay to avoid drowning Slave
 
-        data = self.i2c.read_byte_data(self.I2C_ADDR, self.READ_REG)  # Finally pick up the data
+        data = self.i2c.read_byte_data(self.I2C_ADDR, self.READ_REG)  # Finally, pick up the data
 
         return data
 
@@ -204,8 +202,8 @@ class AS7265x(object):
 
             time.sleep(self.POLLING_DELAY)
 
-        self.i2c.write_byte_data(self.I2C_ADDR, self.WRITE_REG,
-                                 addr | 0x80)  # Send Virtual Register address to Write register
+        # Send Virtual Register address to Write register
+        self.i2c.write_byte_data(self.I2C_ADDR, self.WRITE_REG, addr | 0x80)
 
         while 1:
             status = self.i2c.read_byte_data(self.I2C_ADDR, self.STATUS_REG)  # Poll Slave Status register

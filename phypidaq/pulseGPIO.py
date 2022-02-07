@@ -2,14 +2,13 @@
 from __future__ import print_function, division, unicode_literals
 from __future__ import absolute_import
 
-import numpy as np
 import time
 import sys
 import RPi.GPIO as gpio
 from multiprocessing import Process, Queue
 
 
-class pulseGPIO(object):
+class PulseGPIO(object):
     """Set Signal on Raspberry Pi GPIO pin"""
 
     def pulseGPIOpin(self):

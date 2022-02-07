@@ -300,16 +300,16 @@ class runPhyPiDAQ(object):
                 PhyPiConfDict['ChanUnits'] = self.ChanUnits
             else:
                 PhyPiConfDict['ChanUnits'] = [''] * nc
-        l = len(PhyPiConfDict['ChanUnits'])
-        if l < nc:
-            PhyPiConfDict['ChanUnits'] += (nc - l) * ['']
+        length = len(PhyPiConfDict['ChanUnits'])
+        if length < nc:
+            PhyPiConfDict['ChanUnits'] += (nc - length) * ['']
 
         if 'ChanLabels' not in PhyPiConfDict:
             PhyPiConfDict['ChanLabels'] = [''] * nc
         else:
-            l = len(PhyPiConfDict['ChanLabels'])
-            if l < nc:
-                PhyPiConfDict['ChanLabels'] += (nc - l) * ['']
+            length = len(PhyPiConfDict['ChanLabels'])
+            if length < nc:
+                PhyPiConfDict['ChanLabels'] += (nc - length) * ['']
 
         if 'ChanLimits' not in PhyPiConfDict:
             if NFormulae > 0:

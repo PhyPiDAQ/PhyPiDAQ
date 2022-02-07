@@ -2,10 +2,10 @@
 from __future__ import print_function, division, unicode_literals
 from __future__ import absolute_import
 
-import numpy as np
 import time
 import sys
 import smbus
+from ctypes import c_short
 
 # default addresses and ChipIDs of Bosch BMP 085/180 and BMP/E 280 sensors
 BMP_I2CADDR = 0x77
@@ -147,9 +147,8 @@ class BMP085(object):
     def __init__(self, mode=BMP085_STANDARD, address=BMP_I2CADDR, i2c=None, busnum=1, i2c_interface=None):
         # Check that mode is valid.
         if mode not in [BMP085_ULTRALOWPOWER, BMP085_STANDARD, BMP085_HIGHRES, BMP085_ULTRAHIGHRES]:
-            raise ValueError('Unexpected mode value {0}.  Set mode to one of ' +
-                             'BMP085_ULTRALOWPOWER, BMP085_STANDARD, BMP085_HIGHRES, or BMP085_ULTRAHIGHRES'.format(
-                                 mode))
+            raise ValueError(f'Unexpected mode value {mode}.  Set mode to one of ' +
+                             'BMP085_ULTRALOWPOWER, BMP085_STANDARD, BMP085_HIGHRES, or BMP085_ULTRAHIGHRES')
         self._mode = mode
         # Create I2C device.
         if i2c is None:
@@ -414,10 +413,6 @@ class BMP280(object):
 # adapted from original code by Matt Hawkins
 
 # --------------------------------------
-# import smbus
-from ctypes import c_short
-from ctypes import c_byte
-from ctypes import c_ubyte
 
 
 # some helper functions
