@@ -6,7 +6,7 @@
 """
 
 from phypidaq.runPhyPiDAQ import *
-from phypidaq.helpers import kbdwait
+from phypidaq.helpers import keyboard_wait
 import sys
 
 if __name__ == "__main__":  # - - - - - - - - - - - - - - - - - - - -
@@ -15,16 +15,16 @@ if __name__ == "__main__":  # - - - - - - - - - - - - - - - - - - - -
         print("\n!!! run_phypi.py usage:\n" + 10 * ' ' + "run_phypi.py <config>.daq\n")
         prompt = "    starting demo mode from configuration PhyPiDemo.daq" \
                  + "\n" + 25 * ' ' + "type <ret> to continue, 'E+<ret>' to exit -> "
-        answ = kbdwait(prompt)
-        if answ == '':
+        answer = keyboard_wait(prompt)
+        if answer == '':
             sys.argv.append("PhyPiDemo.daq")
         else:
             print("     exiting")
             sys.exit(1)
 
     daq = runPhyPiDAQ(verbose=1)
-    # 1: normal output
     # 0: only errors are printed
+    # 1: normal output
     # 2: verbose output
 
     daq.setup()

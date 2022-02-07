@@ -33,7 +33,7 @@ This is a quickstart guide on how to install the software package and run the de
 The following requirements need to be met to work
 
 - Linux/Unix operating system
-- Python3 runtime
+- Python3.6 runtime or newer
 - `git`-package installed
 - If you want to use the sensor, you need a Raspberry Pi
 

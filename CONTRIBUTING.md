@@ -9,7 +9,9 @@ judgment, and feel free to propose changes to this document in a pull request.
 
 ### Reporting bugs
 
-Please be as specific as possible, when you try to report a bug.
+* **Ensure the bug was not already reported** by searching on GitHub under
+  [Issues](https://github.com/PhyPiDAQ/PhyPiDAQ/issues).
+* Please be as specific as possible, when you try to report a bug.
 
 ### Pull Requests
 

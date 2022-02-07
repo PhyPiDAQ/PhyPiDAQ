@@ -25,27 +25,20 @@ from picodaqa.mpOsci import mpOsci
 
 # helper functions
 
-def kbdInput(cmdQ):
-    """
-      read keyboard input, run as background-thread to avoid blocking
-    """
-    # 1st, remove python 2 vs. python 3 incompatibility for keyboard input
-    if sys.version_info[:2] <= (2, 7):
-        get_input = raw_input
-    else:
-        get_input = input
+def keyboard_input(cmd_queue):
+    """ read keyboard input, run as background-thread to avoid blocking """
 
     while ACTIVE:
-        kbdtxt = get_input(20 * ' ' + 'type -> P(ause), R(esume), or (E)nd+ <ret> ')
-        cmdQ.put(kbdtxt)
-        kbdtxt = ''
+        kbdtxt = input(20 * ' ' + 'type -> P(ause), R(esume), or (E)nd+ <ret> ')
+        cmd_queue.put(kbdtxt)
+        kbdtxt = ""
 
 
-def stop_processes(proclst):
+def stop_processes(process_list):
     """
       Close all running processes at end of run
     """
-    for p in proclst:  # stop all sub-processes
+    for p in process_list:  # stop all sub-processes
         if p.is_alive():
             print('    terminating ' + p.name)
             if p.is_alive():
@@ -90,12 +83,10 @@ if __name__ == "__main__":  # - - - - - - - - - - - - - - - - - - - - - -
     datQ = mp.Queue(1)  # Queue for data transfer to sub-process
     XY = True  # display Channel A vs. B if True
     name = 'Oscilloscope'
-    procs.append(mp.Process(name=name, target=mpOsci,
-                            args=(datQ, PSconf.OscConfDict, deltaT, name)))
+    procs.append(mp.Process(name=name, target=mpOsci, args=(datQ, PSconf.OscConfDict, deltaT, name)))
     #                    Queue      config        interval name
 
-    thrds.append(threading.Thread(name='kbdInput', target=kbdInput,
-                                  args=(cmdQ,)))
+    thrds.append(threading.Thread(name='kbdInput', target=keyboard_input, args=(cmdQ,)))
     #                           Queue
 
     # start subprocess(es)
@@ -106,10 +97,10 @@ if __name__ == "__main__":  # - - - - - - - - - - - - - - - - - - - - - -
 
     ACTIVE = True  # thread(s) active
     # start threads
-    for thrd in thrds:
-        print(' -> starting thread ', thrd.name)
-        thrd.deamon = True
-        thrd.start()
+    for thread in thrds:
+        print(' -> starting thread ', thread.name)
+        thread.deamon = True
+        thread.start()
 
     DAQ_ACTIVE = True  # Data Acquisition active
     # -- LOOP

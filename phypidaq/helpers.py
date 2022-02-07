@@ -40,11 +40,11 @@ def generateCalibrationFunction(calibd):
     return interpolate.UnivariateSpline(r, t, k=min(3, len(t) - 1), s=0)
 
 
-def stop_processes(proclst):
+def stop_processes(process_list):
     """
       Close all running processes at end of run
     """
-    for p in proclst:  # stop all sub-processes
+    for p in process_list:  # stop all sub-processes
         if p.is_alive():
             print('    terminating ' + p.name)
             if p.is_alive():
@@ -52,20 +52,13 @@ def stop_processes(proclst):
             time.sleep(1.)
 
 
-def kbdwait(prompt=None):
-    """
-      wait for keyboard input
-    """
-    # 1st, remove pyhton 2 vs. python 3 incompatibility for keyboard input
-    if sys.version_info[:2] <= (2, 7):
-        get_input = raw_input
-    else:
-        get_input = input
+def keyboard_wait(prompt=None):
+    """ wait for keyboard input """
     #  wait for input
     if prompt is None:
-        return get_input(50 * ' ' + 'type <ret> to exit -> ')
+        return input(50 * ' ' + 'type <ret> to exit -> ')
     else:
-        return get_input(prompt)
+        return input(prompt)
 
 
 class DAQwait(object):
@@ -133,7 +126,7 @@ class RingBuffer(object):
             return self.B[: self.k]
 
 
-class fifoManager(object):
+class FifoManager(object):
     """ open a fifo (linux pipe) to transfer data to external process """
 
     def __init__(self, fname):

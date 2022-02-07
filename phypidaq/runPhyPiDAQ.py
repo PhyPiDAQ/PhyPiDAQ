@@ -67,22 +67,15 @@ class runPhyPiDAQ(object):
         status = tc.b+tc.g+'Running'+tc.E if self.DAQ_ACTIVE else tc.b+tc.y+'Paused '+tc.E
         print('\r' + 5*' ' + status + 5*' ' + tc.prompt, end='')
 
-    def kbdInput(self, cmdQ):
+    def keyboard_input(self, cmd_queue):
         """ Read keyboard input, run as background-thread to avoid blocking """
-
-        # 1st, remove pyhton 2 vs. python 3 incompatibility for keyboard input
-        if sys.version_info[:2] <= (2, 7):
-            get_input = raw_input
-        else:
-            get_input = input
 
         first = True
         while self.ACTIVE:
             if first:
                 self.prompt()
                 first = False
-            cmdQ.put(get_input())
-            kbdtxt = ''
+            cmd_queue.put(input())
 
     def decodeCommand(self, cmdQ):
         """
@@ -350,8 +343,8 @@ class runPhyPiDAQ(object):
         if self.DAQfifo:
             print('PhyPiDAQ: opening fifo ', self.DAQfifo)
             print('   start process reading from fifo')
-            from .helpers import fifoManager
-            self.send_to_fifo = fifoManager(self.DAQfifo)
+            from .helpers import FifoManager
+            self.send_to_fifo = FifoManager(self.DAQfifo)
 
         # Configure a websocket for data transfer
         if 'DAQwebsocket' in PhyPiConfDict:
@@ -471,7 +464,7 @@ class runPhyPiDAQ(object):
             print('  starting in Paused mode - type R to resume')
 
         # start keyboard control
-        kbdthrd = threading.Thread(name='kbdInput', target=self.kbdInput, args=(cmdQ,))
+        kbdthrd = threading.Thread(name='kbdInput', target=self.keyboard_input, args=(cmdQ,))
         kbdthrd.daemon = True
         kbdthrd.start()
 
