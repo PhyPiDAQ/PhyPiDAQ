@@ -64,7 +64,8 @@ class DataRecorder(object):
 
     def close(self):
         # explicit close method
-        if not self.f.closed: self.f.close()
+        if not self.f.closed:
+            self.f.close()
 
 #  def __del__(self):
 #  # define a destructor in case .close() is forgotten

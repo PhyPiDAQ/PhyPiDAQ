@@ -3,12 +3,14 @@
 """ script readPipe.py
     usage: readPipe [name of pipe]
 
-    Read data from a named linux pipe 
-    filled by run_phypi.py with option 
+    Read data from a named linux pipe
+    filled by run_phypi.py with option
     DAQfifo: <name of pipe>
 """
 
-import sys, os, errno
+import sys
+import os
+import errno
 
 if len(sys.argv) >= 2:
     FiFo = sys.argv[1]

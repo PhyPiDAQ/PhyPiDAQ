@@ -3,7 +3,7 @@
 """ script RePlot.py
     usage: RePlot.py [filename] [[channel numbers]]
 
-    Read data exported by run_phypi.py and show plot   
+    Read data exported by run_phypi.py and show plot
 """
 
 from __future__ import print_function, division, unicode_literals
@@ -37,7 +37,7 @@ h1 = txtdata[1][2:]
 h2 = txtdata[2][2:]
 dT = float(h1.split(' ')[-1])
 tags = h2.split(',')
-# read data part 
+# read data part
 data = np.loadtxt(txtdata, dtype=np.float32,
                   delimiter=',',
                   unpack=True)
@@ -104,7 +104,7 @@ ylims = []
 for i in range(NChannels):
     ic = Channels[i]
     ylims.append(getlims(min(data[ic]), max(data[ic])))
-# channels >1 are mapped to axis 1, find min, max 
+# channels >1 are mapped to axis 1, find min, max
 ymn0 = ylims[0][0]
 ymx0 = ylims[0][1]
 if NChannels > 1:
@@ -123,7 +123,7 @@ if NChannels > 1:
     else:
         ylims[1][1] = ymx1
 
-# set options for axes 
+# set options for axes
 for i in range(Naxes):
     axes[i].set_xlim(Ti[0], Ti[-1])
     axes[i].set_ylim(ylims[i][0], ylims[i][1])
@@ -131,7 +131,7 @@ for i in range(Naxes):
     axes[i].grid(True, linestyle='--', alpha=0.3)
 axes[0].set_xlabel('History (' + tUnit + ')')
 
-# plot data  
+# plot data
 for i in range(NChannels):
     ic = Channels[i]
     if i == 0:

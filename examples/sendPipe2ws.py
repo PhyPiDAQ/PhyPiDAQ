@@ -33,7 +33,7 @@ except OSError as e:
     if e.errno != errno.EEXIST:
         raise
 
-# set up a websocket for acces via ws://localhost:8314  
+# set up a websocket for acces via ws://localhost:8314
 # host = 'localhost' only local connections
 host = ''  # connections from anywhere (if firewall permits)
 port = 8314

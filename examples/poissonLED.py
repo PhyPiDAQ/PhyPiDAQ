@@ -5,7 +5,11 @@
 from __future__ import print_function, division, unicode_literals
 from __future__ import absolute_import
 
-import time, sys, math, random, threading
+import time
+import sys
+import math
+import random
+import threading
 import RPi.GPIO as gpio
 
 gpio.setmode(gpio.BCM)
@@ -21,7 +25,7 @@ def LEDflash(pin, dt):
 pLED = 26
 gpio.setup(pLED, gpio.OUT)
 
-tau = 1.  # 1 second default 
+tau = 1.  # 1 second default
 if len(sys.argv) > 1:
     tau = float(sys.argv[1])
 tflash = 0.0075

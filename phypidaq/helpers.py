@@ -48,7 +48,8 @@ def stop_processes(proclst):
     for p in proclst:  # stop all sub-processes
         if p.is_alive():
             print('    terminating ' + p.name)
-            if p.is_alive(): p.terminate()
+            if p.is_alive():
+                p.terminate()
             time.sleep(1.)
 
 
@@ -85,7 +86,8 @@ class DAQwait(object):
              TO:   start time of action to be timed
                      if not given, take end-time of last wait
         """
-        if T0 is not None: self.T0 = T0
+        if T0 is not None:
+            self.T0 = T0
         dtcor = self.dt - time.time() + self.T0
         if dtcor > 0.:
             time.sleep(dtcor)

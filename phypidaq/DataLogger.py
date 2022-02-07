@@ -161,7 +161,8 @@ class DataLogger(object):
 
     def init(self, NPoints=None):
         # initialize objects to be animated
-        if NPoints is None: NPoints = self.Npoints
+        if NPoints is None:
+            NPoints = self.Npoints
         if not self.graphs_initialized:
             self.initgraph(NPoints)  # create matplotlib figure
 

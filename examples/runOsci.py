@@ -48,7 +48,8 @@ def stop_processes(proclst):
     for p in proclst:  # stop all sub-processes
         if p.is_alive():
             print('    terminating ' + p.name)
-            if p.is_alive(): p.terminate()
+            if p.is_alive():
+                p.terminate()
             time.sleep(1.)
 
 
