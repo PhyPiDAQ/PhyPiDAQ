@@ -19,7 +19,8 @@ class Ui_PhyPiWindow(object):
         sizePolicy.setHeightForWidth(PhyPiWindow.sizePolicy().hasHeightForWidth())
         PhyPiWindow.setSizePolicy(sizePolicy)
         self.centralwidget = QtWidgets.QWidget(PhyPiWindow)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
+                                           QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.centralwidget.sizePolicy().hasHeightForWidth())
@@ -57,7 +58,7 @@ class Ui_PhyPiWindow(object):
         self.lE_DAQConfFile = QtWidgets.QLineEdit(self.Tab_Control)
         self.lE_DAQConfFile.setGeometry(QtCore.QRect(160, 430, 371, 32))
         self.lE_DAQConfFile.setText("")
-        self.lE_DAQConfFile.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.lE_DAQConfFile.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
         self.lE_DAQConfFile.setReadOnly(True)
         self.lE_DAQConfFile.setObjectName("lE_DAQConfFile")
         self.pB_StartRun = QtWidgets.QPushButton(self.Tab_Control)
@@ -240,45 +241,65 @@ class Ui_PhyPiWindow(object):
     def retranslateUi(self, PhyPiWindow):
         _translate = QtCore.QCoreApplication.translate
         PhyPiWindow.setWindowTitle(_translate("PhyPiWindow", "PhiPiDAQ"))
-        self.tab_Main.setToolTip(_translate("PhyPiWindow", "<html><head/><body><p>Output  / Configuration / Help</p></body></html>"))
-        self.Tab_Control.setToolTip(_translate("PhyPiWindow", "<html><head/><body><p>Control Panel</p></body></html>"))
-        self.label_Picture.setToolTip(_translate("PhyPiWindow", "PhyPi Data Acquitision with Raspberry Pi"))
-        self.label_caption.setText(_translate("PhyPiWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:16pt; font-weight:600; color:#0000ff;\">D</span><span style=\" font-size:16pt; font-weight:600; color:#00007f;\">ata </span><span style=\" font-size:16pt; font-weight:600; color:#0000ff;\">A</span><span style=\" font-size:16pt; font-weight:600; color:#00007f;\">c</span><span style=\" font-size:16pt; font-weight:600; color:#0000ff;\">q</span><span style=\" font-size:16pt; font-weight:600; color:#00007f;\">uisition </span></p><p align=\"center\"><span style=\" font-size:16pt; font-weight:600; color:#00007f;\">for </span><span style=\" font-size:16pt; font-weight:600; color:#0000ff;\">Phy</span><span style=\" font-size:16pt; font-weight:600; color:#00007f;\">sics </span></p><p align=\"center\"><span style=\" font-size:16pt; font-weight:600; color:#00007f;\">with Raspberry </span><span style=\" font-size:16pt; font-weight:600; color:#0000ff;\">Pi</span><span style=\" font-size:16pt; font-weight:600; color:#00007f;\"/></p></body></html>"))
+        self.tab_Main.setToolTip(
+            _translate("PhyPiWindow", "Output  / Configuration / Help"))
+        self.Tab_Control.setToolTip(_translate("PhyPiWindow", "Control Panel"))
+        self.label_Picture.setToolTip(_translate("PhyPiWindow", "PhyPi Data Acquisition with Raspberry Pi"))
+        label_text = """
+        <html><head/><body><p align=\"center\"><span style=\" font-size:16pt; font-weight:600; color:#0000ff;\">D</span>
+        <span style=\" font-size:16pt; font-weight:600; 
+        color:#00007f;\">ata </span><span style=\" font-size:16pt; font-weight:600; color:#0000ff;\">A</span>
+        <span style=\" font-size:16pt; font-weight:600; color:#00007f;\">c</span><span style=\" font-size:16pt; 
+        font-weight:600; color:#0000ff;\">q</span><span style=\" font-size:16pt; font-weight:600; 
+        color:#00007f;\">uisition </span></p><p align=\"center\"><span style=\" font-size:16pt; font-weight:600; 
+        color:#00007f;\">for </span><span style=\" font-size:16pt; font-weight:600; color:#0000ff;\">Phy</span>
+        <span style=\" font-size:16pt; font-weight:600; color:#00007f;\">sics </span></p><p align=\"center\">
+        <span style=\" font-size:16pt; font-weight:600; color:#00007f;\">with Raspberry </span>
+        <span style=\" font-size:16pt; font-weight:600; color:#0000ff;\">Pi</span><span style=\" font-size:16pt; 
+        font-weight:600; color:#00007f;\"/></p></body></html>
+        """
+        self.label_caption.setText(_translate("PhyPiWindow", label_text))
         self.label_DAQconfig.setText(_translate("PhyPiWindow", "DAQ config: "))
-        self.lE_DAQConfFile.setToolTip(_translate("PhyPiWindow", "<html><head/><body><p>DAQ configuration file (type .daq)</p></body></html>"))
-        self.pB_StartRun.setToolTip(_translate("PhyPiWindow", "<html><head/><body><p>Start Data Acquisition</p></body></html>"))
+        self.lE_DAQConfFile.setToolTip(_translate("PhyPiWindow", "DAQ configuration file (type .daq)"))
+        self.pB_StartRun.setToolTip(_translate("PhyPiWindow", "Start Data Acquisition"))
         self.pB_StartRun.setText(_translate("PhyPiWindow", "  StartRun"))
-        self.pB_FileSelect.setToolTip(_translate("PhyPiWindow", "<html><head/><body><p>select daq configuration file</p></body></html>"))
-        self.pB_abort.setToolTip(_translate("PhyPiWindow", "<html><head/><body><p>Exit PhyPi Gui</p></body></html>"))
+        self.pB_FileSelect.setToolTip(_translate("PhyPiWindow", "select daq configuration file"))
+        self.pB_abort.setToolTip(_translate("PhyPiWindow", "Exit PhyPi Gui"))
         self.label_WorkDir.setText(_translate("PhyPiWindow", "Work Dir: "))
-        self.pB_WDselect.setToolTip(_translate("PhyPiWindow", "<html><head/><body><p>select working directory (where output is stored)</p></body></html>"))
+        self.pB_WDselect.setToolTip(_translate("PhyPiWindow", "select working directory (where output is stored)"))
         self.tab_Main.setTabText(self.tab_Main.indexOf(self.Tab_Control), _translate("PhyPiWindow", "Control"))
         self.Tab_Config.setToolTip(_translate("PhyPiWindow", "<html><head/><body><p>Config Panel</p></body></html>"))
-        self.tabConfig.setToolTip(_translate("PhyPiWindow", "<html><head/><body><p>Configuration Files</p></body></html>"))
-        self.tab_phypiConfig.setToolTip(_translate("PhyPiWindow", "<html><head/><body><p>PhyPi Configuration</p></body></html>"))
-        self.pTE_phypiConfig.setToolTip(_translate("PhyPiWindow", "<html><head/><body><p>Main PhyPi Configuration File</p></body></html>"))
-        self.pB_reloadConfig.setToolTip(_translate("PhyPiWindow", "<html><head/><body><p>reload device configuration files if names or paths changed</p></body></html>"))
+        self.tabConfig.setToolTip(
+            _translate("PhyPiWindow", "Configuration Files"))
+        self.tab_phypiConfig.setToolTip(_translate("PhyPiWindow", "PhyPi Configuration"))
+        self.pTE_phypiConfig.setToolTip(_translate("PhyPiWindow", "Main PhyPi Configuration File"))
+        self.pB_reloadConfig.setToolTip(_translate("PhyPiWindow",
+                                                   "reload device configuration files if names or paths changed"))
         self.pB_reloadConfig.setText(_translate("PhyPiWindow", "reload device config(s)"))
-        self.tabConfig.setTabText(self.tabConfig.indexOf(self.tab_phypiConfig), _translate("PhyPiWindow", "PhyPi Config"))
-        self.tab_DeviceConfig0.setToolTip(_translate("PhyPiWindow", "<html><head/><body><p>(1st) Device Configuration</p></body></html>"))
+        self.tabConfig.setTabText(self.tabConfig.indexOf(self.tab_phypiConfig),
+                                  _translate("PhyPiWindow", "PhyPi Config"))
+        self.tab_DeviceConfig0.setToolTip(_translate("PhyPiWindow", "(1st) Device Configuration"))
         self.pTE_DeviceConfig0.setToolTip(_translate("PhyPiWindow", "Device Configuration"))
-        self.pB_DeviceSelect0.setToolTip(_translate("PhyPiWindow", "<html><head/><body><p>load template device configuration</p></body></html>"))
+        self.pB_DeviceSelect0.setToolTip(_translate("PhyPiWindow", "load template device configuration"))
         self.pB_DeviceSelect0.setText(_translate("PhyPiWindow", "   load Device Config"))
-        self.tabConfig.setTabText(self.tabConfig.indexOf(self.tab_DeviceConfig0), _translate("PhyPiWindow", "Device Config"))
-        self.tab_DeviceConfig1.setToolTip(_translate("PhyPiWindow", "<html><head/><body><p>2nd Device Configuration </p></body></html>"))
+        self.tabConfig.setTabText(self.tabConfig.indexOf(self.tab_DeviceConfig0),
+                                  _translate("PhyPiWindow", "Device Config"))
+        self.tab_DeviceConfig1.setToolTip(_translate("PhyPiWindow", "2nd Device Configuration"))
         self.pB_DeviceSelect1.setText(_translate("PhyPiWindow", "     load Device Config"))
-        self.tabConfig.setTabText(self.tabConfig.indexOf(self.tab_DeviceConfig1), _translate("PhyPiWindow", "2nd Device"))
+        self.tabConfig.setTabText(self.tabConfig.indexOf(self.tab_DeviceConfig1),
+                                  _translate("PhyPiWindow", "2nd Device"))
         self.pB_DeviceSelect2.setText(_translate("PhyPiWindow", "     load Device Config"))
-        self.tabConfig.setTabText(self.tabConfig.indexOf(self.tab_DeviceConfig2), _translate("PhyPiWindow", "3rd Device"))
+        self.tabConfig.setTabText(self.tabConfig.indexOf(self.tab_DeviceConfig2),
+                                  _translate("PhyPiWindow", "3rd Device"))
         self.rB_EditMode.setText(_translate("PhyPiWindow", "Edit Mode"))
         self.tab_Main.setTabText(self.tab_Main.indexOf(self.Tab_Config), _translate("PhyPiWindow", "Configuration"))
-        self.Tab_Help.setToolTip(_translate("PhyPiWindow", "<html><head/><body><p>Info &amp; Help</p></body></html>"))
+        self.Tab_Help.setToolTip(_translate("PhyPiWindow", "Info &amp; Help"))
         self.pB_Help.setText(_translate("PhyPiWindow", "English"))
         self.pB_Hilfe.setText(_translate("PhyPiWindow", "Deutsch"))
         self.tab_Main.setTabText(self.tab_Main.indexOf(self.Tab_Help), _translate("PhyPiWindow", "Help / Hilfe"))
-        self.label.setWhatsThis(_translate("PhyPiWindow", "<html><head/><body><p>common name</p></body></html>"))
+        self.label.setWhatsThis(_translate("PhyPiWindow", "common name"))
         self.label.setText(_translate("PhyPiWindow", "Name:"))
-        self.lE_RunTag.setToolTip(_translate("PhyPiWindow", "<html><head/><body><p>Name for the run</p></body></html>"))
+        self.lE_RunTag.setToolTip(_translate("PhyPiWindow", "Name for the run"))
         self.lE_RunTag.setText(_translate("PhyPiWindow", "phypi"))
-        self.pB_SaveDefault.setToolTip(_translate("PhyPiWindow", "<html><head/><body><p>save all config files</p></body></html>"))
+        self.pB_SaveDefault.setToolTip(_translate("PhyPiWindow", "save all config files"))
         self.pB_SaveDefault.setText(_translate("PhyPiWindow", "Save Config"))
