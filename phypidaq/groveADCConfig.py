@@ -58,11 +58,10 @@ class groveADCConfig(object):
 # - - - - - - - - Grove driver code - - - - - - - - - - -
 
 # The MIT License (MIT)
-# Copyright (C) 2018  Seeed Technology Co.,Ltd. 
+# Copyright (C) 2018  Seeed Technology Co.,Ltd.
 #
 # This is the ADC library for Grove Base Hat
 # which used to connect grove sensors for raspberry pi.
-# 
 """
 This is the code for
     - `Grove Base Hat for RPi

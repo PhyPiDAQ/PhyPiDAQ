@@ -45,7 +45,8 @@ def pwmpulse(pin, dt, dc=0.5):
 
 
 print('flashing GPIO pin %i with dt= %.3gs and duty cycle %.3g' % (GPIOpin, dt, dc))
-if dt < dtslow: print('         using gpio.PWM()')
+if dt < dtslow:
+    print('         using gpio.PWM()')
 
 try:
     gpio.setup(GPIOpin, gpio.OUT)  # initialize GPIO pin for output

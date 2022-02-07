@@ -25,7 +25,8 @@ class BMPx80Config(object):
 
     def __init__(self, confdict=None):
         self.BMP_I2CADDR = BMP_I2CADDR
-        if confdict is None: confdict = {}
+        if confdict is None:
+            confdict = {}
         if 'I2CADDR' in confdict:
             self.BMP_I2CADDR = confdict['I2CADDR']
             print("BMPx80: I2C address set to %x " % self.BMP_I2CADDR)

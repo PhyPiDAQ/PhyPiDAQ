@@ -130,7 +130,7 @@ class AS7265xConfig(object):
 ##############################################################################
 
 # driver code
-#   adapted from 
+#   adapted from
 # https://github.com/LiamsGitHub/AS7265x-spectrometer/blob/master/spectrometer.py
 
 

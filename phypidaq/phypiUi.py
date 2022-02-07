@@ -247,15 +247,15 @@ class Ui_PhyPiWindow(object):
         self.label_Picture.setToolTip(_translate("PhyPiWindow", "PhyPi Data Acquisition with Raspberry Pi"))
         label_text = """
         <html><head/><body><p align=\"center\"><span style=\" font-size:16pt; font-weight:600; color:#0000ff;\">D</span>
-        <span style=\" font-size:16pt; font-weight:600; 
+        <span style=\" font-size:16pt; font-weight:600;
         color:#00007f;\">ata </span><span style=\" font-size:16pt; font-weight:600; color:#0000ff;\">A</span>
-        <span style=\" font-size:16pt; font-weight:600; color:#00007f;\">c</span><span style=\" font-size:16pt; 
-        font-weight:600; color:#0000ff;\">q</span><span style=\" font-size:16pt; font-weight:600; 
-        color:#00007f;\">uisition </span></p><p align=\"center\"><span style=\" font-size:16pt; font-weight:600; 
+        <span style=\" font-size:16pt; font-weight:600; color:#00007f;\">c</span><span style=\" font-size:16pt;
+        font-weight:600; color:#0000ff;\">q</span><span style=\" font-size:16pt; font-weight:600;
+        color:#00007f;\">uisition </span></p><p align=\"center\"><span style=\" font-size:16pt; font-weight:600;
         color:#00007f;\">for </span><span style=\" font-size:16pt; font-weight:600; color:#0000ff;\">Phy</span>
         <span style=\" font-size:16pt; font-weight:600; color:#00007f;\">sics </span></p><p align=\"center\">
         <span style=\" font-size:16pt; font-weight:600; color:#00007f;\">with Raspberry </span>
-        <span style=\" font-size:16pt; font-weight:600; color:#0000ff;\">Pi</span><span style=\" font-size:16pt; 
+        <span style=\" font-size:16pt; font-weight:600; color:#0000ff;\">Pi</span><span style=\" font-size:16pt;
         font-weight:600; color:#00007f;\"/></p></body></html>
         """
         self.label_caption.setText(_translate("PhyPiWindow", label_text))

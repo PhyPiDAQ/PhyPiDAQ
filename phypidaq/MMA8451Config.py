@@ -63,7 +63,7 @@ class MMA8451Config(object):
 
 """code to configure and read out Adafruit MMA8451 3-axis Accelerometer
 
-   strip-down version of original code by Massimo Di Primo 
+   strip-down version of original code by Massimo Di Primo
       (see https://github.com/Massixone/mma8451)
    into a library
 """
@@ -141,7 +141,7 @@ DATARATE_12_5_HZ = 0x28  # 12.5Hz
 DATARATE_6_25HZ = 0x30  # 6.25Hz
 DATARATE_1_56_HZ = 0x38  # 1.56Hz
 
-# Orientation labeling 
+# Orientation labeling
 PL_PUF = 0
 PL_PUB = 1
 PL_PDF = 2
@@ -424,13 +424,13 @@ class MMA8451:
     def getAxisValue(self):
         """
         Retrieves axis values and converts into a readable format (i.e. m/s2)
-        :return:  ax, ay, az acceleration 
+        :return:  ax, ay, az acceleration
         """
-        #        # Make sure F_READ and F_MODE are disabled.
-        #        f_read = self.b.read_byte_data(self.a, REG_CTRL_REG1) & FLAG_F_READ
-        #        assert f_read == 0, 'F_READ mode is not disabled. : %s' % (f_read)
-        #        f_mode = self.b.read_byte_data(self.a, REG_F_SETUP) & FLAG_F_MODE_FIFO_TRIGGER
-        #        assert f_mode == 0, 'F_MODE mode is not disabled. : %s' % (f_mode)
+        #  # Make sure F_READ and F_MODE are disabled.
+        #  f_read = self.b.read_byte_data(self.a, REG_CTRL_REG1) & FLAG_F_READ
+        #  assert f_read == 0, 'F_READ mode is not disabled. : %s' % (f_read)
+        #  f_mode = self.b.read_byte_data(self.a, REG_F_SETUP) & FLAG_F_MODE_FIFO_TRIGGER
+        #  assert f_mode == 0, 'F_MODE mode is not disabled. : %s' % (f_mode)
 
         #
         self.xyzdata = self.block_read(REG_OUT_X_MSB, 6)
@@ -462,33 +462,26 @@ class MMA8451:
         print("Raspberry Info      = " + str(self.raspiInfo))
 
     def debugShowRegisters(self):
-        print("REG_STATUS       (0x00):" + str(format(self.readRegister(REG_STATUS), '#04x')) + " | Binary: " + format(
-            self.readRegister(REG_STATUS), 'b').zfill(8))
-        print("REG_WHOAMI       (0x0d):" + str(format(self.readRegister(REG_WHOAMI), '#04x')) + " | Binary: " + format(
-            self.readRegister(REG_WHOAMI), 'b').zfill(8))
-        print("REG_F_SETUP      (0x09):" + str(format(self.readRegister(REG_F_SETUP), '#04x')) + " | Binary: " + format(
-            self.readRegister(REG_F_SETUP), 'b').zfill(8))
-        print("REG_XYZ_DATA_CFG (0x0e):" + str(
-            format(self.readRegister(REG_XYZ_DATA_CFG), '#04x')) + " | Binary: " + format(
-            self.readRegister(REG_XYZ_DATA_CFG), 'b').zfill(8))
-        print(
-            "REG_CTRL_REG1    (0x2a):" + str(format(self.readRegister(REG_CTRL_REG1), '#04x')) + " | Binary: " + format(
-                self.readRegister(REG_CTRL_REG1), 'b').zfill(8))
-        print(
-            "REG_CTRL_REG2    (0x2b):" + str(format(self.readRegister(REG_CTRL_REG2), '#04x')) + " | Binary: " + format(
-                self.readRegister(REG_CTRL_REG2), 'b').zfill(8))
-        print(
-            "REG_CTRL_REG3    (0x2c):" + str(format(self.readRegister(REG_CTRL_REG3), '#04x')) + " | Binary: " + format(
-                self.readRegister(REG_CTRL_REG3), 'b').zfill(8))
-        print(
-            "REG_CTRL_REG4    (0x2d):" + str(format(self.readRegister(REG_CTRL_REG4), '#04x')) + " | Binary: " + format(
-                self.readRegister(REG_CTRL_REG4), 'b').zfill(8))
-        print(
-            "REG_CTRL_REG5    (0x2e):" + str(format(self.readRegister(REG_CTRL_REG5), '#04x')) + " | Binary: " + format(
-                self.readRegister(REG_CTRL_REG5), 'b').zfill(8))
-        print(
-            "REG_PL_STATUS    (0x10):" + str(format(self.readRegister(REG_PL_STATUS), '#04x')) + " | Binary: " + format(
-                self.readRegister(REG_PL_STATUS), 'b').zfill(8))
+        print("REG_STATUS       (0x00):" + str(format(self.readRegister(REG_STATUS), '#04x'))
+              + " | Binary: " + format(self.readRegister(REG_STATUS), 'b').zfill(8))
+        print("REG_WHOAMI       (0x0d):" + str(format(self.readRegister(REG_WHOAMI), '#04x'))
+              + " | Binary: " + format(self.readRegister(REG_WHOAMI), 'b').zfill(8))
+        print("REG_F_SETUP      (0x09):" + str(format(self.readRegister(REG_F_SETUP), '#04x'))
+              + " | Binary: " + format(self.readRegister(REG_F_SETUP), 'b').zfill(8))
+        print("REG_XYZ_DATA_CFG (0x0e):" + str(format(self.readRegister(REG_XYZ_DATA_CFG), '#04x'))
+              + " | Binary: " + format(self.readRegister(REG_XYZ_DATA_CFG), 'b').zfill(8))
+        print("REG_CTRL_REG1    (0x2a):" + str(format(self.readRegister(REG_CTRL_REG1), '#04x'))
+              + " | Binary: " + format(self.readRegister(REG_CTRL_REG1), 'b').zfill(8))
+        print("REG_CTRL_REG2    (0x2b):" + str(format(self.readRegister(REG_CTRL_REG2), '#04x'))
+              + " | Binary: " + format(self.readRegister(REG_CTRL_REG2), 'b').zfill(8))
+        print("REG_CTRL_REG3    (0x2c):" + str(format(self.readRegister(REG_CTRL_REG3), '#04x'))
+              + " | Binary: " + format(self.readRegister(REG_CTRL_REG3), 'b').zfill(8))
+        print("REG_CTRL_REG4    (0x2d):" + str(format(self.readRegister(REG_CTRL_REG4), '#04x'))
+              + " | Binary: " + format(self.readRegister(REG_CTRL_REG4), 'b').zfill(8))
+        print("REG_CTRL_REG5    (0x2e):" + str(format(self.readRegister(REG_CTRL_REG5), '#04x'))
+              + " | Binary: " + format(self.readRegister(REG_CTRL_REG5), 'b').zfill(8))
+        print("REG_PL_STATUS    (0x10):" + str(format(self.readRegister(REG_PL_STATUS), '#04x'))
+              + " | Binary: " + format(self.readRegister(REG_PL_STATUS), 'b').zfill(8))
         print("debugRealTime    " + str(runTimeConfigObject.debugRealTime))
         print("NumInterrupts    " + str(runTimeConfigObject.NumInterrupts))
 

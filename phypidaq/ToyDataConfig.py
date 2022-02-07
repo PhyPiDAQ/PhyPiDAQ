@@ -36,7 +36,7 @@ class ToyDataConfig(object):
         self.count += 1
         for i in range(self.NChannels):
             buf[i] = (i + 1) * self.offset \
-                     + self.amplitude * (np.sin(self.count * self.omega * (i + 1) * np.pi - i * np.pi / 3.) \
+                     + self.amplitude * (np.sin(self.count * self.omega * (i + 1) * np.pi - i * np.pi / 3.)
                                          + self.noise * np.random.rand())
 
     def closeDevice(self):

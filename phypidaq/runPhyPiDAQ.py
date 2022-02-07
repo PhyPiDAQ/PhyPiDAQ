@@ -27,16 +27,16 @@ from math import *
 from scipy import interpolate
 
 # Display module
-## only imported if needed: phypidaq.DisplayManager import DisplayManager
+# only imported if needed: phypidaq.DisplayManager import DisplayManager
 # Webserver
-## module .WebsocketManager only imported if needed
+# module .WebsocketManager only imported if needed
 # data recorder
 from .DataRecorder import DataRecorder
 # other helper functions
 from .helpers import DAQwait
 # modules imported only if needed
-## from .helpers import generateCalibrationFunction
-## from .helpers import RingBuffer
+# from .helpers import generateCalibrationFunction
+# from .helpers import RingBuffer
 
 # ----- class for running data acquisition --------------------
 
@@ -536,7 +536,7 @@ class runPhyPiDAQ(object):
                     if self.DAQfifo is not None or self.DAQwebsocket is not None:
                         # transform data to csv format
                         csv_data = ','.join(['{0:.3f}'.format(cnt * interval)] +
-                                   ['{0:.4g}'.format(d) for d in self.data[:NChannels]])+'\n'
+                                            ['{0:.4g}'.format(d) for d in self.data[:NChannels]])+'\n'
                         # ... write to fifo ...
                         if self.DAQfifo is not None:
                             self.send_to_fifo(csv_data)
