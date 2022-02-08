@@ -233,7 +233,9 @@ class Display(QMainWindow):
         self.started = True
         # Disable the Run/Resume button and rename it from Run to Resume
         self.button_resume.setEnabled(False)
-        self.button_resume.setText("Resume")
+        self.button_resume.setText("&Resume")
+        self.button_resume.setShortcut('Shift+r')
+        self.button_resume.setShortcut('r')
 
         # Enable all others buttons
         self.button_pause.setEnabled(True)
