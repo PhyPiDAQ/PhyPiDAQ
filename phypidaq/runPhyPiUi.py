@@ -146,7 +146,7 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
         try:
             with open(DAQconfFile, 'r') as f:
                 DAQconf = f.read()
-        except:
+        except OSError:
             print('     failed to read DAQ configuration file ' + DAQconfFile)
             exit(1)
 
@@ -180,20 +180,20 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
     def setHelp_DE(self):
         try:
             self.TE_Help.setText(open('phypidaq/doc/Hilfe.html', 'r').read())
-        except:
+        except OSError:
             self.TE_Help.setText("Fehlt!")
 
     def setHelp_EN(self):
         try:
             self.TE_Help.setText(open('phypidaq/doc/Help.html', 'r').read())
-        except:
+        except OSError:
             self.TE_Help.setText("Missing!")
 
     def setDevConfig_fromFile(self, i, fname):
         try:
             self.pTE_DeviceConfigs[i].setPlainText(open(fname).read())
             print('   - Device configuration from file ' + fname)
-        except:
+        except OSError:
             self.pTE_DeviceConfigs[i].setPlainText('# no config file ' + fname)
 
     def readDeviceConfig(self):
@@ -231,8 +231,7 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
                 fname = self.cwd + '/' + DevFnam
                 self.setDevConfig_fromFile(i, fname)
                 if self.DeviceFiles[i] != '':
-                    message = self.MB_Info('Info',
-                                           'Device Configuration re-read, please check')
+                    self.MB_Info('Info', 'Device Configuration re-read, please check')
                 self.DeviceFiles[i] = DevFiles[i]
 
     def selectConfigFile(self):
@@ -246,24 +245,21 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
             self.initDAQ(FileName)
 
     def selectDeviceFile0(self):
-        path2File = QtWidgets.QFileDialog.getOpenFileName(None,
-                                                          'Device config', self.ConfDir, 'yaml(*.yaml)')
+        path2File = QtWidgets.QFileDialog.getOpenFileName(None, 'Device config', self.ConfDir, 'yaml(*.yaml)')
         FileName = str(path2File[0]).strip()
         if FileName != '':
             # print('selected File ' + str(FileName) )
             self.setDevConfig_fromFile(0, FileName)
 
     def selectDeviceFile1(self):
-        path2File = QtWidgets.QFileDialog.getOpenFileName(None,
-                                                          'Device config', self.ConfDir, 'yaml(*.yaml)')
+        path2File = QtWidgets.QFileDialog.getOpenFileName(None, 'Device config', self.ConfDir, 'yaml(*.yaml)')
         FileName = str(path2File[0]).strip()
         if FileName != '':
             # print('selected File ' + str(FileName) )
             self.setDevConfig_fromFile(1, FileName)
 
     def selectDeviceFile2(self):
-        path2File = QtWidgets.QFileDialog.getOpenFileName(None,
-                                                          'Device config', self.ConfDir, 'yaml(*.yaml)')
+        path2File = QtWidgets.QFileDialog.getOpenFileName(None, 'Device config', self.ConfDir, 'yaml(*.yaml)')
         FileName = str(path2File[0]).strip()
         if FileName != '':
             # print('selected File ' + str(FileName) )
@@ -288,10 +284,9 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
     def checkConfig(self, DAQconf):
         # check validity of configuration files for valid yaml syntax
         try:
-            DAQconfdict = yaml.load(DAQconf, Loader=yaml.Loader)
+            yaml.load(DAQconf, Loader=yaml.Loader)
         except Exception as e:
-            self.MB_Warning('Warning',
-                            'PhyPi Config is not valid yaml format \n' + str(e))
+            self.MB_Warning('Warning', 'PhyPi Config is not valid yaml format \n' + str(e))
             return 1
 
         DevConfs = []
@@ -300,8 +295,7 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
             try:
                 _ = yaml.load(DevConfs[i], Loader=yaml.Loader)
             except Exception as e:
-                self.MB_Warning('Warning',
-                                'Device Config %i is not valid yaml format \n' % (i) + str(e))
+                self.MB_Warning('Warning', 'Device Config %i is not valid yaml format \n' % (i) + str(e))
                 return 1
         return 0
 
@@ -314,8 +308,7 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
         try:
             DAQconfdict = yaml.load(DAQconf, Loader=yaml.Loader)
         except Exception as e:
-            self.MB_Warning('Warning',
-                            'PhyPi Config is not valid yaml format \n' + str(e))
+            self.MB_Warning('Warning', 'PhyPi Config is not valid yaml format \n' + str(e))
             return 1
 
         DevConfs = []
@@ -334,8 +327,7 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
         fullDAQfile = confdir + '/' + DAQfile
 
         if verbose:
-            if self.MB_Question('Question',
-                                'saving Config to file ' + fullDAQfile) == QMessageBox.Cancel:
+            if self.MB_Question('Question', 'saving Config to file ' + fullDAQfile) == QMessageBox.Cancel:
                 return 1
 
         DevFiles = DAQconfdict["DeviceFile"]
@@ -375,8 +367,7 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
             print('   - saved Device configuration to ' + fullDevFile)
 
         if verbose:
-            message = self.MB_Info('Info',
-                                   'saved PhyPi and Device Configuration')
+            self.MB_Info('Info', 'saved PhyPi and Device Configuration')
         return 0
 
     def saveDefaultConfig(self):
@@ -459,12 +450,12 @@ def runPhyPiUi():
     try:
         with open(cfgname) as cfg:
             cfg_dict = yaml.load(cfg, Loader=yaml.Loader)
-    except:
+    except (OSError, yaml.YAMLError):
         cfgname = path_to_PhyPi + '/' + CONFIG_ENVIRONMENT_file
         try:
             with open(cfgname) as cfg:
                 cfg_dict = yaml.load(cfg, Loader=yaml.Loader)
-        except:
+        except (OSError, yaml.YAMLError):
             print(2 * ' ', ' !!! no valid file '
                   + CONFIG_ENVIRONMENT_file + ' found - using defaults')
             cfg_dict = {'work_directory': '~', 'config_directory': ' ', 'daq_file': 'PhyPiDemo.daq'}

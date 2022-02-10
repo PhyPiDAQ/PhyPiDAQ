@@ -15,7 +15,6 @@ from __future__ import absolute_import
 # Package imports
 import sys
 import os
-import errno
 import time
 import yaml
 import numpy as np
@@ -24,7 +23,6 @@ import multiprocessing as mp
 
 # math module needed for formulae
 from math import *
-from scipy import interpolate
 
 # Display module
 # only imported if needed: phypidaq.DisplayManager import DisplayManager
@@ -478,8 +476,8 @@ class runPhyPiDAQ(object):
         # -- LOOP
         try:
             cnt = 0
-            T0 = time.time()
-            brk = False
+            # T0 = time.time()
+            # brk = False
 
             wait = DAQwait(interval)  # initialize wait timer
 

@@ -17,10 +17,10 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 
 matplotlib.use('Qt5Agg')
 
-from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QPushButton, QLabel, QFileDialog
+from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QPushButton, QLabel, QFileDialog  # noqa: E402
 
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-import matplotlib.animation as anim
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas  # noqa: E402
+import matplotlib.animation as anim  # noqa: E402
 
 
 class Display(QMainWindow):

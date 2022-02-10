@@ -156,11 +156,15 @@ PRECISION_08_BIT = 8
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 # Register CTRL_REG1 (0x2a) R/W - System Control 1 Register
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-# |   Bit 7      |   Bit 6      |  Bit 5       |  Bit 4       |   Bit 3      |  Bit 2       |  Bit 1       |  Bit 0       |
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-# |  ASLPRATE1   |  ASLPRATE0   |     DR2      |    DR1       |    DR0       |  LNOISE      |  F_READ      |  ACTIVE      |
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
+# BIT 7: ASLPRATE1
+# BIT 6: ASLPRATE0
+# BIT 5: DR2
+# BIT 4: DR1
+# BIT 3: DR0
+# BIT 2: LNOISE
+# BIT 1: F_READ
+# BIT 0: ACTIVE
+
 # Auto-Wake Sample frequency Selection
 FLAG_ASLPRATE_50_HZ = 0x00  # Auto-Wake Sample frequency (Sleep Mode Rate Detection) 50 Hz
 FLAG_ASLPRATE_12_5_HZ = 0x40  # Auto-Wake Sample frequency (Sleep Mode Rate Detection) 12.5 Hz
@@ -181,11 +185,15 @@ FLAG_F_READ = 0x02  # Fast Read  (1: 8 bit sample, 0: 14 bit Sample)
 FLAG_ACTIVE = 0x01  # Active (1: ACTIVE Mode, 0: STANDBY Mode)
 
 # Register CTRL_REG2 (0x2b) R/W - System Control 2 Register
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-# |   Bit 7      |   Bit 6      |  Bit 5       |  Bit 4       |   Bit 3      |  Bit 2       |  Bit 1       |  Bit 0       |
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-# |   ST         |   RST        |     0        |  SMODS1      |  SMODS0      |   SLPE       |   MODS1      |   MODS0      |
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
+# BIT 7: ST
+# BIT 6: RST
+# BIT 5: 0
+# BIT 4: SMODS1
+# BIT 3: SMODS0
+# BIT 2: SLPE
+# BIT 1: MODS1
+# BIT 0: MODS0
+
 # Other Flags
 FLAG_STEST = 0x80  # Self Test (1: Self-Test enabled, 0: Self-Test disabled)
 FLAG_RESET = 0x40  # Reset (1: Reset enabled, 0: Reset disabled)
@@ -203,11 +211,15 @@ FLAG_MODS_HR = 0x12  # Active Mode Power Scheme Selection: High Resolution
 FLAG_MODS_LP = 0x1b  # Active Mode Power Scheme Selection: Low Power
 
 # Register CTRL_REG4 (0x2d) R/W - Interrupt Enable Register
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-# |   Bit 7      |   Bit 6      |  Bit 5       |  Bit 4       |   Bit 3      |  Bit 2       |  Bit 1       |  Bit 0       |
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-# | INT_EN_ASLP  | INT_EN_FIFO  |INT_EN_TRANS  |INT_EN_LNDPR  |INT_EN_PULSE  |INT_EN_FF_MT  |       -      | INT_EN_DRDY  |
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
+# BIT 7: INT_EN_ASLP
+# BIT 6: INT_EN_FIFO
+# BIT 5: INT_EN_TRANS
+# BIT 4: INT_EN_LNDPR
+# BIT 3: INT_EN_PULSE
+# BIT 2: INT_EN_FF_MT
+# BIT 1: -
+# BIT 0: INT_EN_DRDY
+
 FLAG_INT_EN_ASLP = 0x80  # Interrupt Auto SLEEP/WAKE (0: Disabled, 1: Enabled)
 FLAG_INT_EN_FIFO = 0x40  # Interrupt FIFO (0: Disabled, 1: Enabled)
 FLAG_INT_EN_TRANS = 0x20  # Interrupt Transient (0: Disabled, 1: Enabled)
@@ -218,31 +230,47 @@ FLAG_INT_EN_BIT1 = 0x00  # Not Used
 FLAG_INT_EN_DRDY = 0x01  # Interrupt Data Ready (0: Disabled, 1: Enabled)
 
 # Register CTRL_REG5 (0x2e) R/W - Interrupt Configuration Register
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-# |   Bit 7      |   Bit 6      |  Bit 5       |  Bit 4       |   Bit 3      |  Bit 2       |  Bit 1       |  Bit 0       |
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-# | INT_CFG_ASLP | INT_CFG_FIFO |INT_CFG_TRANS |INT_CFG_LNDPRT|INT_CFG_PULSE |INT_CFG_FF_MT |       -      | INT_CFG_DRDY |
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-FLAG_INT_CFG_ASLP = 0x80  # INT1/INT2 Configuration (0: Interrupt is routed to INT2 pin; 1: Interrupt is routed to INT1 pin)
-FLAG_INT_CFG_FIFO = 0x40  # INT1/INT2 Configuration (0: Interrupt is routed to INT2 pin; 1: Interrupt is routed to INT1 pin)
-FLAG_INT_CFG_TRANS = 0x20  # INT1/INT2 Configuration (0: Interrupt is routed to INT2 pin; 1: Interrupt is routed to INT1 pin)
-FLAG_INT_CFG_LNDPRT = 0x10  # INT1/INT2 Configuration (0: Interrupt is routed to INT2 pin; 1: Interrupt is routed to INT1 pin)
-FLAG_INT_CFG_PULSE = 0x08  # INT1/INT2 Configuration (0: Interrupt is routed to INT2 pin; 1: Interrupt is routed to INT1 pin)
-FLAG_INT_CFG_FF_MT = 0x04  # INT1/INT2 Configuration (0: Interrupt is routed to INT2 pin; 1: Interrupt is routed to INT1 pin)
+# BIT 7: INT_CFG_ASLP
+# BIT 6: INT_CFG_FIFO
+# BIT 5: INT_CFG_TRANS
+# BIT 4: INT_CFG_LNDPRT
+# BIT 3: INT_CFG_PULSE
+# BIT 2: INT_CFG_FF_MT
+# BIT 1: -
+# BIT 0: INT_CFG_DRDY
+
+# INT1/INT2 Configuration (0: Interrupt is routed to INT2 pin; 1: Interrupt is routed to INT1 pin)
+FLAG_INT_CFG_ASLP = 0x80
+# INT1/INT2 Configuration (0: Interrupt is routed to INT2 pin; 1: Interrupt is routed to INT1 pin)
+FLAG_INT_CFG_FIFO = 0x40
+# INT1/INT2 Configuration (0: Interrupt is routed to INT2 pin; 1: Interrupt is routed to INT1 pin)
+FLAG_INT_CFG_TRANS = 0x20
+# INT1/INT2 Configuration (0: Interrupt is routed to INT2 pin; 1: Interrupt is routed to INT1 pin)
+FLAG_INT_CFG_LNDPRT = 0x10
+# INT1/INT2 Configuration (0: Interrupt is routed to INT2 pin; 1: Interrupt is routed to INT1 pin)
+FLAG_INT_CFG_PULSE = 0x08
+# INT1/INT2 Configuration (0: Interrupt is routed to INT2 pin; 1: Interrupt is routed to INT1 pin)
+FLAG_INT_CFG_FF_MT = 0x04
 FLAG_INT_CFG_BIT1 = 0x00  # Not Used
-FLAG_INT_CFG_DRDY = 0x01  # INT1/INT2 Configuration (0: Interrupt is routed to INT2 pin; 1: Interrupt is routed to INT1 pin)
+# INT1/INT2 Configuration (0: Interrupt is routed to INT2 pin; 1: Interrupt is routed to INT1 pin)
+FLAG_INT_CFG_DRDY = 0x01
 
 # Register XYZ_DATA_CFG (0x0e) R/W
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-# |   Bit 7      |   Bit 6      |  Bit 5       |  Bit 4       |   Bit 3      |  Bit 2       |  Bit 1       |  Bit 0       |
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-# |     0        |     0        |     0        |  HPF_OUT     |     0        |     0        |    FS1       |    FS0       |
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
+# BIT 7: 0
+# BIT 6: 0
+# BIT 5: 0
+# BIT 4: HPF_OUT
+# BIT 3: 0
+# BIT 2: 0
+# BIT 1: FS1
+# BIT 0: FS0
+
 # Other Flags
 FLAG_XYZ_DATA_BIT_7 = 0x00  # 0 (Zero): Not Used
 FLAG_XYZ_DATA_BIT_6 = 0x00  # 0 (Zero): Not Used
 FLAG_XYZ_DATA_BIT_5 = 0x00  # 0 (Zero): Not Used
-FLAG_XYZ_DATA_BIT_HPF_OUT = 0x00  # High-Pass Filter (1: output data High-pass filtered, 0: output data High-pass NOT filtered)
+# High-Pass Filter (1: output data High-pass filtered, 0: output data High-pass NOT filtered)
+FLAG_XYZ_DATA_BIT_HPF_OUT = 0x00
 FLAG_XYZ_DATA_BIT_3 = 0x00  # 0 (Zero): Not Used
 FLAG_XYZ_DATA_BIT_2 = 0x00  # 0 (Zero): Not Used
 FLAG_XYZ_DATA_BIT_FS_2G = 0x00  # Full Scale Range 2g
@@ -251,22 +279,30 @@ FLAG_XYZ_DATA_BIT_FS_8G = 0x02  # Full Scale Range 8g
 FLAG_XYZ_DATA_BIT_FS_RSVD = 0x03  # Reserved
 
 # Register F_SETUP (0x09) R/W - FIFO Setup Register
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-# |   Bit 7      |   Bit 6      |  Bit 5       |  Bit 4       |   Bit 3      |  Bit 2       |  Bit 1       |  Bit 0       |
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-# |  F_MODE1     |  F_MODE0     |  F_WMRK5     |  F_WMRK4     |  F_WMRK3     |  F_WMRK2     |  F_WMRK1     |  F_WMRK0     |
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
+# BIT 7: F_MODE1
+# BIT 6: F_MODE0
+# BIT 5: F_WMRK5
+# BIT 4: F_WMRK4
+# BIT 3: F_WMRK3
+# BIT 2: F_WMRK2
+# BIT 1: F_WMRK1
+# BIT 0: F_WMRK0
+
 FLAG_F_MODE_FIFO_NO = 0x00  # FIFO is disabled.
 FLAG_F_MODE_FIFO_RECNT = 0x40  # FIFO contains the most recent samples when overflowed (circular buffer)
 FLAG_F_MODE_FIFO_STOP = 0x80  # FIFO stops accepting new samples when overflowed.
 FLAG_F_MODE_FIFO_TRIGGER = 0xc0  # FIFO Trigger mode
 
 # Register PL_STATUS (0x010) R/O - Portrait/Landscape Status Register
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-# |   Bit 7      |   Bit 6      |  Bit 5       |  Bit 4       |   Bit 3      |  Bit 2       |  Bit 1       |  Bit 0       |
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-# |    NEWLP     |    LO        |      -       |      -       |     -        |  LAPO[1]     |  LAPO[0]     |  BAFRO       |
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
+# BIT 7: NEWLP
+# BIT 6: LO
+# BIT 5: -
+# BIT 4: -
+# BIT 3: -
+# BIT 2: LAPO[1]
+# BIT 1: LAPO[0]
+# BIT 0: BAFRO
+
 FLAG_PL_NEWLP = 0x80  # Landscape/Portrait status change flag.
 FLAG_PL_LO = 0x40  # Z-Tilt Angle Lockout.
 FLAG_PL_LAPO_PU = 0x00  # 00: Portrait Up: Equipment standing vertically in the normal orientation
@@ -276,20 +312,28 @@ FLAG_PL_LAPO_LL = 0x06  # 11: Landscape Left: Equipment is in landscape mode to 
 FLAG_PL_BAFRO = 0x01  # Back or Front orientation. (0: Front: Equipment is in the front facing orientation, 1: Back)
 
 # Register PL_CFG (0x011) R/W - Portrait/Landscape Configuration Register
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-# |   Bit 7      |   Bit 6      |  Bit 5       |  Bit 4       |   Bit 3      |  Bit 2       |  Bit 1       |  Bit 0       |
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-# |   DBCNTM     |  PL_EN       |      -       |      -       |     -        |      -       |      -       |     -        |
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
+# BIT 7: DBCNTM
+# BIT 6: PL_EN
+# BIT 5: -
+# BIT 4: -
+# BIT 3: -
+# BIT 2: -
+# BIT 1: -
+# BIT 0: -
+
 FLAG_PL_CFG_DBCNTM = 0x80  # Debounce counter mode selection (0: Decrements debounce, 1: Clears counter)
 FLAG_PL_CFG_PL_EN = 0x40  # Portrait/Landscape Detection Enable (0: P/L Detection Disabled, 1: P/L Detection Enabled)
 
 # Register TRANSIENT_CFG (0x1d) R/W - Transient_CFG Register
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-# |   Bit 7      |   Bit 6      |  Bit 5       |  Bit 4       |   Bit 3      |  Bit 2       |  Bit 1       |  Bit 0       |
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-# |      -       |      -       |      -       |     ELE      |   ZTEFE      |   YTEFE      |   XTEFE      |  HPF_BYP     |
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
+# BIT 7: -
+# BIT 6: -
+# BIT 5: -
+# BIT 4: ELE
+# BIT 3: ZTEFE
+# BIT 2: YTEFE
+# BIT 1: XTEFE
+# BIT 0: HPF_BYP
+
 FLAG_TRANSIENT_CFG_ELE = 0x10  # Transient event flags (0: Event flag latch disabled; 1: Event flag latch enabled)
 FLAG_TRANSIENT_CFG_ZTEFE = 0x08  # Event flag enable on Z (0: Event detection disabled; 1: Raise event flag)
 FLAG_TRANSIENT_CFG_YTEFE = 0x04  # Event flag enable on Y (0: Event detection disabled; 1: Raise event flag)
@@ -297,27 +341,40 @@ FLAG_TRANSIENT_CFG_XTEFE = 0x02  # Event flag enable on X (0: Event detection di
 FLAG_TRANSIENT_CFG_HPF_BYP = 0x01  # Bypass High-Pass filter/Motion Detection
 
 # Register TRANSIENT_SCR (0x01e) R/O - TRANSIENT_SRC Register
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-# |   Bit 7      |   Bit 6      |  Bit 5       |  Bit 4       |   Bit 3      |  Bit 2       |  Bit 1       |  Bit 0       |
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-# |       -      |      EA      |   ZTRANSE    | Z_Trans_Pol  |   YTRANSE    | Y_Trans_Pol  |   XTRANSE    | X_Trans_Pol  |
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-FLAG_TRANSIENT_SCR_EA = 0x40  # Event Active Flag (0: no event flag has been asserted; 1: one or more event flag has been asserted)
-FLAG_TRANSIENT_SCR_ZTRANSE = 0x20  # Z transient event (0: no interrupt, 1: Z Transient acceleration > than TRANSIENT_THS event has occurred
-FLAG_TRANSIENT_SCR_ZTR_POL = 0x10  # Polarity of Z Transient Event that triggered interrupt (0: Z event Positive g, 1: Z event Negative g)
-FLAG_TRANSIENT_SCR_YTRANSE = 0x08  # Y transient event (0: no interrupt, 1: Y Transient acceleration > than TRANSIENT_THS event has occurred
-FLAG_TRANSIENT_SCR_YTR_POL = 0x04  # Polarity of Y Transient Event that triggered interrupt (0: Y event Positive g, 1: Y event Negative g)
-FLAG_TRANSIENT_SCR_XTRANSE = 0x02  # X transient event (0: no interrupt, 1: X Transient acceleration > than TRANSIENT_THS event has occurred
-FLAG_TRANSIENT_SCR_XTR_POL = 0x01  # Polarity of X Transient Event that triggered interrupt (0: X event Positive g, 1: X event Negative g)
+# BIT 7: -
+# BIT 6: EA
+# BIT 5: ZTRANSE
+# BIT 4: Z_Trans_Pol
+# BIT 3: YTRANSE
+# BIT 2: Y_Trans_Pol
+# BIT 1: XTRANSE
+# BIT 0: X_Trans_Pol
+
+# Event Active Flag (0: no event flag has been asserted; 1: one or more event flag has been asserted)
+FLAG_TRANSIENT_SCR_EA = 0x40
+# Z transient event (0: no interrupt, 1: Z Transient acceleration > than TRANSIENT_THS event has occurred
+FLAG_TRANSIENT_SCR_ZTRANSE = 0x20
+# Polarity of Z Transient Event that triggered interrupt (0: Z event Positive g, 1: Z event Negative g)
+FLAG_TRANSIENT_SCR_ZTR_POL = 0x10
+# Y transient event (0: no interrupt, 1: Y Transient acceleration > than TRANSIENT_THS event has occurred
+FLAG_TRANSIENT_SCR_YTRANSE = 0x08
+# Polarity of Y Transient Event that triggered interrupt (0: Y event Positive g, 1: Y event Negative g)
+FLAG_TRANSIENT_SCR_YTR_POL = 0x04
+# X transient event (0: no interrupt, 1: X Transient acceleration > than TRANSIENT_THS event has occurred
+FLAG_TRANSIENT_SCR_XTRANSE = 0x02
+# Polarity of X Transient Event that triggered interrupt (0: X event Positive g, 1: X event Negative g)
+FLAG_TRANSIENT_SCR_XTR_POL = 0x01
 
 
 # Register FF_MT_THS (0x017) R/W - Freefall and Motion Threshold Register
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-# |   Bit 7      |   Bit 6      |  Bit 5       |  Bit 4       |   Bit 3      |  Bit 2       |  Bit 1       |  Bit 0       |
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-# |   DBCNTM     |     THS6     |    THS5      |    THS4      |    THS3      |    THS2      |    THS1      |    THS0      |
-# +--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
-
+# BIT 7: DBCNTM
+# BIT 6: THS6
+# BIT 5: THS5
+# BIT 4: THS4
+# BIT 3: THS3
+# BIT 2: THS2
+# BIT 1: THS1
+# BIT 0: THS0
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Define MMA8541 config class

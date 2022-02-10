@@ -41,8 +41,8 @@ class ReplayConfig(object):
             f.close()
         rdata = d.splitlines()
         # read header
-        h0 = rdata[0][1:]  # remove leading '#'
-        h1 = rdata[1][1:]
+        # h0 = rdata[0][1:]  # remove leading '#'
+        # h1 = rdata[1][1:]
         tags = rdata[2][1:].split(self.csvSeparator)
         if self.NChannels is None:
             self.NChannels = len(tags)

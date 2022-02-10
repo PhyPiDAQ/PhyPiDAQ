@@ -4,10 +4,10 @@ from __future__ import absolute_import
 
 import sys
 
-ADS_I2CADDR = 0x48
-
 # import relevant pieces from adafruit
 import Adafruit_ADS1x15
+
+ADS_I2CADDR = 0x48
 
 
 class ADS1115Config(object):

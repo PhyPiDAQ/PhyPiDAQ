@@ -106,11 +106,11 @@ class AS7265xConfig(object):
     def acquireData(self, buf):
 
         if self.CalibrateData == 1:
-            buf[0], buf[1], buf[2], buf[3], buf[4], buf[5], buf[6], buf[7], buf[8], buf[9], buf[10], buf[11], buf[12], \
-            buf[13], buf[14], buf[15], buf[16], buf[17] = self.AS7265x.readCAL()
+            buf[0], buf[1], buf[2], buf[3], buf[4], buf[5], buf[6], buf[7], buf[8], buf[9], buf[10], \
+                buf[11], buf[12], buf[13], buf[14], buf[15], buf[16], buf[17] = self.AS7265x.readCAL()
         else:
-            buf[0], buf[1], buf[2], buf[3], buf[4], buf[5], buf[6], buf[7], buf[8], buf[9], buf[10], buf[11], buf[12], \
-            buf[13], buf[14], buf[15], buf[16], buf[17] = self.AS7265x.readRAW()
+            buf[0], buf[1], buf[2], buf[3], buf[4], buf[5], buf[6], buf[7], buf[8], buf[9], buf[10], \
+                buf[11], buf[12], buf[13], buf[14], buf[15], buf[16], buf[17] = self.AS7265x.readRAW()
 
         if self.TrimTo1 == 1:
             arrmax = np.amax(buf)
@@ -161,7 +161,8 @@ class AS7265x(object):
         # Do a dummy read to ensure FIFO queue is empty
         status = self.i2c.read_byte_data(self.I2C_ADDR, self.STATUS_REG)
         if (status & self.RX_VALID) != 0:  # There is data to be read
-            incoming = self.i2c.read_byte_data(self.I2C_ADDR, self.READ_REG)  # Read it to clear the queue and dump it
+            # Read it to clear the queue and dump it
+            incoming = self.i2c.read_byte_data(self.I2C_ADDR, self.READ_REG)  # noqa: F841
 
         while 1:
 
@@ -261,7 +262,7 @@ class AS7265x(object):
             mode = DEVSELbits[device]
         except:
             print("DEVSEL bad device name")
-            return (False)
+            return False
 
         self.writeReg(0x4f, mode)
 
@@ -305,7 +306,7 @@ class AS7265x(object):
     # Returns: Boolean. True, False
     def boardPresent(self):
         try:
-            device_type = self.readReg(0x00)
+            device_type = self.readReg(0x00)  # noqa: F841
             return True
         except:
             return False
@@ -361,7 +362,7 @@ class AS7265x(object):
         DEVSELbits = {"AS72651": 0b00, "AS72652": 0b01, "AS72653": 0b10}
 
         try:
-            mode = DEVSELbits[device]
+            mode = DEVSELbits[device]  # noqa: F841
             # print ("Mode = " + str(mode))
         except:
             print("Bad device name")
