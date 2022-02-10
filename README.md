@@ -16,7 +16,7 @@ instructions or educational concepts, please check out our other [repositories](
 ## Übersicht in Deutscher Sprache
 
 Das PhyPiDAQ-Projekt zielt darauf ab, Studierenden und SchülerInnen Zugang zu modernster Messtechnik und Datenerfassung
-zu verschaffen. Da es auf offenen, standardisierten Protokollen und und leicht verfügbarer Hardware basiert, kann es
+zu verschaffen. Da es auf offenen, standardisierten Protokollen und leicht verfügbarer Hardware basiert, kann es
 nicht nur kostengünstig eingerichtet werden, sondern bietet auch eine hervorragende pädagogische Einführung in die
 Messmethoden der modernen Wissenschaft. Die Messtechnik kann mit einer Powerbank betrieben werden, was sie tragbar macht
 und Experimente auch in freier Natur ermöglicht. *PhyPiDAQ* richtet sich an SchülerInnen von der Mittelstufe bis hin zu
