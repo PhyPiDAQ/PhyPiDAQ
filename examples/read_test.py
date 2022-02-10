@@ -25,7 +25,7 @@ class Config:
         print('acquire')
         dat[0] = 42.0
 
-    def close(self):
+    def closeDevice(self):
         print('close')
 
 
@@ -45,21 +45,23 @@ def main():
     device.init()
 
     dt = 0.1  # read-out interval in s
-    T0 = time()
+    delta_time = 0  # Ensure, that the variable is defined before accessed
+    initial_time = time()
 
-    dat = array([0.0])
+    data = array([0.0])
 
     try:
         print('starting readout,  type <ctrl-C> to stop')
         while True:
-            device.acquireData(dat)
-            dT = time() - T0
-            print(f'{dT:.2f}, {dat[0]:.3f}')
+            device.acquireData(data)
+            delta_time = time() - initial_time
+            print(f'{delta_time:.2f}, {data[0]:.3f}')
             sleep(dt)
-    except:
-        print(f'{dT + 1:.2f}, {ERROR:.3f}')
+    except KeyboardInterrupt:
+        print(f'{delta_time + 1:.2f}, {ERROR:.3f}')
     finally:
-        device.close()
+        if device is not None:
+            device.closeDevice()
 
 
 if __name__ == "__main__":

@@ -210,7 +210,7 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
             exit(1)
 
         # if not a list, make it one
-        if type(DevFiles) != type([]):
+        if not isinstance(DevFiles, list):
             DevFiles = [DevFiles]
         self.NDeviceConfigs = len(DevFiles)
         #  enable Config Tabs if needed
@@ -331,7 +331,7 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
                 return 1
 
         DevFiles = DAQconfdict["DeviceFile"]
-        if type(DevFiles) != type([]):
+        if not isinstance(DevFiles, list):
             DevFiles = [DevFiles]
 
         # check for overwriting ...

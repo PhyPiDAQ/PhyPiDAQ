@@ -25,7 +25,7 @@ def generateCalibrationFunction(calibd):
         # if no error, input is an array
         r = calibd[1]
         t = calibd[0]
-    except:
+    except TypeError:
         # input is only one number
         r = [0., 1.]
         t = [0., calibd]

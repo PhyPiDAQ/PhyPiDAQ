@@ -71,7 +71,7 @@ class DataLogger(object):
         self.Cidx0 = self.Chan2Axes.index(0)  # 1st Channel axis0
         try:
             self.Cidx1 = self.Chan2Axes.index(1)  # 1st Channel axis1
-        except:
+        except ValueError:
             self.NAxes = 1
             self.Cidx1 = self.Cidx0
         cu0 = '(' + self.ChanUnits[self.Cidx0] + ')' if self.ChanUnits[self.Cidx0] else ''

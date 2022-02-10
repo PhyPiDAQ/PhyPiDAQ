@@ -46,7 +46,7 @@ class PSConfig(object):
         self.AvModes = self.NChannels * [0]
         if 'ChanAverages' in self.confdict:
             ChanAvs = self.confdict['ChanAverages']
-            if type(ChanAvs) is not type([]):
+            if not isinstance(ChanAvs, list):
                 ChanAvs = [ChanAvs]
             for i, m in enumerate(ChanAvs):
                 if m == 'rms':

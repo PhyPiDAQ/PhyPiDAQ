@@ -186,7 +186,7 @@ class runPhyPiDAQ(object):
             print("!!! no device config given - trying ADC ADS1115")
 
         # if not a list, make it one
-        if type(DevFiles) != type([]):
+        if not isinstance(DevFiles, list):
             DevFiles = [DevFiles]
         NDevices = len(DevFiles)
 
@@ -233,7 +233,7 @@ class runPhyPiDAQ(object):
             ChanLims += DEVs[i].ChanLims[0: nC]
             try:
                 ChanUnits += DEVs[i].ChanUnits[0: nC]
-            except:
+            except (TypeError, AttributeError):
                 ChanUnits = None
 
         self.DEVs = DEVs
@@ -552,7 +552,7 @@ class runPhyPiDAQ(object):
             self.ACTIVE = False
             print('\n' + sys.argv[0] + ': keyboard interrupt - closing down ...')
 
-        except:
+        except BaseException:
             # 'except Exception as e' leaves some errors unnoted
             print('\n!!! ' + sys.argv[0] + ': exception in data-taking loop')
             print(sys.exc_info()[1])

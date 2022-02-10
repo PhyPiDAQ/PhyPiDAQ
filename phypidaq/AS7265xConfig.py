@@ -260,7 +260,7 @@ class AS7265x(object):
 
         try:
             mode = DEVSELbits[device]
-        except:
+        except BaseException:
             print("DEVSEL bad device name")
             return False
 
@@ -308,7 +308,7 @@ class AS7265x(object):
         try:
             device_type = self.readReg(0x00)  # noqa: F841
             return True
-        except:
+        except Exception:
             return False
 
     # Return system hardware version
@@ -321,7 +321,7 @@ class AS7265x(object):
 
         # print (device_type, hw_version)
 
-        return ((device_type, hw_version))
+        return device_type, hw_version
 
     # Return current temperatures of all 3 devices in a list
     # Input variables: void
@@ -364,7 +364,7 @@ class AS7265x(object):
         try:
             mode = DEVSELbits[device]  # noqa: F841
             # print ("Mode = " + str(mode))
-        except:
+        except Exception:
             print("Bad device name")
             return False
 
@@ -411,7 +411,7 @@ class AS7265x(object):
 
         if time not in range(0, 255):
             print("Illegal integration time setting")
-            return (False)
+            return False
 
         for device in devices:
             self.setDEVSEL(device)

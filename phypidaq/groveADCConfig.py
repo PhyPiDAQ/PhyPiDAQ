@@ -105,7 +105,7 @@ class Bus:
                 import RPi.GPIO as GPIO
                 # use the bus that matches your raspi version
                 rev = GPIO.RPI_REVISION
-            except:
+            except ModuleNotFoundError:
                 rev = 3
             if rev == 2 or rev == 3:
                 bus = 1  # for Pi 2+

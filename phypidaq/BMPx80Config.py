@@ -53,7 +53,7 @@ class BMPx80Config(object):
             try:
                 # find out which sensor we have:
                 (self.chipID,) = bus.read_i2c_block_data(self.BMP_I2CADDR, REG_ID, 1)
-            except:
+            except IOError:
                 # try secondary address (BMP280)
                 print("BMPx80: trying secondary address %x " % BMP_I2CADDR2)
                 (self.chipID,) = bus.read_i2c_block_data(BMP_I2CADDR2, REG_ID, 1)

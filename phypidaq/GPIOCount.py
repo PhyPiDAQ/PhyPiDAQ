@@ -58,7 +58,7 @@ class GPIOCount(object):
                     GPIO.add_event_detect(gp, GPIO.RISING, bouncetime=bounce_time)
                 # set callback function
                 GPIO.add_event_callback(gp, self.cbf[i])
-        except:
+        except (RuntimeError, ValueError, TypeError):
             print("GPIOCount: failed to initialise GPIO - exit")
             sys.exit(1)
 

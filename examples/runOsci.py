@@ -63,7 +63,7 @@ if __name__ == "__main__":  # - - - - - - - - - - - - - - - - - - - - - -
     try:
         with open(PSconfFile) as f:
             PSconfDict = yaml.load(f, Loader=yaml.Loader)
-    except OSError:
+    except (OSError, yaml.YAMLError):
         print('     failed to read scope configuration file ' + PSconfFile)
         exit(1)
 
