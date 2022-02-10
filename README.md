@@ -2,10 +2,10 @@
 
 ## Summary in English language
 
-The PhyPiDAQ project aims to provide student access to state-of-the-art measurement technology and data acquisition
+The PhyPiDAQ project aims to provide students access to state-of-the-art measurement technology and data acquisition
 tools. As it is based on standardized protocols and hardware, it can not only be cheaper to set up than similar offers
 but also give a great educational introduction in methods of modern science. Additionally, the measuring technology
-can be run off a power bank, making it portable and allowing great experiments in nature. It targets students from
+can be run off a power bank, making it portable and allowing great experiments in nature. This project targets students from
 middle school up to undergraduates at the university level with great matching educational concepts. Looking beyond
 school it is also an amazing base for STEM based competitions like
 "[Jugend forscht](https://www.jugend-forscht.de/information-in-english.html)" or science fairs.
@@ -23,7 +23,7 @@ und Experimente auch in freier Natur ermöglicht. *PhyPiDAQ* richtet sich an Sch
 Studierenden auf Universitätsebene. Über die Schule hinaus ist es auch eine gute Basis für MINT-Wettbewerbe wie
 "[Jugend forscht](https://www.jugend-forscht.de/)".
 
-Dies ist das Softwarepaket zur Datenerfassung und die zugehörige Dokumentation. Wenn Sie auf der Suche nach
+Dies ist das Softwarepaket zur Datenerfassung und die zugehörige Dokumentation. Wenn Sie nach
 Hardware-Beschreibungen, Bauanleitungen oder pädagogischen Konzepten suchen, schauen Sie sich bitte unsere anderen
 [Repositories](https://github.com/PhyPiDAQ) an.
 
