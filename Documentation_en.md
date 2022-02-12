@@ -222,19 +222,15 @@ git pull           # eventually update to latest version of PhyPiDAQ
 
 The installation is now done and *PhyPiDAQ* is ready to be used.
 
-The last part of the inatallation procedure is also valid to update an exiting verion of `PhyPiDAQ` .
+The last part of the installation procedure is also valid to update an exiting verion of `PhyPiDAQ` .
 
-To test the installaion without connected hardware or on a system other than the Raspberry Pi, PhyPiDAQ
+To test the installation without connected hardware or on a system other than the Raspberry Pi, PhyPiDAQ
 may be started in demo-mode:
 
 ```bash
 cd ~/git/PhyPiDAQ  # change to installation directory
 ./run_phypi.py     # execute run_phypi.py with configuration PhyPiDemo.daq
 ```
-
-
-
-**Anmerkung**
 
 **Remark**
 
@@ -257,13 +253,13 @@ sudo mv ~/git/PhyPiDAQ /usr/local/
 
 Please note that the paths in the example above must be adjusted in this case, e.g. ´~/git/` -> /usr/local/.
 The paths in *~/Desktop/phypi.desktop* must also be changed appropriately. This is most easily achieved by
-right-clicking the icon and use the dialog "Properties". 
+right-clicking the icon and use of the dialog "Properties". 
 
 
 
 ### Dependencies on external packages
 
-The PhyPiDAQ package relies on code from other packages providing the drivers for the supported devices and libraries for data visualisation:
+The PhyPiDAQ package relies on code from other packages providing the drivers for the supported devices and libraries for data visualization:
 
 - the Adafruit Pyhon MCP3008 library  
      <https://github.com/adafruit/Adafruit_Python_MCP3008>
@@ -283,7 +279,7 @@ The PhyPiDAQ package relies on code from other packages providing the drivers fo
 For convenience, installation files for external packages and for modules of this package 
 in pip wheel format are provided in sub-directory *./installlibs*. 
 
-The visualization modules depend on *matplotlib.pyplot*, *Tkinter* and *pyQt5*, which must also be installed.
+The visualization modules depend on *matplotlib.pyplot* and *pyQt5*, which must also be installed.
 
 For completeness, the steps performed by the script `installlibs.sh` are documented here:
 

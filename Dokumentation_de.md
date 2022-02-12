@@ -2,8 +2,6 @@
 
 ---
 
-The **English** version of the documentation.
-
 Dies ist die **deutsche Version**.
 
 The **English** version of this document may be found unter 
@@ -87,7 +85,7 @@ DeviceFile: config/ADS1115Config.yaml    # 16 bit ADC, I2C bus
 #DeviceFile: config/MMA8451Config.yaml   # Beschleunigungssensor
 #DeviceFile: config/VL53LxConfig.yaml    # Abstandssensor
 
-## Beispiel für die Verwendung mehrer Sensoren:
+## Beispiel für die Verwendung mehrerer Sensoren:
 #DeviceFile: [config/ADS1115Config.yaml, config/GPIOCount.yaml]  
 
 # Demo options:
@@ -122,7 +120,7 @@ ChanColors: [darkblue, sienna] # Farbzuordnung in der Anzeige
 #  - null        # chan2 : Keine Formel
 
 #
-# -- Konfiguation der grafischen Anzeige
+# -- Konfiguration der grafischen Anzeige
 #
 Interval: 0.1                # Datennahme-Intervall in Sekunden
 #NHistoryPoints: 120          # Anzahl Datenpunkte im Verlaufspuffer (Vorgabe 120)
@@ -151,7 +149,7 @@ XYmode:     false            # XY-Darstellung ein/aus
 DataFile:   null              #   null falls keine Ausgebe gewuenscht
 #CSVseparator: ';'            # Feld-Trenner auf ';' setzen, Vorgabe ist ','
 
-# Speicherung der letzen NHistoryPoints Datenpunke
+# Speicherung der letzten NHistoryPoints Datenpunke
 #bufferData: PhyPiData    # Dateiname für (optionale) Speicherung 
 #bufferData: null         #  null zum Ausschalten; Voreinstellung: Datei PhyPiData.dat 
 
@@ -202,7 +200,8 @@ sampleRate: 860           # programmierbare Datenrate des ADS1115
    
 ```
 
-Das **USB-Oszilloskop** PicoScope kann ebenfalls als Datenlogger eingesetzt werden. In diesem Fall wird über eine Anzahl von Messungen mit sehr hoher Ausleserate gemittelt. Wählt man z.B. ein Messintervall von 20 ms, so wird 50 Hz- Rauschen effizient herausgemittelt.
+Das **USB-Oszilloskop** PicoScope kann ebenfalls als Datenlogger eingesetzt werden. In diesem Fall wird über eine Anzahl von Messungen mit sehr hoher Ausleserate gemittelt. Wählt man z.B. ein Messintervall von 20 ms, so wird
+50 Hz-Rauschen effizient herausgemittelt.
 
 **Inhalt der Gerätekonfiguration `PSconfig.yaml`**
 
@@ -252,8 +251,6 @@ cd ~/git
 git clone https://github.com/GuenterQuast/PhyPiDAQ
 ```
 
-
-
 PhyPiDAQ* basiert auf Code aus anderen Paketen, die die Treiber für die unterstützten Geräte und  Bibliotheken für die Visualisierung bereitstellen. Die notwendigen Befehle zu deren Installation sind im Scritp `installlibs.sh` zusammengefasst.  Geben Sie auf der Kommandozeile folgende Befehle ein (ohne den erklärenden Text nachdem `#`-Zeichen):
 
 ```bash
@@ -264,9 +261,8 @@ git pull           # optional, falls Sie PhyPiDAQ aktualisieren möchten
 
 Damit ist die Installation schon abgeschlossen und `PhyPiDAQ` ist bereit für den ersten Einsatz. 
 
-Die letzten Zeilen der Installationsvorschrift gelten auch, wenn eine schon installierte Version von
-`PhyPiDAQ` aktualisiert werden soll.
-
+Die letzten Zeilen der Installationsvorschrift gelten auch, wenn eine schon installierte Version 
+von `PhyPiDAQ` aktualisiert werden soll.
 
 
 Um die Installation auch ohne angeschlossene Hardware oder auf einem anderen System als dem 
@@ -324,7 +320,7 @@ Dies ist die Liste der externen Pakete, von denen `PhyPiDAQ` abhängt:
 
 Zur Vereinfachung der Installation werden Installationsdateien für benötigte externe Pakete und für die Module dieses Pakets als Debian Installationsdateien im *.deb*-Format oder als python-Module im *pip*-Wheel-Format im Unterverzeichnis *./installlibs*/ bereitgestellt.
 
-Die Module zur Visualisierung hängen von *matplotlib.pyplot* , *Tkinter* und *pyQt5* ab, die ebenfalls noch installiert werden müssen.
+Die Module zur Visualisierung hängen von *matplotlib.pyplot* und *pyQt5* ab, die ebenfalls noch installiert werden müssen.
 
 Die vom oben schon verwendeten Scritp `installlibs.sh`  ausgeführten Schritte sind die folgenden:
 
