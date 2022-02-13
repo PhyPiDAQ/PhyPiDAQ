@@ -38,16 +38,6 @@ Experimenten mit PhyPiDAQ suchen, schauen Sie sich bitte unsere anderen
 [Repositories](https://github.com/PhyPiDAQ) an.
 
 
-## Contributing
-
-For information on how to contribute to this project, please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file.
-
-
-## License
-
-This project is licensed under the `MIT BSD 2-Clause License`. For more information refer to the [LICENSE](LICENSE) file.
-
-
 ## Quickstart
 
 This is a quickstart guide on how to install the software package and run the demo.
