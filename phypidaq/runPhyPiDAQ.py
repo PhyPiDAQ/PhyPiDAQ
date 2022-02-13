@@ -611,4 +611,3 @@ if __name__ == "__main__":  # - - - - - - - - - - - - - - - - - - - - - -
     print("DAQ set-up:\n", yaml.dump(daq.PhyPiConfDict))
 
     daq.run()
-

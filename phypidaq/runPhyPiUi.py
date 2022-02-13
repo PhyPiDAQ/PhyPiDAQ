@@ -392,8 +392,8 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
         """ Save PhyPi configuration to file ~/CONFIG_ENVIRONMENT_file """
         hd = os.getenv('HOME')
         # ... and find name of work directory
-        cfgname = hd + '/' + CONFIG_ENVIRONMENT_file
-        fcfg = open(cfgname, 'w')
+        config_name = hd + '/' + CONFIG_ENVIRONMENT_file
+        fcfg = open(config_name, 'w')
         print('work_directory: ', self.WDname, file=fcfg)
         print('config_directory: ', self.ConfDir, file=fcfg)
         print('daq_file: ', os.path.basename(self.DAQfile), file=fcfg)
@@ -431,11 +431,11 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
             self.Window.show()
 
     def start_runphypi(self):
-        dir = os.getcwd()
-#        subprocess.call([dir + '/run_phypi.py ' + self.DAQfile],
-#                        cwd=self.path_to_WD, shell=True)
         subprocess.call(['python3 -m phypidaq.runPhyPiDAQ ' + self.DAQfile],
                         cwd=self.path_to_WD, shell=True)
+#        dir = os.getcwd()
+#        subprocess.call([dir + '/run_phypi.py ' + self.DAQfile],
+#                        cwd=self.path_to_WD, shell=True)
 
 
 # - end Class Ui_PhyPiWindow
@@ -448,14 +448,14 @@ def runPhyPiUi():
     path_to_PhyPi = os.path.dirname(script)
     homedir = os.getenv('HOME')
     # ... and find name of work directory
-    cfgname = homedir + '/' + CONFIG_ENVIRONMENT_file
+    config_name = homedir + '/' + CONFIG_ENVIRONMENT_file
     try:
-        with open(cfgname) as cfg:
+        with open(config_name) as cfg:
             cfg_dict = yaml.load(cfg, Loader=yaml.Loader)
     except (OSError, yaml.YAMLError):
-        cfgname = path_to_PhyPi + '/' + CONFIG_ENVIRONMENT_file
+        config_name = path_to_PhyPi + '/' + CONFIG_ENVIRONMENT_file
         try:
-            with open(cfgname) as cfg:
+            with open(config_name) as cfg:
                 cfg_dict = yaml.load(cfg, Loader=yaml.Loader)
         except (OSError, yaml.YAMLError):
             print(2 * ' ', ' !!! no valid file '
