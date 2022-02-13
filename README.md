@@ -1,6 +1,10 @@
 # PhyPiDAQ Description of Software
 
-## Summary in English language
+[Software Guide](Documentation_en.md). 
+
+[Dikumentation der Software](Dokumentation_de.md). 
+
+## Summary
 
 The PhyPiDAQ project aims to provide students access to state-of-the-art measurement technology and data acquisition
 tools. As it is based on standardized protocols and hardware, it can not only be cheaper to set up than similar offers
@@ -10,11 +14,11 @@ from middle school up to undergraduates at the university level with great match
 school it is also an amazing base for STEM based competitions like
 "[Jugend forscht](https://www.jugend-forscht.de/information-in-english.html)" or science fairs.
 
-
 This is the software package for data acquisition and its documentation. For details, see the [detailed Documentation](Documentation_en.md). 
 
 If you are looking for hardware guides, build
 instructions or educational concepts, please check out our other [repositories](https://github.com/PhyPiDAQ).
+
 
 ## Übersicht in Deutscher Sprache
 
@@ -26,12 +30,22 @@ und Experimente auch in freier Natur ermöglicht. *PhyPiDAQ* richtet sich an Sch
 Studierenden auf Universitätsebene. Über die Schule hinaus ist es auch eine gute Basis für MINT-Wettbewerbe wie
 "[Jugend forscht](https://www.jugend-forscht.de/)".
 
-Dies ist das Softwarepaket zur Datenerfassung und die zugehörige Dokumentation. Weitere Information zu Installation, Funktionsweise
-und Konfiguration der Software zum PhyPiDAQ-Projekt findet sich
-[hier](Dokumentation_de.md). 
+Dies ist das Softwarepaket zur Datenerfassung und die zugehörige Dokumentation. Weitere Information zu Installation,
+Funktionsweise und Konfiguration der Software zum PhyPiDAQ-Projekt findet sich [hier](Dokumentation_de.md). 
 
-Wenn Sie nach Hardware-Beschreibungen, Bauanleitungen oder Beschreibungen von Experimenten mit PhyPiDAQ suchen, schauen Sie sich bitte unsere anderen
+Wenn Sie nach Hardware-Beschreibungen, Bauanleitungen oder Beschreibungen von
+Experimenten mit PhyPiDAQ suchen, schauen Sie sich bitte unsere anderen
 [Repositories](https://github.com/PhyPiDAQ) an.
+
+
+## Contributing
+
+For information on how to contribute to this project, please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file.
+
+
+## License
+
+This project is licensed under the `MIT BSD 2-Clause License`. For more information refer to the [LICENSE](LICENSE) file.
 
 
 ## Quickstart
