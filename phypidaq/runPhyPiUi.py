@@ -432,7 +432,9 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
 
     def start_runphypi(self):
         dir = os.getcwd()
-        subprocess.call([dir + '/run_phypi.py ' + self.DAQfile],
+#        subprocess.call([dir + '/run_phypi.py ' + self.DAQfile],
+#                        cwd=self.path_to_WD, shell=True)
+        subprocess.call(['python3 -m phypidaq.runPhyPiDAQ ' + self.DAQfile],
                         cwd=self.path_to_WD, shell=True)
 
 
