@@ -3,7 +3,8 @@
 """ run graphical user interface of PhyPiDAQ
 """
 
-from phypidaq.runPhyPiUi import *
+import sys, subprocess
 
 if __name__ == "__main__":  # - - - - - - - - - - - - - - - - - - - -
-    runPhyPiUi()
+    arg = '' if len(sys.argv)<2 else sys.argv[1]
+    subprocess.call(['python3 -m phypidaq.runPhyPiUi ' + arg], shell=True)

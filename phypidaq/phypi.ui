@@ -160,8 +160,8 @@
        <string>  StartRun</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>images/start.jpg</normaloff>images/start.jpg</iconset>
+       <iconset theme="start-here">
+        <normaloff>.</normaloff>.</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -186,8 +186,8 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>images/open-folder.jpg</normaloff>images/open-folder.jpg</iconset>
+       <iconset theme="folder-open">
+        <normaloff>.</normaloff>.</iconset>
       </property>
      </widget>
      <widget class="QPushButton" name="pB_abort">
@@ -209,8 +209,8 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>images/application-exit.jpg</normaloff>images/application-exit.jpg</iconset>
+       <iconset theme="edit-delete">
+        <normaloff>.</normaloff>.</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -270,8 +270,8 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>images/open-folder.jpg</normaloff>images/open-folder.jpg</iconset>
+       <iconset theme="folder-open">
+        <normaloff>.</normaloff>.</iconset>
       </property>
      </widget>
      <widget class="QLabel" name="label_2">
@@ -402,8 +402,8 @@
          <string>reload device config(s)</string>
         </property>
         <property name="icon">
-         <iconset>
-          <normaloff>images/ok.png</normaloff>images/ok.png</iconset>
+         <iconset theme="list-add">
+          <normaloff>.</normaloff>.</iconset>
         </property>
         <property name="checkable">
          <bool>false</bool>
@@ -593,8 +593,8 @@
        <string>English</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>images/flagUK.png</normaloff>images/flagUK.png</iconset>
+       <iconset theme="flag-en">
+        <normaloff>.</normaloff>.</iconset>
       </property>
      </widget>
      <widget class="QPushButton" name="pB_Hilfe">
@@ -610,8 +610,8 @@
        <string>Deutsch</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>images/flagDE.png</normaloff>images/flagDE.png</iconset>
+       <iconset theme="flag-de">
+        <normaloff>.</normaloff>.</iconset>
       </property>
      </widget>
     </widget>
