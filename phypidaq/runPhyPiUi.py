@@ -372,7 +372,10 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
             # make sub-directory if needed and non-existent
             if cdir != '':
                 if not os.path.exists(confdir + '/' + cdir):
-                    os.makedirs(confdir + '/' + cdir)
+                    try:
+                        os.makedirs(confdir + '/' + cdir)
+                    except OSError:
+                        print("Couldn't create folder!")
             fDev = open(confdir + '/' + DevFile, 'w')
             print(DevConfs[i], file=fDev)
             fDev.close()
@@ -422,7 +425,10 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
         self.runDir = (RunTag + '_' + datetime)  # timestamp
         self.path_to_WD = self.WDname + '/' + self.runDir
         if not os.path.exists(self.path_to_WD):
-            os.makedirs(self.path_to_WD)
+            try:
+                os.makedirs(self.path_to_WD)
+            except OSError:
+                print("Couldn't create folder!")
 
         if self.saveConfigs(self.path_to_WD):
             return
