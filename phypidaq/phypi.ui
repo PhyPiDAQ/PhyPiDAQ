@@ -64,7 +64,7 @@
        </rect>
       </property>
       <property name="toolTip">
-       <string>PhyPi Data Acquitision with Raspberry Pi</string>
+       <string>PhyPi Data Acquisition with Raspberry Pi</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
