@@ -452,11 +452,10 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
             self.Window.show()
 
     def start_runphypi(self):
-        subprocess.call(['python3 -m phypidaq.runPhyPiDAQ ' + self.DAQfile],
-                        cwd=self.path_to_WD, shell=True)
-#        dir = os.getcwd()
-#        subprocess.call([dir + '/run_phypi.py ' + self.DAQfile],
-#                        cwd=self.path_to_WD, shell=True)
+        if platform.system() == "Windows":
+            subprocess.run(args=["python", "-m", "phypidaq.runPhyPiDAQ", self.DAQfile], cwd=self.path_to_WD)
+        else:
+            subprocess.run(args=["python3", "-m", "phypidaq.runPhyPiDAQ", self.DAQfile], cwd=self.path_to_WD)
 
 
 # - end Class Ui_PhyPiWindow
