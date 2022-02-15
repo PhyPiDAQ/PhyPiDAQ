@@ -498,8 +498,9 @@ def runPhyPiUi():
 
     # check for/read command line arguments and get DAQ configuration file
     if len(sys.argv) == 2:
-        DAQconfFile = os.path.abspath(sys.argv[1])  # with full path to file
-        conf_directory = os.path.dirname(DAQconfFile)  # config dir from file name
+        if sys.argv[1] != '':
+          DAQconfFile = os.path.abspath(sys.argv[1])  # with full path to file
+          conf_directory = os.path.dirname(DAQconfFile)  # config dir from file name
 
     # print config information
     print(5 * ' ', 'work directory: ', work_directory)
