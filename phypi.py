@@ -6,5 +6,10 @@
 import sys, subprocess
 
 if __name__ == "__main__":  # - - - - - - - - - - - - - - - - - - - -
-    arg = '' if len(sys.argv)<2 else sys.argv[1]
-    subprocess.call(['python3 -m phypidaq.runPhyPiUi ' + arg], shell=True)
+    # get commandline arguments 
+    arg = '' if len(sys.argv)<2 else sys.argv[1]    
+    # sys.executable is the present python interpreter,
+    #  restart it and run GUI of PhyPiDAQ 
+    subprocess.run(
+        [sys.executable + ' -m phypidaq.runPhyPiUi ' + arg],
+                   shell=True)
