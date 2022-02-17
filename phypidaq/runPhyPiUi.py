@@ -156,11 +156,20 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
         try:
             with open(DAQconfFile, 'r') as f:
                 DAQconf = f.read()
+           # check if file is valid yaml format
+            try:
+                _confDict = yaml.load(DAQconf,
+                               Loader=yaml.Loader)
+            except Exception as e:
+                print('Exception: ', e)
+                print('     DAQ configuration not valid yaml format' + DAQconfFile)
+                return
         except OSError:
             print('     failed to read DAQ configuration file ' + DAQconfFile)
             # exit(1)
             DAQconf = 'missing !'
-
+            return
+               
         self.lE_DAQConfFile.setText(DAQconfFile)
         RunTag = os.path.split(DAQconfFile)[1].split('.')[0]
         self.lE_RunTag.setText(RunTag)
@@ -209,8 +218,13 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
 
     def readDeviceConfig(self):
         #   read Device Configuration as specified by actual phypi DAQ config
-        phypiConfD = yaml.load(self.pTE_phypiConfig.toPlainText(),
-                               Loader=yaml.Loader)
+        try: 
+            phypiConfD = yaml.load(self.pTE_phypiConfig.toPlainText(),
+                                   Loader=yaml.Loader)
+        except:
+            print('     DAQ configuration not valid yaml format' + DAQconfFile)
+            return
+
         # find the device configuration file
         if "DeviceFile" in phypiConfD:
             DevFiles = phypiConfD["DeviceFile"]
