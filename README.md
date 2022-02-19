@@ -2,7 +2,8 @@
 
 [Software Guide](Documentation_en.md). 
 
-[Dikumentation der Software](Dokumentation_de.md). 
+[Dokumentation der Software](Dokumentation_de.md). 
+
 
 ## Summary
 
@@ -14,13 +15,19 @@ from middle school up to undergraduates at the university level with great match
 school it is also an amazing base for STEM based competitions like
 "[Jugend forscht](https://www.jugend-forscht.de/information-in-english.html)" or science fairs.
 
-This is the software package for data acquisition and its documentation. For details, see the [detailed Documentation](Documentation_en.md). 
+This is the software package for data acquisition and its documentation. For details, see the [full Documentation](Documentation_en.md). 
 
-If you are looking for hardware guides, build
-instructions or educational concepts, please check out our other [repositories](https://github.com/PhyPiDAQ).
+If you are looking for hardware guides, build instructions or educational concepts, please check out our other 
+[repositories](https://github.com/PhyPiDAQ).
+
+#### Currently available Documentation
+
+ - [Software Description](https://github.com/PhyPiDAQ/PhyPiDAQ/blob/main/Documentation_en.md)
+ - [Educators Guide](https://github.com/PhyPiDAQ/EducatorsGuide/blob/main/EducatorsGuide.md)
+ - [Hardware build instructions](https://github.com/PhyPiDAQ/MeasuringCase/blob/main/Documentation_en.md)
 
 
-## Übersicht in Deutscher Sprache
+## Übersicht in deutscher Sprache
 
 Das PhyPiDAQ-Projekt zielt darauf ab, Studierenden und SchülerInnen Zugang zu modernster Messtechnik und Datenerfassung
 zu verschaffen. Da es auf offenen, standardisierten Protokollen und leicht verfügbarer Hardware basiert, kann es
@@ -37,18 +44,26 @@ Wenn Sie nach Hardware-Beschreibungen, Bauanleitungen oder Beschreibungen von
 Experimenten mit PhyPiDAQ suchen, schauen Sie sich bitte unsere anderen
 [Repositories](https://github.com/PhyPiDAQ) an.
 
+#### Derzeit verfügbare Dokumentation
 
-## Quickstart
+ - [Anleitung für Lehrkräfte](https://github.com/PhyPiDAQ/EducatorsGuide/blob/main/Anleitung.md)
+ - [Einführungskurs für Schülerinnen und Schüler](
+     https://github.com/PhyPiDAQ/EducatorsGuide/blob/main/docs/Kurs_digitale_Messwerterfassung_mit_PhyPiDAQ.md)
+ - [Beschreibung der Software](https://github.com/PhyPiDAQ/PhyPiDAQ/blob/main/Dokumentation_de.md)
+ - [Bauanleitung Messkoffer](https://github.com/PhyPiDAQ/MeasuringCase/blob/main/Dokumentation_de.md)
 
-This is a quickstart guide on how to install the software package and run the demo.
+
+## Quick-start
+
+This is a quick-start guide on how to install the software package and run a demo.
 The following requirements need to be met to work
 
 - Linux/Unix operating system
 - Python3.6 runtime or newer
 - `git`-package installed
-- If you want to use the sensor, you need a Raspberry Pi
+- If you want to use all supported sensors, you need a Raspberry Pi
 
-1. Open a terminal and go to the folder, where the software should be installed.
+1. Open a terminal and go to the folder where the software should be installed.
 2. Download the latest release using the following command
 
    ```shell
@@ -74,15 +89,17 @@ The following requirements need to be met to work
      ./run_phypi.py
    ```
 
-For further information on the installation process, additional sensor support and multiuser support refer to the
-sections below.
+For further information on the installation process, on sensors and hardware needs or on educational examples 
+see the detailed documentation in the repositories under the link
+[http://github.com/PhyPiDAQ](http://github.com/PhyPiDAQ).
+
 
 ## Supported sensors
 
-This is a brief summary of all sensors, that are currently supported. Next to the sensors you can find a very simple
-list of dimensions, that can be measured. For more information
+This is a brief summary of all sensors currently supported. Next to the sensors there is a list
+of quantities measured by each sensor. 
 
-List of actively supported sensors
+####List of actively supported sensors
 
 - ADS1115 4 channel, 16 bit Analog-to-Digital Converter
 - MCP3009 10 bit Analog-to-Digital Converter
@@ -111,11 +128,13 @@ Legacy support
 - BMP085 temperature, pressure
 - BMP180 temperature, pressure
 
+
 ## Contributing
 
-For information on how to contribute to this project, please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file.
+For information on how to contribute to this project, please refer to the 
+[CONTRIBUTING.md](CONTRIBUTING.md) file.
 
 ## License
 
-This project is licensed under the `MIT BSD 2-Clause License`. For more information refer to the [LICENSE](LICENSE)
-file.
+This project is licensed under the `MIT BSD 2-Clause License`. For more information refer to the 
+[LICENSE](LICENSE) file.
