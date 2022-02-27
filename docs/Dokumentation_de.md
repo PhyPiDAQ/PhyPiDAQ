@@ -231,7 +231,6 @@ frqSG: 0.    # aus
 
 Beispiele für andere Geräte, wie den Analog-Digital-Wandler MCP3008, für Ratenmessungen über die GPIO - Pins des Raspberry Pi oder Temperaturmessungen mit dem digitalen 1-Wire Thermometer DS18B20,  PT100-Sensoren am MAX31865 'Resistance-to-Digital Converter' oder mit Thermoelementen (Typ K) am MAX31855 'Thermocouple-to-Digital Converter' sind im Konfigurationsverzeichnis `./config/` enthalten, siehe `MCP3008Config.yaml` , `GPIOcount.yaml`, `DS18B20Config.yaml` , `MAX31865Config.yaml` oder`MAX31855Config.yaml`.
 
-<div style="page-break-after: always;"></div>
 ## Installation von PhyPiDAQ auf dem Raspberry Pi
 
 **Beziehen des PhyPiDAQ Codes und einfache Installation**
@@ -248,7 +247,7 @@ Zur Installation von `PhyPiDAQ` geben Sie folgende Befehle ein :
 ```bash
 mkdir ~/git
 cd ~/git
-git clone https://github.com/GuenterQuast/PhyPiDAQ
+git clone https://github.com/PhyPiDAQ/PhyPiDAQ
 ```
 
 PhyPiDAQ* basiert auf Code aus anderen Paketen, die die Treiber für die unterstützten Geräte und  Bibliotheken für die Visualisierung bereitstellen. Die notwendigen Befehle zu deren Installation sind im Scritp `installlibs.sh` zusammengefasst.  Geben Sie auf der Kommandozeile folgende Befehle ein (ohne den erklärenden Text nachdem `#`-Zeichen):

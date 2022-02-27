@@ -208,7 +208,7 @@ After setting up your Raspberry pi with the most recent version of the Debian Re
 ```bash
 mkdir git
 cd git
-git clone https://github.com/GuenterQuast/PhyPiDAQ
+git clone https://github.com/PhyPiDAQ/PhyPiDAQ
 ```
 
 For your convenience, the script *installlibs.sh* installs all components needed for PhyPiDAQ. Simply execute

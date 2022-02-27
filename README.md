@@ -1,8 +1,8 @@
 # PhyPiDAQ Description of Software
 
-[Software Guide](Documentation_en.md). 
+[Software Guide](docs/Documentation_en.md). 
 
-[Dokumentation der Software](Dokumentation_de.md). 
+[Dokumentation der Software](docs/Dokumentation_de.md). 
 
 
 ## Summary
@@ -15,7 +15,7 @@ from middle school up to undergraduates at the university level with great match
 school it is also an amazing base for STEM based competitions like
 "[Jugend forscht](https://www.jugend-forscht.de/information-in-english.html)" or science fairs.
 
-This is the software package for data acquisition and its documentation. For details, see the [full Documentation](Documentation_en.md). 
+This is the software package for data acquisition and its documentation. For details, see the [full Documentation](docs/Documentation_en.md). 
 
 If you are looking for hardware guides, build instructions or educational concepts, please check out our other 
 [repositories](https://github.com/PhyPiDAQ).
@@ -38,7 +38,7 @@ Studierenden auf Universitätsebene. Über die Schule hinaus ist es auch eine gu
 "[Jugend forscht](https://www.jugend-forscht.de/)".
 
 Dies ist das Softwarepaket zur Datenerfassung und die zugehörige Dokumentation. Weitere Information zu Installation,
-Funktionsweise und Konfiguration der Software zum PhyPiDAQ-Projekt findet sich [hier](Dokumentation_de.md). 
+Funktionsweise und Konfiguration der Software zum PhyPiDAQ-Projekt findet sich [hier](docs/Dokumentation_de.md). 
 
 Wenn Sie nach Hardware-Beschreibungen, Bauanleitungen oder Beschreibungen von
 Experimenten mit PhyPiDAQ suchen, schauen Sie sich bitte unsere anderen

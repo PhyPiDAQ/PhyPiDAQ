@@ -205,13 +205,13 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
 
     def setHelp_DE(self):
         try:
-            self.TE_Help.setText(open('doc/Hilfe.html', 'r').read())
+            self.TE_Help.setText(open('doc/Hilfe.html', 'r', encoding='utf-8').read())
         except OSError:
             self.TE_Help.setText("Fehlt!")
 
     def setHelp_EN(self):
         try:
-            self.TE_Help.setText(open('doc/Help.html', 'r').read())
+            self.TE_Help.setText(open('doc/Help.html', 'r', encoding='utf-8').read())
         except OSError:
             self.TE_Help.setText("Missing!")
 
