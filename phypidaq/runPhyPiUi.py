@@ -165,6 +165,11 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
                 print('Exception: ', e)
                 print('     DAQ configuration not valid yaml format' + DAQconfFile)
                 return
+
+            # Do another file check
+            if len(_confDict.keys()) == 0:
+                print("Config dictionary is empty!")
+
         except OSError:
             print('     failed to read DAQ configuration file ' + DAQconfFile)
             # exit(1)
