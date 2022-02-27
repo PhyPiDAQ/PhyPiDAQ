@@ -149,9 +149,9 @@ class runPhyPiDAQ(object):
         try:
             with open(PhyPiConfFile) as f:
                 PhyPiConfDict = yaml.load(f, Loader=yaml.Loader)
-        except Exception as e:
+        except (OSError, yaml.YAMLError) as exception:
             print('!!! failed to read configuration file ' + PhyPiConfFile)
-            print(str(e))
+            print(str(exception))
             exit(1)
 
         # set default options:
@@ -197,9 +197,9 @@ class runPhyPiDAQ(object):
                 f = open(fnam)
                 DEVconfDicts.append(yaml.load(f, Loader=yaml.Loader))
                 f.close()
-            except Exception as e:
+            except (OSError, yaml.YAMLError) as exception:
                 print('!!! failed to read configuration file ' + fnam)
-                print(str(e))
+                print(str(exception))
                 exit(1)
 
         # configure and initialize all Devices

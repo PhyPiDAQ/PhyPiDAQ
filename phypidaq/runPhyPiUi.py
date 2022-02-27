@@ -13,6 +13,7 @@ from builtins import super
 """
 
 import os
+import platform
 import subprocess
 import sys
 import time
@@ -82,7 +83,10 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
         self.setHelp_EN()
 
         # find user home directory and create directory 'PhyPi'
-        self.homedir = os.getenv('HOME')
+        if platform.system() == "Windows":
+            self.homedir = os.getenv('USERPROFILE')
+        else:
+            self.homedir = os.getenv('HOME')
         if ConfDir is not None:
             if ConfDir[0] != '/':  # relative path
                 self.ConfDir = self.homedir + '/' + ConfDir
@@ -92,7 +96,10 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
             if self.ConfDir is None:
                 self.ConfDir = self.homedir + '/PhyPi'
         if not os.path.exists(self.ConfDir):
-            os.makedirs(self.ConfDir)
+            try:
+                os.makedirs(self.ConfDir)
+            except OSError:
+                print("Could create config directory!")
 
         # set initial working Directory
         if WDname is not None:
@@ -104,7 +111,10 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
             if self.WDname is None:
                 self.WDname = self.ConfDir
         if not os.path.exists(self.WDname):
-            os.makedirs(self.WDname)
+            try:
+                os.makedirs(self.WDname)
+            except OSError:
+                print("Could create working directory!")
 
         self.lE_WorkDir.setText(self.WDname)
 
@@ -146,11 +156,19 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
         try:
             with open(DAQconfFile, 'r') as f:
                 DAQconf = f.read()
+            # check if file is valid yaml format
+            try:
+                _confDict = yaml.load(DAQconf, Loader=yaml.Loader)
+            except yaml.YAMLError as e:
+                print('Exception: ', e)
+                print('     DAQ configuration not valid yaml format' + DAQconfFile)
+                return
         except OSError:
             print('     failed to read DAQ configuration file ' + DAQconfFile)
             # exit(1)
-            DAQconf='missing !'
-        
+            DAQconf = 'missing !'
+            return
+
         self.lE_DAQConfFile.setText(DAQconfFile)
         RunTag = os.path.split(DAQconfFile)[1].split('.')[0]
         self.lE_RunTag.setText(RunTag)
@@ -199,8 +217,12 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
 
     def readDeviceConfig(self):
         #   read Device Configuration as specified by actual phypi DAQ config
-        phypiConfD = yaml.load(self.pTE_phypiConfig.toPlainText(),
-                               Loader=yaml.Loader)
+        try:
+            phypiConfD = yaml.load(self.pTE_phypiConfig.toPlainText(), Loader=yaml.Loader)
+        except yaml.YAMLError:
+            print('     DAQ configuration not valid yaml format' + DAQconfFile)
+            return
+
         # find the device configuration file
         if "DeviceFile" in phypiConfD:
             DevFiles = phypiConfD["DeviceFile"]
@@ -287,7 +309,7 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
         # check validity of configuration files for valid yaml syntax
         try:
             yaml.load(DAQconf, Loader=yaml.Loader)
-        except Exception as e:
+        except yaml.YAMLError as e:
             self.MB_Warning('Warning', 'PhyPi Config is not valid yaml format \n' + str(e))
             return 1
 
@@ -296,7 +318,7 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
             DevConfs.append(self.pTE_DeviceConfigs[i].toPlainText())
             try:
                 _ = yaml.load(DevConfs[i], Loader=yaml.Loader)
-            except Exception as e:
+            except yaml.YAMLError as e:
                 self.MB_Warning('Warning', 'Device Config %i is not valid yaml format \n' % (i) + str(e))
                 return 1
         return 0
@@ -309,7 +331,7 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
         # check validity of configuration files for valid yaml syntax
         try:
             DAQconfdict = yaml.load(DAQconf, Loader=yaml.Loader)
-        except Exception as e:
+        except yaml.YAMLError as e:
             self.MB_Warning('Warning', 'PhyPi Config is not valid yaml format \n' + str(e))
             return 1
 
@@ -318,13 +340,13 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
             DevConfs.append(self.pTE_DeviceConfigs[i].toPlainText())
             try:
                 _ = yaml.load(DevConfs[i], Loader=yaml.Loader)
-            except Exception as e:
+            except yaml.YAMLError as e:
                 self.MB_Warning('Warning',
                                 'Device Config %i is not valid yaml format \n' % (i) + str(e))
                 return 1
 
         # name of DAQ configuration file in confdir
-        if (DAQfile) is None:  # derive from RunTag if not given
+        if DAQfile is None:  # derive from RunTag if not given
             DAQfile = str(self.lE_RunTag.text()).replace(' ', '') + '.daq'
         fullDAQfile = confdir + '/' + DAQfile
 
@@ -362,7 +384,10 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
             # make sub-directory if needed and non-existent
             if cdir != '':
                 if not os.path.exists(confdir + '/' + cdir):
-                    os.makedirs(confdir + '/' + cdir)
+                    try:
+                        os.makedirs(confdir + '/' + cdir)
+                    except OSError:
+                        print("Couldn't create folder!")
             fDev = open(confdir + '/' + DevFile, 'w')
             print(DevConfs[i], file=fDev)
             fDev.close()
@@ -392,9 +417,12 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
 
     def saveEnvironment(self):
         """ Save PhyPi configuration to file ~/CONFIG_ENVIRONMENT_file """
-        hd = os.getenv('HOME')
+        if platform.system() == "Windows":
+            homedir = os.getenv('USERPROFILE')
+        else:
+            homedir = os.getenv('HOME')
         # ... and find name of work directory
-        config_name = hd + '/' + CONFIG_ENVIRONMENT_file
+        config_name = homedir + '/' + CONFIG_ENVIRONMENT_file
         fcfg = open(config_name, 'w')
         print('work_directory: ', self.WDname, file=fcfg)
         print('config_directory: ', self.ConfDir, file=fcfg)
@@ -409,7 +437,10 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
         self.runDir = (RunTag + '_' + datetime)  # timestamp
         self.path_to_WD = self.WDname + '/' + self.runDir
         if not os.path.exists(self.path_to_WD):
-            os.makedirs(self.path_to_WD)
+            try:
+                os.makedirs(self.path_to_WD)
+            except OSError:
+                print("Couldn't create folder!")
 
         if self.saveConfigs(self.path_to_WD):
             return
@@ -433,11 +464,7 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
             self.Window.show()
 
     def start_runphypi(self):
-        subprocess.call(['python3 -m phypidaq.runPhyPiDAQ ' + self.DAQfile],
-                        cwd=self.path_to_WD, shell=True)
-#        dir = os.getcwd()
-#        subprocess.call([dir + '/run_phypi.py ' + self.DAQfile],
-#                        cwd=self.path_to_WD, shell=True)
+        subprocess.run(args=[sys.executable, "-m", "phypidaq.runPhyPiDAQ", self.DAQfile], cwd=self.path_to_WD)
 
 
 # - end Class Ui_PhyPiWindow
@@ -448,7 +475,10 @@ def runPhyPiUi():
 
     # get relevant paths ...
     path_to_PhyPi = os.path.dirname(script)
-    homedir = os.getenv('HOME')
+    if platform.system() == "Windows":
+        homedir = os.getenv('USERPROFILE')
+    else:
+        homedir = os.getenv('HOME')
     # ... and find name of work directory
     config_name = homedir + '/' + CONFIG_ENVIRONMENT_file
     try:
@@ -480,8 +510,9 @@ def runPhyPiUi():
 
     # check for/read command line arguments and get DAQ configuration file
     if len(sys.argv) == 2:
-        DAQconfFile = os.path.abspath(sys.argv[1])  # with full path to file
-        conf_directory = os.path.dirname(DAQconfFile)  # config dir from file name
+        if sys.argv[1] != '':
+            DAQconfFile = os.path.abspath(sys.argv[1])  # with full path to file
+            conf_directory = os.path.dirname(DAQconfFile)  # config dir from file name
 
     # print config information
     print(5 * ' ', 'work directory: ', work_directory)
