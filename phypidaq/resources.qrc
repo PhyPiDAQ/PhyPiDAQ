@@ -1,0 +1,8 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="icons">
+        <file alias="application-exit">images/application-exit.jpg</file>
+        <file alias="flag-DE">images/flagDE.png</file>
+        <file alias="flag-EN">images/flagUK.png</file>
+    </qresource>
+</RCC>

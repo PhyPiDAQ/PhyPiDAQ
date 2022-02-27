@@ -71,7 +71,7 @@
            <string></string>
           </property>
           <property name="icon">
-           <iconset theme="edit-delete"><normaloff>.</normaloff>.</iconset>
+           <iconset theme=":/icons/application-exit"/>
           </property>
           <property name="iconSize">
            <size>
@@ -306,7 +306,7 @@
            <string>Start Data Acquisition</string>
           </property>
           <property name="text">
-           <string>StartRun</string>
+           <string>Start Run</string>
           </property>
           <property name="icon">
            <iconset theme="start-here"><normaloff>.</normaloff>.</iconset>
@@ -609,7 +609,7 @@
               <string>English</string>
              </property>
              <property name="icon">
-              <iconset theme="flag-en"><normaloff>.</normaloff>.</iconset>
+              <iconset theme=":/icons/flag-EN"/>
              </property>
             </widget>
            </item>
@@ -627,7 +627,7 @@
               <string>Deutsch</string>
              </property>
              <property name="icon">
-              <iconset theme="flag-de"><normaloff>.</normaloff>.</iconset>
+              <iconset theme=":/icons/flag-DE"/>
              </property>
             </widget>
            </item>
