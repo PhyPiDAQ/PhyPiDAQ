@@ -1,9 +1,8 @@
 # PhyPiDAQ Description of Software
 
-[Software Guide](docs/Documentation_en.md). 
+[Software Guide](docs/Documentation_en.md).
 
-[Dokumentation der Software](docs/Dokumentation_de.md). 
-
+[Dokumentation der Software](docs/Dokumentation_de.md).
 
 ## Summary
 
@@ -15,17 +14,17 @@ from middle school up to undergraduates at the university level with great match
 school it is also an amazing base for STEM based competitions like
 "[Jugend forscht](https://www.jugend-forscht.de/information-in-english.html)" or science fairs.
 
-This is the software package for data acquisition and its documentation. For details, see the [full Documentation](docs/Documentation_en.md). 
+This is the software package for data acquisition and its documentation. For details, see the
+[full Documentation](docs/Documentation_en.md). 
 
-If you are looking for hardware guides, build instructions or educational concepts, please check out our other 
+If you are looking for hardware guides, build instructions or educational concepts, please check out our other
 [repositories](https://github.com/PhyPiDAQ).
 
-#### Currently available Documentation
+### Currently available Documentation
 
- - [Software Description](https://github.com/PhyPiDAQ/PhyPiDAQ/blob/main/Documentation_en.md)
- - [Educators Guide](https://github.com/PhyPiDAQ/EducatorsGuide/blob/main/EducatorsGuide.md)
- - [Hardware build instructions](https://github.com/PhyPiDAQ/MeasuringCase/blob/main/Documentation_en.md)
-
+- [Software Description](https://github.com/PhyPiDAQ/PhyPiDAQ/blob/main/Documentation_en.md)
+- [Educators Guide](https://github.com/PhyPiDAQ/EducatorsGuide/blob/main/EducatorsGuide.md)
+- [Hardware build instructions](https://github.com/PhyPiDAQ/MeasuringCase/blob/main/Documentation_en.md)
 
 ## Übersicht in deutscher Sprache
 
@@ -38,20 +37,19 @@ Studierenden auf Universitätsebene. Über die Schule hinaus ist es auch eine gu
 "[Jugend forscht](https://www.jugend-forscht.de/)".
 
 Dies ist das Softwarepaket zur Datenerfassung und die zugehörige Dokumentation. Weitere Information zu Installation,
-Funktionsweise und Konfiguration der Software zum PhyPiDAQ-Projekt findet sich [hier](docs/Dokumentation_de.md). 
+Funktionsweise und Konfiguration der Software zum PhyPiDAQ-Projekt findet sich [hier](docs/Dokumentation_de.md).
 
 Wenn Sie nach Hardware-Beschreibungen, Bauanleitungen oder Beschreibungen von
 Experimenten mit PhyPiDAQ suchen, schauen Sie sich bitte unsere anderen
 [Repositories](https://github.com/PhyPiDAQ) an.
 
-#### Derzeit verfügbare Dokumentation
+### Derzeit verfügbare Dokumentation
 
- - [Anleitung für Lehrkräfte](https://github.com/PhyPiDAQ/EducatorsGuide/blob/main/Anleitung.md)
- - [Einführungskurs für Schülerinnen und Schüler](
-     https://github.com/PhyPiDAQ/EducatorsGuide/blob/main/docs/Kurs_digitale_Messwerterfassung_mit_PhyPiDAQ.md)
- - [Beschreibung der Software](https://github.com/PhyPiDAQ/PhyPiDAQ/blob/main/Dokumentation_de.md)
- - [Bauanleitung Messkoffer](https://github.com/PhyPiDAQ/MeasuringCase/blob/main/Dokumentation_de.md)
-
+- [Anleitung für Lehrkräfte](https://github.com/PhyPiDAQ/EducatorsGuide/blob/main/Anleitung.md)
+- [Einführungskurs für Schülerinnen und Schüler](
+    https://github.com/PhyPiDAQ/EducatorsGuide/blob/main/docs/Kurs_digitale_Messwerterfassung_mit_PhyPiDAQ.md)
+- [Beschreibung der Software](https://github.com/PhyPiDAQ/PhyPiDAQ/blob/main/Dokumentation_de.md)
+- [Bauanleitung Messkoffer](https://github.com/PhyPiDAQ/MeasuringCase/blob/main/Dokumentation_de.md)
 
 ## Quick-start
 
@@ -89,17 +87,16 @@ The following requirements need to be met to work
      ./run_phypi.py
    ```
 
-For further information on the installation process, on sensors and hardware needs or on educational examples 
+For further information on the installation process, on sensors and hardware needs or on educational examples
 see the detailed documentation in the repositories under the link
 [http://github.com/PhyPiDAQ](http://github.com/PhyPiDAQ).
-
 
 ## Supported sensors
 
 This is a brief summary of all sensors currently supported. Next to the sensors there is a list
 of quantities measured by each sensor. 
 
-####List of actively supported sensors
+### List of actively supported sensors
 
 - ADS1115 4 channel, 16 bit Analog-to-Digital Converter
 - MCP3009 10 bit Analog-to-Digital Converter
@@ -123,18 +120,17 @@ of quantities measured by each sensor.
 - PicoScope USB oscilloscopes
 - rate measurements via GPIO pins
 
-Legacy support
+### Legacy support
 
 - BMP085 temperature, pressure
 - BMP180 temperature, pressure
 
-
 ## Contributing
 
-For information on how to contribute to this project, please refer to the 
+For information on how to contribute to this project, please refer to the
 [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
 ## License
 
-This project is licensed under the `MIT BSD 2-Clause License`. For more information refer to the 
+This project is licensed under the `MIT BSD 2-Clause License`. For more information refer to the
 [LICENSE](LICENSE) file.

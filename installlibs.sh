@@ -24,7 +24,7 @@ then
   sudo pip3 install installlibs/tgz/*.tar.gz # python packages
 
   # Install all sensor drivers specified in the
-  sudo pip3 install -r /requirements.txt
+  sudo pip3 install -r requirements.txt
 
   sudo usermod -a -G tty pi # grant access to USB for user pi
 fi
