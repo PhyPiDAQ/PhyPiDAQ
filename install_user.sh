@@ -33,9 +33,9 @@ if [ -d $DIR ]; then
   #copy python code
   cp -auv phypi.py $DIR
   cp -auv run_phypi.py $DIR
-  mkdir $DIR/phypidaq
-  cp -auv phypidaq/images $DIR/phypidaq/
-  cp -auv phypidaq/doc    $DIR/phypidaq/
+  # mkdir $DIR/phypidaq # no longer needed with new Qt set-up
+  # cp -auv phypidaq/images $DIR/phypidaq/
+  # cp -auv phypidaq/doc    $DIR/phypidaq/
 
   #copy config examples
   cp -auv config/ $DIR
