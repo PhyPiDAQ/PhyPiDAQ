@@ -18,7 +18,7 @@ Neben den GPIO Ein- und Ausgängen des Raspberry Pi werden die Analog-Digital-Wa
 
 Das Paket bietet eine Abstraktionsschicht für Messgeräte und Sensoren, die an einen Raspberry Pi angeschlossen sind. Eigene Klassen für jedes Gerät bieten eine einfache, einheitliche Schnittstelle, die nur die Methoden `init(<config_dictionary>)`, `acquireData(buffer)`und `closeDevice()` enthalten. Einfache Beispiele mit minimalem Code veranschaulichen die Verwendung. Die grafische Benutzeroberfläche `phypi.py` und das Skript `run_phypi.py` bieten eine konfigurierbare Umgebung für komplexere Messprojekte.
 
- *Abb. 1*:  Darstellung der Zeitabhängigkeit von zwei Signalquellen an einem AD-Wandler  
+ *Abb. 1*: Darstellung der Zeitabhängigkeit von zwei Signalquellen an einem AD-Wandler  
                     ![Figure 1](images/Kondensator.png)
 
 

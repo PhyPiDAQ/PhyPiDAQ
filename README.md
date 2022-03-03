@@ -15,7 +15,7 @@ school it is also an amazing base for STEM based competitions like
 "[Jugend forscht](https://www.jugend-forscht.de/information-in-english.html)" or science fairs.
 
 This is the software package for data acquisition and its documentation. For details, see the
-[full Documentation](docs/Documentation_en.md). 
+[full Documentation](docs/Documentation_en.md).
 
 If you are looking for hardware guides, build instructions or educational concepts, please check out our other
 [repositories](https://github.com/PhyPiDAQ).
@@ -94,7 +94,7 @@ see the detailed documentation in the repositories under the link
 ## Supported sensors
 
 This is a brief summary of all sensors currently supported. Next to the sensors there is a list
-of quantities measured by each sensor. 
+of quantities measured by each sensor.
 
 ### List of actively supported sensors
 

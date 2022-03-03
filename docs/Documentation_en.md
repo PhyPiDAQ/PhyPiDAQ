@@ -16,7 +16,7 @@ In addition to the GPIO inputs/outputs of the Raspberry Pi, the analogue-to-digi
 
 The package provides an abstraction layer for measurement devices and sensors connected to a Raspberry Pi.  Dedicated classes for each device provide a simple, unified interface, containing only the methods `init(<config_dictionary>)`, `acquireData(buffer)` and `closeDevice()`. Simple examples with minimalist code illustrate the usage. The graphical user interface `phypi.py` and the script `run_phypi.py` provide a configurable environment for more complex measurements.
 
-*Fig. 1*:  Visualisation of  the time  dependence of two signals connected to an ADC  
+*Fig. 1*: Visualisation of  the time  dependence of two signals connected to an ADC  
            ![Figure 1](images/Kondensator.png)
 
 
@@ -211,8 +211,8 @@ cd git
 git clone https://github.com/PhyPiDAQ/PhyPiDAQ
 ```
 
-For your convenience, the script *installlibs.sh* installs all components needed for PhyPiDAQ. Simply execute
-the script *installlibs.sh* once on the command line (without text after `#`):
+For your convenience, the script `installlibs.sh` installs all components needed for PhyPiDAQ. Simply execute
+the script `installlibs.sh` once on the command line (without text after `#`):
 
 ```bash
 cd ~/git/PhyPiDAQ  # change to installation directory 
@@ -222,7 +222,7 @@ git pull           # eventually update to latest version of PhyPiDAQ
 
 The installation is now done and *PhyPiDAQ* is ready to be used.
 
-The last part of the installation procedure is also valid to update an exiting verion of `PhyPiDAQ` .
+The last part of the installation procedure is also valid to update an exiting version of `PhyPiDAQ` .
 
 To test the installation without connected hardware or on a system other than the Raspberry Pi, PhyPiDAQ
 may be started in demo-mode:
@@ -234,13 +234,14 @@ cd ~/git/PhyPiDAQ  # change to installation directory
 
 **Remark**
 
-*PhyPiDAQ* is meant to be an educational tool.  Confronting students with the full contents of this package is therefore not appropriate. Instead, it is recommended to create a working directory and copy examples from there to the student's working directory. This is achieved via the following commands:
+*PhyPiDAQ* is meant to be an educational tool.  Confronting students with the full contents of this package is therefore
+not appropriate. Instead, it is recommended to create a working directory and copy examples from there to the student's 
+working directory. This is achieved via the following commands:
 
 ```bash
 # create PhyPi working directory and make examples and config files available
 cd ~/git/PhyPiDAQ
-./install_user.sh [<directory name>]
-    # the input of a directory name is optional; default is "PhiPi"
+./install_user.sh [<directory name>] # the input of a directory name is optional; default is "PhiPi"
 # provide icon to graphical user interface
 cp ~/git/PhyPiDAQ/phypi.desktop ~/Desktop
 ```

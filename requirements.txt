@@ -11,7 +11,6 @@ adafruit-circuitpython-max31855==3.2.11
 adafruit-circuitpython-max31865==2.2.12
 Adafruit-PlatformDetect==3.15.3
 Adafruit-PureIO==1.1.9
-## pkg-resources==0.0.0
 pyftdi==0.53.2
 pyserial==3.5
 pyusb==1.1.1
