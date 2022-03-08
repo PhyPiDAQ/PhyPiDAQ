@@ -18,16 +18,18 @@ All are natural numbers starting from 0.
 Follow this steps to create a release
 
 - Write down all changes to the code into the [Release Notes](../ReleaseNotes.md), following the format
-```markdown
-## v1.0.0
-Date: 01. Januar 2022
 
-### Changes
+  ```markdown
+  ## v1.0.0
+  Date: 01. Januar 2022
+  
+  ### Changes
+  
+  - A simple list of changes
+  - Another one
+  
+  ```
 
-- A simple list of changes
-- Another one
-
-```
 - Ensure, that you have a date for the release and also the correct version number.
 - Ensure, that the code, you want to release is working properly and mets the check of the Python Code linter.
 - Update the `phypidaq/_version_info.py` with the matching version.

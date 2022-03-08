@@ -1,6 +1,7 @@
-#Release notes for PhyPiDAQ
+# Release notes for PhyPiDAQ
 
 ## v1.1.0 (Planned)
+
 Date (planned): 14. March 2022
 
 ### Changes
@@ -17,6 +18,7 @@ Date (planned): 14. March 2022
 - BMP085 and BMP180 have been declared **legacy implementations**.
 
 ## v1.0.2
+
 Date: 14. August 2021
 
 ### Changes
@@ -25,6 +27,7 @@ Date: 14. August 2021
 - Moved the doc and images to the phypidaq folder
 
 ## v1.0.1
+
 Date: 11 June 2021
 
 ### Changes
@@ -43,6 +46,7 @@ Date: 11 June 2021
 - Support for ADC on Raspberry Pi Grove Base Hat
 
 ## v0.9.4beta
+
 Date: June 2019
 
 ### Changes
@@ -50,6 +54,7 @@ Date: June 2019
 - added output to fifo
 
 ## v0.9.3beta
+
 Date: Jun 2019
 
 ### Changes
@@ -84,6 +89,7 @@ Date: Jun 2019
 - Added script `GPIO-In-Out.py`
 
 ## v0.9.2
+
 Date: 13. February 2019
 
 ### Changes
@@ -112,7 +118,8 @@ Date: 13. February 2019
 - Added support for temperature and pressure sensor BMP180
 - Improved error messages
 
-## v0.9.1 
+## v0.9.1
+
 Date: 24. November 2018
 
 ### Changes
@@ -124,6 +131,7 @@ Date: 24. November 2018
 - User install script
 
 ## v0.9.0
+
 Date: 7. October 2018
 
 Initial release
