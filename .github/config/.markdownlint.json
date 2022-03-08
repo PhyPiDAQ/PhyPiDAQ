@@ -5,5 +5,5 @@
     "strict": true,
     "code_blocks": false
   },
-  "siblings_only": true
+  "allow_different_nesting": true
 }
