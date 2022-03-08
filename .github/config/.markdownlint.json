@@ -5,5 +5,7 @@
     "strict": true,
     "code_blocks": false
   },
-  "allow_different_nesting": true
+  "MD024": {
+    "allow_different_nesting": true
+  }
 }
