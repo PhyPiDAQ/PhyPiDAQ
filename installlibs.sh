@@ -10,6 +10,9 @@ sudo apt-get install python3-matplotlib --yes
 sudo apt-get install python3-pyqt5 --yes
 sudo apt-get install libatlas-base-dev --yes # needed to build numpy
 
+# install this package (phypidaq) 
+sudo pip3 install .
+
 read -p "Do you want to install the sensor drivers (Y/n)?" -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
