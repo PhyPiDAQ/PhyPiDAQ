@@ -45,5 +45,5 @@ if [ -d $DIR ]; then
   cp -auv examples/ $DIR
 fi
 
-echo "The full documentation (software, hardware and educational guidelines) can be found on GitHub:"
-echo "https://github.com/PhyPiDAQ"
+echo -e "\nThe full documentation (software, hardware and educational guidelines) can be found on GitHub:"
+echo -e "https://github.com/PhyPiDAQ"

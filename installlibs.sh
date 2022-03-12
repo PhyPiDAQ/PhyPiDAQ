@@ -13,9 +13,11 @@ sudo apt-get install libatlas-base-dev --yes # needed to build numpy
 # install this package (phypidaq) 
 sudo pip3 install .
 
-read -p "Do you want to install the sensor drivers (Y/n)?" -n 1 -r
+read -p "Do you want to install the sensor drivers (Y/n)? " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
+
+  echo -e "\n   ... installing drivers"
   # some python packages for IO
   sudo pip3 install i2cdev
   sudo pip3 install spidev
@@ -32,10 +34,11 @@ then
   sudo usermod -a -G tty pi # grant access to USB for user pi
 fi
 
-read -p "Do you want to install the picoscope drivers (Y/n)?" -n 1 -r
+read -p "Do you want to install the picoscope drivers (Y/n)? " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
 
+  echo -e "\n   ...installing PicoScope drivers"
   sudo dpkg -i installlibs/picoscopelibs/*.deb # picoscope
   sudo usermod -a -G tty pi # grant access to USB for user pi
 fi
