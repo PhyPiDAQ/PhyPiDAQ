@@ -1,6 +1,6 @@
 # Structure of the phypidaq
 
-## Programs 
+## Programs
 
 - `run_phypi.py`  
     run data acquisition and display modules as specified in configuration files (default `PhyPiConf.daq`
@@ -19,7 +19,7 @@
 - `phypidaq/ADS1115Config.py`  
     class for handling of analog-to-digital converter ADS1115
 
-- `phypidaq/MCP3008Config.py`   
+- `phypidaq/MCP3008Config.py`  
     class analog-to-digital converter MCP3008
 
 - `phypidaq/MCP3008Config.py`  
@@ -34,7 +34,7 @@
 - ``phypidaq/MMA8451Config.py``  
     class for the digital accelerometer MMA8451
 
-- `phypidaq/GPIOCount.py`   
+- `phypidaq/GPIOCount.py`  
     class for reading rates from GPIO pins
 
 - `phypidaq/MAX31855Config.py`  
@@ -50,19 +50,19 @@
     class for VL53L1X distance sensor
 
 - `phypidaq/TCS34725Config`
-    class for TCS34725 RGB color sensor 
+    class for TCS34725 RGB color sensor
 
 - `phypidaq/AS7262Config`
     class for AS7262 six channel color sensor
 
 - `phypidaq/AS7265xConfig`
-    class for AS7265x 18 channel spectral sensor 
+    class for AS7265x 18 channel spectral sensor
 
 - `phypidaq/GDK101Config.py`  
-    class  for gamma ray detektor GDK101, FTLAB
+    class for gamma ray detektor GDK101, FTLAB
 
 - `phypidaq/ToyDataConfig.py`  
-    class to generate simulated data (for test, debugging or exercises) 
+    class to generate simulated data (for test, debugging or exercises)
 
 - `phypidaq/ReplayConfig`  
     class to replay data from file
@@ -95,34 +95,32 @@
 - `phypidaq/phypi.ui`
     output of `designer-qt5` , describes the graphical user interface
 
-
-## Configuration files 
+## Configuration files
 
 - `phypidaq.cfg`  
-     global configuration for directory with configuration files and inital work directory;
+     global configuration for directory with configuration files and initial work directory;
      if this file is found in the `home` directory, it takes priority over the one in the installation directory
 - `PhyPiConf.daq`  
      main configuration file, depends on device configurations in sub-directory *config/*
 - `config/ADS1115Config.yaml` 16 bit ADC
 - `config/MCP3008Config.yaml` 10 bit ADC
 - `config/MCP3208Config.yaml`  12 bit ADC
-- `config/INA219Config.yaml` current and voltage sensore
+- `config/INA219Config.yaml` current and voltage sensor
 - `config/DS18B20Config.yaml` digital temperature sensor
 - `config/BMP280Config.yaml` temperature and pressure sensor
 - ``config/BMP180Config.yaml` temperature and pressure sensor
-- `config/GPIOCount.yaml`  frequency measruement via GPIO pin
-- `config/MAX31855Config.yaml` converter for thermocouple 
+- `config/GPIOCount.yaml`  frequency measurement via GPIO pin
+- `config/MAX31855Config.yaml` converter for thermocouple
 - `config/MAX31865Config.yaml` converter for PT-100
 - `config/INA219Config.yaml` current-voltage sensor
 - `config/TCS34752Config.yaml` RGB sensor
 - `config/AS7262Config.yaml` 6 channel color sensor
 - `config/AS7265xConfig.yaml` 18 channel spectral sensor
 - `config/VL53L1XConfig.yaml` distance sensor
-- `config/GDK101.yaml` gamma-ray detector 
+- `config/GDK101.yaml` gamma-ray detector
 - `config/PSConfig.yaml`  PicoScope usb oscilloscope
 
-
-## Examples 
+## Examples
 
 - `examples/read_analog.py`  
     very minimalist example to read one channel from an analog-to-ditigal converter
@@ -160,8 +158,7 @@
     generate a fixed frequency signal on a GPIO pin  
 
 - `examples/set_MPC4725`  
-    example to set voltage on MCP4725 ditital-to-analog converter
-
+    example to set voltage on MCP4725 digital-to-analog converter
 
 ## Configuration files for *run_phypi.py*
 
@@ -185,7 +182,7 @@
     measurement of gamma-ray dose with GDK101
 - `examples/ToyData.daq`
     generation and display of simulated data  
-- `examples/ReplayData.daq`   
+- `examples/ReplayData.daq`  
     data from file (for demo mode)
 - `examples/readPipe.py`  
     read data from named linux pipe (*run_phypi.py* with option DAQfifo: \<pipe name\>)

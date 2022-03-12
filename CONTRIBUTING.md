@@ -31,11 +31,11 @@ steps.
 
 Here is a list of all contributors sorted alphabetically by lastname
 
-- Moritz Aupperle
-- Alexander Becker
-- Dominik Braig
-- Raphael Grau
-- Alexander Kaschta
-- Achim Pelster
-- Günther Quast
-- M. Wong
+* Moritz Aupperle
+* Alexander Becker
+* Dominik Braig
+* Raphael Grau
+* Alexander Kaschta
+* Achim Pelster
+* Günther Quast
+* M. Wong
