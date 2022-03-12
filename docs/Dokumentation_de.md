@@ -12,7 +12,7 @@ the Link [Documentation_en.md](Documentation_en.md).
 ### Datenerfassung und Analyse für die Physikausbildung mit Raspberry Pi
 
 
-Dieser Code in der Programmmiersprache *python3* bietet einige grundlegende Funktionen zur Datenerfassung und -visualisierung wie Datenlogger, Balkendiagramm, XY- oder Oszilloskopanzeige und Datenaufzeichnung auf Festplatte.
+Dieser Code in der Programmiersprache *python3* bietet einige grundlegende Funktionen zur Datenerfassung und -visualisierung wie Datenlogger, Balkendiagramm, XY- oder Oszilloskopanzeige und Datenaufzeichnung auf Festplatte.
 
 Neben den GPIO Ein- und Ausgängen des Raspberry Pi werden die Analog-Digital-Wandler ADS1115 und MCP3008 sowie USB-Oszilloskope (PicoScope der Firma picotech) als Eingabegeräte für analoge Daten sowie eine Reihe von digitalen Sensoren mit Protokollen wie I²C oder SPI unterstützt.
 
@@ -201,7 +201,7 @@ sampleRate: 860           # programmierbare Datenrate des ADS1115
 ```
 
 Das **USB-Oszilloskop** PicoScope kann ebenfalls als Datenlogger eingesetzt werden. In diesem Fall wird über eine Anzahl von Messungen mit sehr hoher Ausleserate gemittelt. Wählt man z.B. ein Messintervall von 20 ms, so wird
-50 Hz-Rauschen effizient herausgemittelt.
+50 Hz-Rauschen effizient heraus gemittelt.
 
 **Inhalt der Gerätekonfiguration `PSconfig.yaml`**
 
@@ -265,7 +265,7 @@ von `PhyPiDAQ` aktualisiert werden soll.
 
 
 Um die Installation auch ohne angeschlossene Hardware oder auf einem anderen System als dem 
-Rasbperry Pi zu testen, kann PhyPiDAQ im Demo-Modus gestartet werden:
+Raspberry Pi zu testen, kann PhyPiDAQ im Demo-Modus gestartet werden:
 
 ```bash
 cd ~/git/PhyPiDAQ  # ins Installationsverzeichnis wechseln
@@ -321,7 +321,7 @@ Zur Vereinfachung der Installation werden Installationsdateien für benötigte e
 
 Die Module zur Visualisierung hängen von *matplotlib.pyplot* und *pyQt5* ab, die ebenfalls noch installiert werden müssen.
 
-Die vom oben schon verwendeten Scritp `installlibs.sh`  ausgeführten Schritte sind die folgenden:
+Die vom oben schon verwendeten Script `installlibs.sh`  ausgeführten Schritte sind die folgenden:
 
 ```bash
 #
@@ -355,7 +355,6 @@ werden; das picotech-raspbian-Repository kann dazu hinzugefügt werden:
 3. Speichern Sie die Datei /etc/apt/sources.list mit `Strg + O` und `Enter`.
 4. Schließen Sie die Datei /etc/apt/sources.list mit `Strg + X`.
 
-<div style="page-break-after: always;"></div>
 Nun können die Treiber für PicoScope-Geräte mit *apt-get* eingebunden und ggf. aktualisiert werden: 
 
 ```bash
@@ -651,7 +650,6 @@ aus dem Stromnetz aufgefangen werden. Höhere Störfrequenzen findet man in der 
 - `phypi.py`  
     graphische Oberfläche zum Editieren der Konfiguration und Starten des Skripts `run_phypi.py`
 
-<div style="page-break-after: always;"></div>
 ### Module
 
 - `phypidaq/__init__.py`  
@@ -784,6 +782,7 @@ aus dem Stromnetz aufgefangen werden. Höhere Störfrequenzen findet man in der 
     Beispiel zum Setzen des Spannungswerts für Analog-Digital-Wandler MCP4725
 
 ### Konfigurationsdateien für *run_phypi.py*
+
 - `examples/Amperemeter.daq`  
     simultane Messung und Darstellung von Strom und ggf. Spannung mit dem Strom- und Spannungssensor INA219
 - `examples/DiodenKennlinie.daq`  
@@ -808,22 +807,3 @@ aus dem Stromnetz aufgefangen werden. Höhere Störfrequenzen findet man in der 
     Erzeugung und Anzeige von simulierten Daten 
 - `examples/ReplayData.daq`  
     Daten aus Datei (für Demo-Zwecke)
-
-
-### Dokumentation (muss überarbeitet werden!)
-
-- `doc/Kurs_digitale_Messwerterfassung_mit_PhyPiDAQ.md  (.pdf)`  
-    Einführungskurs für Schüler zum Messen mit dem Raspberry Pi
-- `doc/Einrichten_des_Raspberry_Pi.md (.pdf)`   
-    Aufsetzen des Raspberry Pi für dieses Projekt
-- `doc/Komponenten_fuer_PhyPi.md (.pdf)`   
-    empfohlene Komponenten für dieses Projekt
-- `doc/Bauanleitung_Kraftsensor.md (.pdf)`   
-    Bauanleitung für Kraftsenor
-- `Hardware` 
-    Ordner mit Dokumentation zum Bau einer Platine mit analogen Vorverstärkeren:  
-    - Elektrometerverstärker
-    - Pegelwandler
-    - Instrumentenverstärker 
-    - ... und andere
-

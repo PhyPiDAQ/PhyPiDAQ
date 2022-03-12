@@ -10,7 +10,7 @@ Die **deutsche Version** dieses Dokuments findet sich unter dem Link [Dokumentat
 
 ---
 
-This *python3*  code provides some basic functionality for data acquisition and visualisation like data logger, bar-chart, XY- or oscilloscope display and data recording on disk.  
+This *python3* code provides some basic functionality for data acquisition and visualisation like data logger, bar-chart, XY- or oscilloscope display and data recording on disk.
 
 In addition to the GPIO inputs/outputs of the Raspberry Pi, the analogue-to-digital converters ADS1115 and MCP3008 and PicoScope USB-oscilloscopes are supported as input devices for analogue data, as well as a number of digital sensors using protocols like I²C or SPI.
 
@@ -123,8 +123,6 @@ DAQfifo: null
 #DAQfifo: PhyPiDAQ.fifo
 ```
 
-
-
 ## Device configuration files
 
 Typical, commented examples of device configurations are shown below. The device configuration file for the analogue-to-digital converter **ADS1115** specifies the active channels, their ranges and single or differential operation modes.
@@ -163,7 +161,7 @@ sampleRate: 860           # programmable Sample Rate of ADS1115
                           #    8, 16, 32, 64, 128, 250, 475, 860
 ```
 
-The **USB-oscilloscope** PicoScope can also be used as data logger. In this case the average of a large number of measurements at high rate is taken. Choosing a measurement time of 20 ms very effectively eliminates 50 Hz noise. 
+The **USB-oscilloscope** PicoScope can also be used as data logger. In this case the average of a large number of measurements at high rate is taken. Choosing a measurement time of 20 ms very effectively eliminates 50 Hz noise.
 
 **file PSconfig.yaml**
 
@@ -198,7 +196,6 @@ frqSG: 0.
 
 Examples of other devices like the analog-to-digital converter MCP3008, of rate measurements via the GPIO pins of the Raspberry Pi or temperature measurements with the 1-wire digital thermometer DS18B20,   PT100 sensors and the resistance-to-digital converter MAX31865 or thermocouples and the thermocouple-to-digital converter MAX31855 are also contained in the configuration directory, see files `MCP3008Config.yaml`, `GPIOcount.yaml`, `DS18B20Config.yaml` , `MAX31865Config.yaml` or `MAX31855Config.yaml`, respectively.
 
-<div style="page-break-after: always;"></div>
 ## Installation of PhyPiDAQ on a Raspberry Pi
 
 **Get PhyPiDAQ code and dependencies**
@@ -254,33 +251,14 @@ sudo mv ~/git/PhyPiDAQ /usr/local/
 
 Please note that the paths in the example above must be adjusted in this case, e.g. ´~/git/` -> /usr/local/.
 The paths in *~/Desktop/phypi.desktop* must also be changed appropriately. This is most easily achieved by
-right-clicking the icon and use of the dialog "Properties". 
-
-
+right-clicking the icon and use of the dialog "Properties".
 
 ### Dependencies on external packages
 
-The PhyPiDAQ package relies on code from other packages providing the drivers for the supported devices and libraries for data visualization:
+A complete list of [dependencies](Dependencies.md) can be found in [Dependencies.md](Dependencies.md).
 
-- the Adafruit Pyhon MCP3008 library  
-     <https://github.com/adafruit/Adafruit_Python_MCP3008>
-- the Adafruit Python ADX1x15 library  
-     <https://github.com/adafruit/Adafruit_Python_ADS1x15>
-- the Adafruit Python MAX31855 library  
-     <https://github.com/adafruit/Adafruit_Python_MAX31855>
-- the w1thermsensor library by Timo Furrer  
-     <https://github.com/timofurrer/w1thermsensor>
-- components from the picoDAQ project  
-     <https://github.com/GuenterQuast/picoDAQ>
-- the  *python* bindings of the *pico-python* project by Colin O'Flynn  
-     <https://github.com/colinoflynn/pico-python>
-- the low-level drivers contained in the Pico Technology Software Development Kit   
-    <https://labs.picotech.com/raspbian>
-
-For convenience, installation files for external packages and for modules of this package 
-in pip wheel format are provided in sub-directory *./installlibs*. 
-
-The visualization modules depend on *matplotlib.pyplot* and *pyQt5*, which must also be installed.
+For convenience, installation files for some external packages and for modules of this package
+in pip wheel format are provided in subdirectory *./installlibs*.
 
 For completeness, the steps performed by the script `installlibs.sh` are documented here:
 
@@ -301,9 +279,9 @@ sudo pip3 install installlibs/whl/*.whl # python wheels
 sudo pip3 install installlibs/tgz/*.tar.gz # python packages 
 
 sudo dpkg -i installlibs/picoscopelibs/*.deb # picoscope 
-sudo usermod -a -G tty pi # grant acces to USB for user pi
+sudo usermod -a -G tty pi # grant access to USB for user pi
 ```
-<div style="page-break-after: always;"></div>
+
 The drivers for PicoScope oscilloscopes may also be installed from the repository of the vendor, which is included as follows:
 
 1. Open file /etc/apt/sources.list by `sudo nano /etc/apt/sources.list`.   
@@ -313,7 +291,6 @@ The drivers for PicoScope oscilloscopes may also be installed from the repositor
 3. Save file /etc/apt/sources.list by `Ctrl + O` and `Enter`.
 4. Close /etc/apt/sources.list by `Ctrl + X`.
 
-<div style="page-break-after: always;"></div>
 Now the drivers for drivers for the various PicoScope devices can be included end eventually
 updated with *apt-get*:
 
@@ -327,213 +304,16 @@ sudo apt-get install libps2000a
 sudo usermod -a -G tty pi
 ```
 
-
 ## Overview of files contained in PhyPiDAQ 
 
-### Programs 
+An introduction to the file structure of PhyPiDAQ, including lists of all examples and more can be found in
+[PackageStructure.md](PackageStructure.md).
 
-- `run_phypi.py`  
-    run data acquisition and display modules as specified in configuration files (default `PhyPiConf.daq`
-    and *.yaml* files ins subdirectory *config/*)
-- `phypi.py`  
-    graphical user interface to edit configuration files and start the script `run_phypi.py`
+## Developer guides
 
-### Modules
+The developer guides provide useful information on the following toppics
 
-- `phypidaq/__init__.py`  
-   initialisation for package *phypidaq*
-
-- `phypidaq/_version_info.py`  
-    version info for package *phypidaq*
-
-- `phypidaq/ADS1115Config.py`  
-    class for handling of analog-to-digital converter ADS1115
-
-- `phypidaq/MCP3008Config.py`   
-    class analog-to-digital converter MCP3008
-
-- `phypidaq/MCP3008Config.py`  
-    class for current and voltage sensor INA219
-
-- `phypidaq/DS18B20Config.py`  
-    class for handling of digital thermometer DS18B20
-
-- ``phypidaq/BMPx80Config.py``  
-    class for the digital temperature and pressure sensors BMP180/280 or BME280
-
-- ``phypidaq/MMA8451Config.py``  
-    class for the digital accelerometer MMA8451
-
-- `phypidaq/GPIOCount.py`   
-    class for reading rates from GPIO pins
-
-- `phypidaq/MAX31855Config.py`  
-    class for MAX31855 thermocouple-to-digital converter
-
-- `phypidaq/MAX31865Config.py`  
-    class for MAX31865 resistance-to-digital converter
-
-- `phypidaq/PSConfig.py`  
-    class for PicoScope USB oscilloscopes
-
-- `phypidaq/VL53LxConfig`  
-    class for VL53L1X distance sensor
-
-- `phypidaq/TCS34725Config`
-    class for TCS34725 RGB color sensor 
-
-- `phypidaq/AS7262Config`
-    class for AS7262 six channel color sensor
-
-- `phypidaq/AS7265xConfig`
-    class for AS7265x 18 channel spectral sensor 
-
-- `phypidaq/GDK101Config.py`  
-    class  for gamma ray detektor GDK101, FTLAB
-
-- `phypidaq/ToyDataConfig.py`  
-    class to generate simulated data (for test, debugging or exercises) 
-
-- `phypidaq/ReplayConfig`  
-    class to replay data from file
-
-- `phypidaq/Display`  
-    interface and background-process handling data visualisation
-
-- `phypidaq/DataLogge`  
-    class for display of data histories and xy diagrams
-
-- `phypidaq/DataGraph`  
-    general display module for data as bar graphs, history plots and xy-graphs
-
-- `phypidaq/DataRecorde`  
-    store data in CSV format
-
-- `phypidaq/pulseGPIO`
-    class to set or pulse GPIO pin of raspberry py
-
-- `phypidaq/runPhyPiDAQ`  
-    class for script `run_phypi.py`
-
-- `phypidaq/runPhyPiUI.py`
-    class for graphical user interface `phypi.py`, uses `phypiUI` as base class
-
-- `phypidaq/phypyUI`
-
-    base class for `runPhyPyUI`, generated from `phypi.ui` with `pyuic5`
-
-- `phypidaq/phypi.ui`
-    output of `designer-qt5` , describes the graphical user interface
-
-
-### Configuration files 
-
-- `phypidaq.cfg`  
-     global configuration for directory with configuration files and inital work directory;
-     if this file is found in the `home` directory, it takes priority over the one in the installation directory
-- `PhyPiConf.daq`  
-     main configuration file, depends on device configurations in sub-directory *config/*
-- `config/ADS1115Config.yaml` 16 bit ADC
-- `config/MCP3008Config.yaml` 10 bit ADC
-- `config/MCP3208Config.yaml`  12 bit ADC
-- `config/INA219Config.yaml` current and voltage sensore
-- `config/DS18B20Config.yaml` digital temperature sensor
-- `config/BMP280Config.yaml` temperature and pressure sensor
-- ``config/BMP180Config.yaml` temperature and pressure sensor
-- `config/GPIOCount.yaml`  frequency measruement via GPIO pin
-- `config/MAX31855Config.yaml` converter for thermocouple 
-- `config/MAX31865Config.yaml` converter for PT-100
-- `config/INA219Config.yaml` current-voltage sensor
-- `config/TCS34752Config.yaml` RGB sensor
-- `config/AS7262Config.yaml` 6 channel color sensor
-- `config/AS7265xConfig.yaml` 18 channel spectral sensor
-- `config/VL53L1XConfig.yaml` distance sensor
-- `config/GDK101.yaml` gamma-ray detector 
-- `config/PSConfig.yaml`  PicoScope usb oscilloscope
-
-
-### Examples 
-
-- `examples/read_analog.py`  
-    very minimalist example to read one channel from an analog-to-ditigal converter
-
-- ``examples/display_analog.py``  
-    very minimalist example to read one channel from an analog-to-ditigal converter and
-    display data as a history graph
-
-- ``examples/display_analog2.py``  
-    read two channels from an analog-to-ditigal converter and
-    display data as a history graph
-
-- `examples/read_INA210.py`  
-    read data from INA219 current and voltage sensor
-
-- ``examples/read_18B20.py``s
-     simple example to read the temperature sensor DS18B20
-
-- ``examples/readBMPx80.py``
-    simple example to read the digital temperature  and pressure sensor BMP180/280
-
-- ``examples/readMMA8541.py``
-    simple example to read the digital accelerometer MMA8451
-
-- `examples/runOsci.py`  
-    run an oscilloscope display, configuration as specified in *.yaml* file (default is `PSOsci.yaml`)
-
-- `examples/GPIO-In-Out.py`  
-    example to control  GPIO pins: generate square signal on output pin from variable voltage on input pin
-
-- `examples/poissonLED.py`  
-    generate a random signal following Poisson statistics on a GPIO pin
-
-- `examples/FreqGen.py`  
-    generate a fixed frequency signal on a GPIO pin  
-
-- `examples/set_MPC4725`  
-    example to set voltage on MCP4725 ditital-to-analog converter
-
-
-### Configuration files for *run_phypi.py*
-- `examples/Amperemeter.daq`  
-    display current and eventually voltage read from INA219 sensor
-- ``examples/Barometer.daq``  
-    uses BMB180 or BMP280 sensors to display temperature and air pressure
-- ``examples/Accelerometer.daq``  
-    uses MMA8451 to display x-, y- and z-acceleration
-- ``examples/NoiseMeter.daq``  
-    measure noise with a microphone connected to PicoScope USB oscilloscope;
-     displays the *rms* of 200 samples taken over a time periods of 20 ms.
-    Can also be used with geophone SM-24
-- `examples/RGBsensor.daq`
-    RGB color sensor
-- `examples/ColorSpectrum.daq`
-    six channel color sensor
-- `examples/AS7265x.daq`
-    18 channel spectral sensor
-- `examples/GammaDose.daq`  
-    measurement of gamma-ray dose with GDK101
-- `examples/ToyData.daq`
-    generation and display of simulated data  
-- `examples/ReplayData.daq`   
-    data from file (for demo mode)
-- `examples/readPipe.py`  
-    read data from named linux pipe (*run_phypi.py* with option DAQfifo: \<pipe name\>)
-
-
-###  Documentation
-
-- `doc/Kurs_digitale_Messwerterfassung_mit_PhyPiDAQ.md (.pdf)`  
-    German only: Introductory course to measuring with the Raspberry Pi
-- `doc/Einrichten_des_Raspberry_Pi.md (.pdf)`  
-    German only: setting up the Raspberry Pi for this project
-- `doc/Komponenten_fuer_PhyPi.md (.pdf)`  
-    recommended components for this project
-- `doc/Bauanleitung_Kraftsensor.md (.pdf)`  
-    building instructions for a force sensor
-- `Hardware`  
-    documentation of card with analog preamplifiers
-    -  electrometer 
-    - instrument amplifier
-    - level shifter
-    - ... and others
-
+- Release notes of the package can be found in the [ReleaseNotes.md](../ReleaseNotes.md) of the root folder.
+- Information about the version schema can be found in [ReleaseGuide.md](ReleaseGuide.md).
+- A usage guide of external QT tools can be found in [Resources.md](Resources.md), describing the updating icon 
+  resources and the graphical user interface (GUI).

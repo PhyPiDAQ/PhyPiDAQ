@@ -55,8 +55,8 @@ class MAX31865Config(object):
             self.CS = board.D6
         else:
             print("MAX31865Config: Cannot use Chip-Select pin ", CSpin)
-            sys.exit(1) 
- 
+            sys.exit(1)
+
     def init(self):
         spi = board.SPI()
         cs = digitalio.DigitalInOut(self.CS)

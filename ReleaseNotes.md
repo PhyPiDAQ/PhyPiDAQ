@@ -15,6 +15,7 @@ Date (planned): 14. March 2022
 - `tkinter` was completely refactored to a Qt implementation.
 - Implementation of the BME680 including examples and a script for setting up the sensor
 - Security Fix: Shell injection
+- Python 2-support has been dropped.
 - BMP085 and BMP180 have been declared **legacy implementations**.
 
 ## v1.0.2
@@ -125,7 +126,7 @@ Date: 24. November 2018
 ### Changes
 
 - Improved documentation
-- Latest versions  of dependencies
+- Latest versions of dependencies
 - Added digital temperature sensor DS18B20
 - Support for PS2204A,
 - User install script

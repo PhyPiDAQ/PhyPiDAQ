@@ -26,3 +26,16 @@ Please follow these steps to have your contribution considered by the maintainer
 If a status check is failing, and you believe that the failure is unrelated to your change, please leave a comment on
 the pull request explaining why you believe the failure is unrelated. We will take a look into it and decide on the next
 steps.
+
+## Contributors
+
+Here is a list of all contributors sorted alphabetically by lastname
+
+- Moritz Aupperle
+- Alexander Becker
+- Dominik Braig
+- Raphael Grau
+- Alexander Kaschta
+- Achim Pelster
+- Günther Quast
+- M. Wong
