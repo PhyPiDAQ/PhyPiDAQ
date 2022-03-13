@@ -16,6 +16,10 @@ for data visualization:
   - Link: [https://github.com/adafruit/Adafruit_CircuitPython_BMP280](
   https://github.com/adafruit/Adafruit_CircuitPython_BMP280)
   - MIT License
+- Adafruit BMP38X library
+  - Link: [https://github.com/adafruit/Adafruit_CircuitPython_BMP3XX](
+  https://github.com/adafruit/Adafruit_CircuitPython_BMP3XX)
+  - MIT License
 - Adafruit BME280 library
   - Link: [https://github.com/adafruit/Adafruit_CircuitPython_BME280](
   https://github.com/adafruit/Adafruit_CircuitPython_BME280)
