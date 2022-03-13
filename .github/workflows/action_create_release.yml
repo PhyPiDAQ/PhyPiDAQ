@@ -18,9 +18,9 @@ jobs:
         uses: ffurrer2/extract-release-notes@v1
         id: extract-release-notes
         with:
-          release_notes_file: ReleaseNotes.md
+          changelog_file: ReleaseNotes.md
       - name: Generate Changelog
-        run: echo "${{ steps.extract-release-notes.outputs.release_notes }}" > Changelog.txt
+        run: echo "${{ steps.extract-release-notes.outputs.release_notes }}" > ReleaseNotes.txt
       - name: Create release
         uses: actions/create-release@v1
         id: create_release
@@ -41,12 +41,12 @@ jobs:
           asset_path: ./LICENSE
           asset_name: LICENSE
           asset_content_type: text/plain
-      - name: Upload changelog
+      - name: Upload release notes
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./Changelog.txt
-          asset_name: Changelog.txt
+          asset_path: ./ReleaseNotes.txt
+          asset_name: ReleaseNotes.txt
           asset_content_type: text/plain
