@@ -17,16 +17,37 @@ All are natural numbers starting from 0.
 
 Follow this steps to create a release
 
-- Write down all changes to the code into the [Release Notes](../ReleaseNotes.md), following the format
+- Write down all changes to the code into the [Release Notes](../ReleaseNotes.md), following the displayed format. Keep
+  only the sections, where you have entries. More information about the file structure can be found
+  [here](https://keepachangelog.com/en/1.0.0/).
 
   ```markdown
-  ## v1.0.0
-  Date: 01. Januar 2022
+  ## [1.0.0] - 2022-01-30
   
-  ### Changes
+  ### Added
   
   - A simple list of changes
   - Another one
+  
+  ### Changed
+  
+  - ..
+  
+  ### Deprecated
+  
+  - ...
+  
+  ### Removed
+  
+  - ...
+  
+  ### Fixed
+  
+  - ...
+  
+  ### Security
+  
+  - ...
   
   ```
 
@@ -35,4 +56,4 @@ Follow this steps to create a release
 - Update the `phypidaq/_version_info.py` with the matching version.
 - Inform all project maintainers of the release.
 - Do the release, by merging all the code from your development branch onto the `main` branch.
-- Do a release on the GitHub page.
+- Do a release on the GitHub page, by manually starting the *Create Release* GitHub Action.

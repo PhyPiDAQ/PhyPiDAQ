@@ -1,0 +1,51 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      versionName: 'Name of the version (like 1.1.0)'
+      required: true
+
+jobs:
+  releases:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Extract release notes
+        uses: ffurrer2/extract-release-notes@v1
+        id: extract-release-notes
+        with:
+          release_notes_file: ReleaseNotes.md
+      - name: Generate Changelog
+        run: echo "${{ steps.extract-release-notes.outputs.release_notes }}" > Changelog.txt
+      - name: Create release
+        uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.event.inputs.versionName }}
+          release_name: PhyPiDAQ v${{ github.event.inputs.versionName }}
+          draft: false
+          prerelease: false
+          body: ${{ steps.extract-release-notes.outputs.release_notes }}
+      - name: Upload license
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./LICENSE
+          asset_name: LICENSE
+          asset_content_type: text/plain
+      - name: Upload changelog
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./Changelog.txt
+          asset_name: Changelog.txt
+          asset_content_type: text/plain
