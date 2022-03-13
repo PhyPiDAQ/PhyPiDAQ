@@ -1,10 +1,11 @@
-name: Create Release
+name: "Create a release"
 
 on:
   workflow_dispatch:
     inputs:
-      versionName: 'Name of the version (like 1.1.0)'
-      required: true
+      versionName:
+        description: 'Name of the version (like 1.1.0)'
+        required: true
 
 jobs:
   releases:
