@@ -19,6 +19,8 @@ import sys
 import time
 import yaml
 
+from phypidaq._version_info import _get_version_string
+
 from PyQt5.QtWidgets import QMessageBox
 
 # Import all qt
@@ -77,6 +79,8 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
         # initialisation
         super().setupUi(Window)  # initialize base class
         self.Window = Window
+        # Update window title to include the current version of the software
+        self.Window.setWindowTitle(f"PhyPiDAQ [{_get_version_string()}]")
 
         # set display options, fonts etc.
         self.setOptions()
