@@ -13,6 +13,8 @@ class TelematicsConfig:
         # Limit the size of the queue to limit memory usage
         self.queue = collections.deque([], maxlen=1000)
 
+        self.publish_topic = "Steuerung"
+
         if confdict is None:
             confdict = {}
 
@@ -52,6 +54,9 @@ class TelematicsConfig:
         if len(self.subscribe_topic.strip()) != 0:
             self.client.subscribe(self.subscribe_topic)
 
+        # Start data acquisition
+        self.client.publish(self.publish_topic, "start", qos=1)
+
     def _on_message(self, client, userdata, msg):
         message = msg.payload.decode("utf-8")
         value_list = message.split(" ")
@@ -69,6 +74,7 @@ class TelematicsConfig:
             pass
 
     def closeDevice(self):
+        self.client.publish(self.publish_topic, "stopp", qos=1)
         self.queue.clear()
         self.connected = False
         self.client.loop_stop()
