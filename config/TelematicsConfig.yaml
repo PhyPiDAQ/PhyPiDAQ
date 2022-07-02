@@ -1,0 +1,5 @@
+DAQModule: TelematicsConfig
+
+# ip_address: 255.255.255.255 # IP address for the network device; default is localhost known as 127.0.0.1
+# port: 1000 # Default is 1883
+# subscribe_topic: topic # Default is "ms2"
