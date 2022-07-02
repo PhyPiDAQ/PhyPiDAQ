@@ -13,6 +13,9 @@ class TelematicsConfig:
         # Limit the size of the queue to limit memory usage
         self.queue = collections.deque([], maxlen=1000)
         self.NChannels = 1
+        self.ChanLims = [[0., 1.]]
+        self.ChanNams = ["Random data"]
+        self.ChanUnits = [""]
         self.publish_topic = "Steuerung"
 
         if confdict is None:
