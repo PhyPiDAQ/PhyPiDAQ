@@ -1,5 +1,5 @@
 import collections
-
+import uuid
 import numpy as np
 import paho.mqtt.client as mqtt
 
@@ -34,7 +34,7 @@ class TelematicsConfig:
             self.subscribe_topic = "ms2"
 
         # Create instance of client and give him a random client id
-        self.client = mqtt.Client(clean_session=False)
+        self.client = mqtt.Client("PhyPiDAQ-client-" + str(uuid.uuid1()), clean_session=False)
 
         # Register the client callbacks
         self.client.on_connect = self._connect
