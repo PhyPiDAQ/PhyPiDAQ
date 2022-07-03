@@ -1,4 +1,5 @@
 import collections
+import time
 import uuid
 import numpy as np
 import paho.mqtt.client as mqtt
@@ -10,6 +11,7 @@ class TelematicsConfig:
 
         # Initialize internal properties
         self.connected = False
+        self.last_time = time.time()
         # Limit the size of the queue to limit memory usage
         self.queue = collections.deque([], maxlen=1000)
         self.NChannels = 1
@@ -35,6 +37,14 @@ class TelematicsConfig:
             self.subscribe_topic = confdict["subscribe_topic"]
         else:
             self.subscribe_topic = "ms2"
+
+        if "interval" in confdict:
+            self.interval = confdict["interval"]
+            # Ensure that the interval is in a matching range
+            if self.interval < 0.01:
+                self.interval = 0.1
+        else:
+            self.interval = 0.1
 
         # Create instance of client and give him a random client id
         self.client = mqtt.Client("PhyPiDAQ-client-" + str(uuid.uuid1()), clean_session=False)
@@ -63,8 +73,13 @@ class TelematicsConfig:
     def _on_message(self, client, userdata, msg):
         message = msg.payload.decode("utf-8")
         value_list = message.split(" ")
-        # Convert the first item of the list to a double and append to the internal queue
-        self.queue.append(np.double(value_list[0]))
+
+        # If it's time to add the new value, do it
+        current_time = time.time()
+        if current_time >= self.interval + self.last_time:
+            # Convert the first item of the list to a double and append to the internal queue
+            self.queue.append(np.double(value_list[0]))
+            self.last_time = current_time
 
     def acquireData(self, buf):
         # Skip, if there is no data in the queue
