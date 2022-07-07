@@ -1,5 +1,4 @@
 import collections
-import sys
 import time
 import uuid
 import numpy as np
