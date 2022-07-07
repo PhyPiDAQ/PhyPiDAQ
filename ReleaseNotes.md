@@ -9,6 +9,10 @@ All notable changes to this project will be documented in this file.
 - Support for the BMP388 temperature sensor
 - Software Version in window name
 
+### Fixed
+
+- Make `installlibs.sh` username independent
+
 ## [1.1.0] - 2022-03-13
 
 ### Added

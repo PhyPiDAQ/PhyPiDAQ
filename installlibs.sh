@@ -31,7 +31,7 @@ then
   # Install all sensor drivers specified in the
   sudo pip3 install -r requirements.txt
 
-  sudo usermod -a -G tty pi # grant access to USB for user pi
+  sudo usermod -a -G tty $USER # grant access to USB for the current user
 fi
 
 read -p "Do you want to install the picoscope drivers (Y/n)? " -n 1 -r
@@ -40,6 +40,6 @@ then
 
   echo -e "\n   ...installing PicoScope drivers"
   sudo dpkg -i installlibs/picoscopelibs/*.deb # picoscope
-  sudo usermod -a -G tty pi # grant access to USB for user pi
+  sudo usermod -a -G tty $USER # grant access to USB for the current user
 fi
 
