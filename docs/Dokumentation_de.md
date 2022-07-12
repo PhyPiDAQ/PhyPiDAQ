@@ -283,9 +283,6 @@ Schüler oder Studierende zu Beginn mit dem vollen Umfang des Pakets *PhyPiDAQ* 
 cd ~/git/PhyPiDAQ
 ./install_user.sh [<Verzeichnisname>]  
 #   die Eingabe eines Verzeichnisnamens ist optional; voreingestellt ist "PhyPi"
-
-# klickbares Symbol auf dem Desktop zum Zugang zu phypi
-cp ~/git/PhyPiDAQ/phypi.desktop ~/Desktop
 ```
 
 Um versehentliches Überschreiben von Dateien im Paket *PhyPiDAQ* zu vermeiden, sollte eine Verschiebung bzw. Kopieren in den Systembereich in Erwägung gezogen werden, z. B. nach  /usr/local/:

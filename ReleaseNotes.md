@@ -9,9 +9,14 @@ All notable changes to this project will be documented in this file.
 - Support for the BMP388 temperature sensor
 - Software Version in window name
 
+### Changed
+
+- Desktop link files are now created dynamically by the `install_user.sh`
+
 ### Fixed
 
 - Make `installlibs.sh` username independent
+- Make `install_user.sh` username and installation path independent 
 
 ## [1.1.0] - 2022-03-13
 

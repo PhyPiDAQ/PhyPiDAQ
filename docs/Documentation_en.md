@@ -239,11 +239,9 @@ working directory. This is achieved via the following commands:
 # create PhyPi working directory and make examples and config files available
 cd ~/git/PhyPiDAQ
 ./install_user.sh [<directory name>] # the input of a directory name is optional; default is "PhiPi"
-# provide icon to graphical user interface
-cp ~/git/PhyPiDAQ/phypi.desktop ~/Desktop
 ```
 
- You might also consider moving the *PhyPiDAQ* package to system space, e.g. /usr/local:
+You might also consider moving the *PhyPiDAQ* package to system space, e.g. /usr/local:
 
 ```bash
 sudo mv ~/git/PhyPiDAQ /usr/local/
