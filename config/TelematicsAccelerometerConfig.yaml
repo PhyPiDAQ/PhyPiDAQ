@@ -2,8 +2,15 @@ DAQModule: TelematicsAccelerometerConfig
 
 # ip_address: 255.255.255.255 # IP address for the network device; default is localhost known as 127.0.0.1
 # port: 1000 # Default is 1883
-# subscribe_topic: topic # Default is "ms2"
-# interval: 0.1 # Interval in which network request should be stored. Keep this value in sync with the interval of
-#               # PhyPiDAQ or you might run into asynchronous displayed data and a possible buffer overflow.
-# NChannels: 1 # default is 3; 1: x-acceleration, 2: x-acceleration, y-acceleration, 3: x-acceleration, y-acceleration
-#              # and z-acceleration
+# subscribe_topic: "topic" # Default is "ms2"
+# publish_topic: "topic" # Default is "Steuerung"
+# control_topic: "topic" # Default is "Abtastrate"
+# interval: 0.1 # Interval (unit seconds) in which network request should be stored. Keep this value in sync with the
+#               # interval of PhyPiDAQ or you might run into asynchronous displayed data and a possible buffer overflow.
+# List of available channels, which can be uncommented, to get the data. This is the acceleration of the sensor in those
+# directions. The order in the list doesn't matter, as the order is constant and is determined by the implementation.
+# If nothing is specified, the x-acceleration will be selected.
+# Channels:
+#  - "x"
+#  - "y"
+#  - "z"

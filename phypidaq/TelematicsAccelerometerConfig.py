@@ -14,7 +14,6 @@ class TelematicsAccelerometerConfig:
         self.last_time = time.time()
         # Limit the size of the queue to limit memory usage
         self.queue = collections.deque([], maxlen=1000)
-        self.publish_topic = "Steuerung"
 
         if confdict is None:
             confdict = {}
@@ -34,6 +33,16 @@ class TelematicsAccelerometerConfig:
         else:
             self.subscribe_topic = "ms2"
 
+        if "publish_topic" in confdict:
+            self.publish_topic = confdict["publish_topic"]
+        else:
+            self.publish_topic = "Steuerung"
+
+        if "control_topic" in confdict:
+            self.control_topic = confdict["control_topic"]
+        else:
+            self.control_topic = "Abtastrate"
+
         if "interval" in confdict:
             self.interval = confdict["interval"]
             # Ensure that the interval is in a matching range
@@ -42,13 +51,27 @@ class TelematicsAccelerometerConfig:
         else:
             self.interval = 0.1
 
-        if "NChannels" in confdict:
-            self.NChannels = confdict["NChannels"]
-            if self.NChannels > 3 or self.NChannels < 1:
-                self.NChannels = 3
+        if "Channels" in confdict:
+            if isinstance(confdict["Channels"], list):
+                self.channels = confdict["Channels"]
+                # Ensure, that all items are lowercase
+                self.channels = [x.lower() for x in self.channels]
+                # Filter list, to keep only valid channels
+                self.channels = [x for x in self.channels if x in ["x", "y", "z"]]
+                # Check if enough channels are listed
+                if len(self.channels) < 1:
+                    # Set only one channel
+                    print("No valid channels have been specified! Resetting it to following channels: x")
+                    self.channels = ["x"]
+            else:
+                # Support only one channel
+                self.channels = ["x"]
         else:
-            self.NChannels = 3
+            # Support only one channel
+            self.channels = ["x"]
 
+        # Calculate NChannels and limits
+        self.NChannels = len(self.channels)
         self.ChanLims = self.NChannels * [[-4., 4.]]
         self.ChanNams = self.NChannels * ["Acceleration"]
         # Acceleration in g (9.81 m/s^2)
@@ -74,6 +97,9 @@ class TelematicsAccelerometerConfig:
         # Once the client has connected to the broker, subscribe to the topic
         if len(self.subscribe_topic.strip()) != 0:
             self.client.subscribe(self.subscribe_topic)
+
+        # Publish the data acquisition interval
+        self.client.publish(self.control_topic, round(self.interval * 1000), qos=1)
 
         # Start data acquisition
         self.client.publish(self.publish_topic, "start", qos=1)
@@ -101,11 +127,20 @@ class TelematicsAccelerometerConfig:
             data_list = self.queue.popleft()
 
             # Fill the buffer with the wanted data
-            buf[0] = data_list[0]
-            if self.NChannels > 1:
-                buf[1] = data_list[1]
-            if self.NChannels > 2:
-                buf[2] = data_list[2]
+            if "x" in self.channels:
+                buf[0] = data_list[0]
+            if "y" in self.channels:
+                if "x" in self.channels:
+                    buf[1] = data_list[1]
+                else:
+                    buf[0] = data_list[1]
+            if "z" in self.channels:
+                if "x" in self.channels and "y" in self.channels:
+                    buf[2] = data_list[2]
+                elif "x" in self.channels or "y" in self.channels:
+                    buf[1] = data_list[2]
+                else:
+                    buf[0] = data_list[2]
         else:
             pass
 
