@@ -1,0 +1,8 @@
+DAQModule: TSL45315Config
+
+# I2CADDR: 0x39 # 0x29 is default, 0x39 alternative
+# List of available channels, which can be uncommented, to get the data. The order in the list doesn't matter, as the
+# order is constant and is determined by the implementation.
+# If nothing is specified, only the illuminance will be selected.
+# Channels:
+#  - "lux"
