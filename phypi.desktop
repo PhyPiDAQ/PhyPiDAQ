@@ -1,9 +1,0 @@
-[Desktop Entry]
-Type=Application
-Encoding=UTF-8
-Name=PhyPi
-Comment=PhyPi Configuration
-Icon=/home/pi/PhyPi/PhiPi_icon.png
-Exec=lxterminal -t "PhyPiDAQ" -e phypi.py
-Terminal=false
-

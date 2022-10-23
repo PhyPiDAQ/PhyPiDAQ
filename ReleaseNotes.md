@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2022-10-23
+
+### Added
+
+- Support for the BMP388 temperature sensor
+- Software Version in window name
+
+### Changed
+
+- Desktop link files are now created dynamically by the `install_user.sh`
+- Added `phypi.py` and `run_phypi.py` as package scripts 
+
+### Fixed
+
+- Make `installlibs.sh` username independent
+- Make `install_user.sh` username and installation path independent
+- Typos in documentation
+
 ## [1.1.1] - 2022-03-15
 
 ### Fixed
