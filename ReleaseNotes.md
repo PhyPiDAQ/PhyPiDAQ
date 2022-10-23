@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [1.2.0] - 2022-10-23
 
 ### Added
 
@@ -12,11 +12,13 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Desktop link files are now created dynamically by the `install_user.sh`
+- Added `phypi.py` and `run_phypi.py` as package scripts 
 
 ### Fixed
 
 - Make `installlibs.sh` username independent
-- Make `install_user.sh` username and installation path independent 
+- Make `install_user.sh` username and installation path independent
+- Typos in documentation
 
 ## [1.1.0] - 2022-03-13
 
