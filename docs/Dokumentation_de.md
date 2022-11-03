@@ -81,9 +81,14 @@ DeviceFile: config/ADS1115Config.yaml    # 16 bit ADC, I2C bus
 #DeviceFile: config/DS18B20Config.yaml   # digitaler Temperatursensor
 #DeviceFile: config/MAX31855Config.yaml  # Thermoelement
 #DeviceFile: config/BMP180Config.yaml    # Druck-/Temperatursensor
+#DeviceFile: config/BMP280Config.yaml    # Druck-/Temperatursensor
+#DeviceFile: config/BMP388Config.yaml    # Druck-/Temperatursensor
+#DeviceFile: config/BME280Config.yaml    # Druck-/Temperatur, Höhe, VOC
 #DeviceFile: config/INA219Config.yaml    # Strom-/Spannungssensor
 #DeviceFile: config/MMA8451Config.yaml   # Beschleunigungssensor
 #DeviceFile: config/VL53LxConfig.yaml    # Abstandssensor
+#DeviceFile: config/MLX90393Config.yaml  # Magnetometer
+#DeviceFile: config/TSL45315Config.yaml  # Lux-Meter
 
 ## Beispiel für die Verwendung mehrerer Sensoren:
 #DeviceFile: [config/ADS1115Config.yaml, config/GPIOCount.yaml]  

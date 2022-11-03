@@ -48,10 +48,16 @@ DeviceFile: config/ADS1115Config.yaml    # 16 bit ADC, I2C bus
 #DeviceFile: config/GPIOCount.yaml       # frequency count
 #DeviceFile: config/DS18B20Config.yaml   # digital temperature sensor
 #DeviceFile: config/MAX31855Config.yaml  # thermo element
-#DeviceFile: config/BMP180Config.yaml    # pressure/temperature sensor
+#DeviceFile: config/BMPx80Config.yaml    # pressure/temperature sensor (BMP080 or BMP180)
+#DeviceFile: config/BMP280Config.yaml    # pressure/temperature sensor
+#DeviceFile: config/BMP388Config.yaml    # pressure/temperature sensor
+#DeviceFile: config/BME280Config.yaml    # temperature, pressure, altitude, relative_humidity sensor
+#DeviceFile: config/BME680Config.yaml    # temperature, pressure, altitude, relative_humidity; resistance proportional to VOC particle amount
 #DeviceFile: config/INA219Config.yaml    # Voltage/Current sensor
-#DeviceFile: config/MMA845xConfig.yaml   # Accelerometer 
-#DeviceFile: config/VL53LxConfig.yaml    # ToF distance sensor 
+#DeviceFile: config/MMA845xConfig.yaml   # Distance 
+#DeviceFile: config/MMA845xConfig.yaml   # Accelerometer
+#DeviceFile: config/MLX90393Config.yaml  # Magnetometer
+#DeviceFile: config/TSL45315Config.yaml  # Luminance sensor
 
 ## an example of multiple devices
 #DeviceFile: [config/ADS1115Config.yaml, config/GPIOCount.yaml]  
