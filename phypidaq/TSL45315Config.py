@@ -1,10 +1,10 @@
 import time
-from phypidaq.sensors.protocol import I2CSensor
+from .sensors.protocol import I2CSensor
 
 
 class TSL45315Config:
 
-    def __int__(self, config_dict=None):
+    def __init__(self, config_dict=None):
         if config_dict is None:
             config_dict = {}
         if "I2CADDR" in config_dict:
