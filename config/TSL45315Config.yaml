@@ -6,3 +6,7 @@ DAQModule: TSL45315Config
 # If nothing is specified, only the illuminance will be selected.
 # Channels:
 #  - "lux"
+
+# Multiplier, defining measurement time (which is 400ms for 1, 200ms for 2 and 100ms for 4). Adjusting this will also
+# result in the change of the channel limits, as they are defined as from 0 to Multiplier * 65535 Lux.
+# Multiplier: 1 (default 1, can be also 2 or 4)

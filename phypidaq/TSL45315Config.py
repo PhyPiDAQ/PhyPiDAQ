@@ -31,10 +31,27 @@ class TSL45315Config:
             # Support only one channel
             self.channels = ["lux"]
 
+        if "Multiplier" in config_dict:
+            if isinstance(config_dict["Multiplier"], int):
+                if config_dict["Multiplier"] == 1:
+                    self.multiplier = 1
+                elif config_dict["Multiplier"] == 2:
+                    self.multiplier = 2
+                elif config_dict["Multiplier"] == 4:
+                    self.multiplier = 4
+                else:
+                    self.multiplier = 1
+            else:
+                self.multiplier = 1
+        else:
+            # Set default state
+            self.multiplier = 1
+
         # Calculate NChannels and limits
         self.NChannels = len(self.channels)
         self.ChanNams = ["E_V"]
         self.ChanUnits = ["lx"]
+        self.ChanLims = [[self.multiplier * 0, self.multiplier * 65535]]
 
         # Init the sensor
         self.i2c = I2CSensor(self.I2CADDR)
@@ -43,8 +60,13 @@ class TSL45315Config:
         # Start normal operation mode
         self.i2c.write_register_byte(0x80, 0x03)
 
-        # Set the integration time to 400ms
-        self.i2c.write_register_byte(0x81, 0x00)
+        if self.multiplier == 1:
+            # Set the integration time to 400ms
+            self.i2c.write_register_byte(0x81, 0x00)
+        elif self.multiplier == 2:
+            self.i2c.write_register_byte(0x81, 0x01)
+        elif self.multiplier == 4:
+            self.i2c.write_register_byte(0x81, 0x10)
 
         # Sleep 0.2 seconds to apply the config to the sensor
         time.sleep(0.2)
@@ -53,7 +75,7 @@ class TSL45315Config:
         data = self.i2c.read_register(0x84, 2)
 
         if "lux" in self.channels:
-            buf[0] = data[1] * 256 + data[0]
+            buf[0] = self.multiplier * (data[1] * 256 + data[0])
 
     def closeDevice(self):
         # Nothing to do here
