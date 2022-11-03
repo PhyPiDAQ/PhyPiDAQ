@@ -25,7 +25,8 @@ DeviceFile: config/ReplayConfig.yaml     # data from File
 #DeviceFile: config/BME280Config.yaml    # temperature, pressure, altitude, relative_humidity sensor
 #DeviceFile: config/BME680Config.yaml    # temperature, pressure, altitude, relative_humidity; resistance proportional to VOC particle amount
 #DeviceFile: config/INA219Config.yaml    # Voltage/Current sensor
-#DeviceFile: config/MMA845xConfig.yaml   # Accelerometer
+#DeviceFile: config/VL53LxConfig.yaml    # Abstandssensor
+#DeviceFile: config/MMA845xConfig.yaml   # Distance 
 #DeviceFile: config/MLX90393Config.yaml  # Magnetometer
 #DeviceFile: config/TSL45315Config.yaml  # Luminance sensor
 
