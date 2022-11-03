@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- Support for the TSL45315 luminance sensor
+
 ## [1.2.0] - 2022-10-23
 
 ### Added
