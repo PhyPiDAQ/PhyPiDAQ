@@ -37,5 +37,5 @@ Here is a list of all contributors sorted alphabetically by lastname
 * Raphael Grau
 * Alexander Kaschta
 * Achim Pelster
-* Günther Quast
+* Günter Quast
 * M. Wong

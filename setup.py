@@ -36,7 +36,7 @@ setup(
     packages=['phypidaq'],
     inlcude_package_data=True,
     package_data={'phypidaq': ['PhyPiDemoData.csv', 'images/*', 'doc/*']},
-    scripts=[],
+    scripts = ['phypi.py', 'run_phypi.py'],
     classifiers=[
         'Development Status :: 5 - stable',
         # Specify the Python versions you support here. In particular, ensure
