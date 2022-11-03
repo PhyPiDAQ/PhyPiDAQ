@@ -33,7 +33,7 @@ setup(
     version=phypidaq.__version__,
     author='Guenter Quast',
     author_email='Guenter.Quast@online.de',
-    packages=['phypidaq'],
+    packages=['phypidaq', 'phypidaq.sensors'],
     inlcude_package_data=True,
     package_data={'phypidaq': ['PhyPiDemoData.csv', 'images/*', 'doc/*']},
     scripts=['phypi.py', 'run_phypi.py'],
