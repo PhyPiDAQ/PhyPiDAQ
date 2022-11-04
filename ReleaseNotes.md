@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 - Support for the TSL45315 luminance sensor
 
+### Fixed
+
+- Fixed wrong labeled parameter in BMP280 I2C-address config 
+
 ## [1.2.0] - 2022-10-23
 
 ### Added
