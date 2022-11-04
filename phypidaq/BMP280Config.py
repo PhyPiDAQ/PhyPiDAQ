@@ -32,7 +32,7 @@ class BMP280Config(object):
         i2c_bus = board.I2C()
 
         if hasattr(self, "I2CADDR"):
-            self.sensor = Adafruit_BMP280_I2C(i2c_bus, addr=self.I2CADDR)
+            self.sensor = Adafruit_BMP280_I2C(i2c_bus, address=self.I2CADDR)
         else:
             self.sensor = Adafruit_BMP280_I2C(i2c_bus)
 
