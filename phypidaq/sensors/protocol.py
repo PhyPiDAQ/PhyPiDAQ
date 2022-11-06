@@ -50,9 +50,8 @@ class I2CSensor:
         if length < 1:
             raise ValueError("At least one byte needs to be read!")
 
-        with self.bus as bus:
-            block = bus.read_i2c_block_data(self.device_address, register, length)
-            return block
+        block = self.bus.read_i2c_block_data(self.device_address, register, length)
+        return block
 
     def write_register_byte(self, register: int, value: int) -> None:
         """
@@ -62,5 +61,4 @@ class I2CSensor:
         :param value: int
         :return: none
         """
-        with self.bus as bus:
-            bus.write_byte_data(self.device_address, register, value)
+        self.bus.write_byte_data(self.device_address, register, value)
