@@ -117,6 +117,7 @@ of quantities measured by each sensor.
 - AS7262Config 6 channel color sensor
 - AS7265x 18 channel spectral sensor
 - VL53L0X and VL53L1X distance sensors
+- TSL45315 Luminance sensor
 - GDK101 gamma-ray detector
 - PicoScope USB oscilloscopes
 - rate measurements via GPIO pins
