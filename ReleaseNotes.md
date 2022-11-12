@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Documentation about `flake8` usage
+
+### Changed
+
+- Changed scope of markdown linting to the root directory only
+
 ## [1.2.1] - 2022-11-06
 
 ### Added
