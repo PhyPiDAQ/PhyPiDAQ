@@ -31,7 +31,7 @@ steps.
 
 We are using Continuous-Integration (CI) to check our `Python` code. This includes linting the code using the `flake8`
 package. To install it, simply run the following command in your terminal. You might get prompted to enter your
-password, as sudo-permissions are used.   
+password, as sudo-permissions are used.
 
 ```shell
 sudo pip3 install -r requirements_dev.txt
