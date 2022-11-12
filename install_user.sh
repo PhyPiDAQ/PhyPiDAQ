@@ -51,6 +51,8 @@ if [ -d $DIR ]; then
   #copy python code
   cp -auv phypi.py $DIR
   cp -auv run_phypi.py $DIR
+  cp -auv phypidaq/images/PhiPi_icon.png $DIR
+
   # mkdir $DIR/phypidaq # no longer needed with new Qt set-up
   # cp -auv phypidaq/images $DIR/phypidaq/
   # cp -auv phypidaq/doc    $DIR/phypidaq/
