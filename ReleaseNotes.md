@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- Fixed wrong labeled parameter in BMP280 I2C-address config 
+- Fixed wrong labeled parameter in BMP280 I2C-address config
 
 ## [1.2.0] - 2022-10-23
 
@@ -24,7 +24,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Desktop link files are now created dynamically by the `install_user.sh`
-- Added `phypi.py` and `run_phypi.py` as package scripts 
+- Added `phypi.py` and `run_phypi.py` as package scripts
 
 ### Fixed
 
