@@ -295,8 +295,7 @@ The drivers for PicoScope oscilloscopes may also be installed from the repositor
 3. Save file /etc/apt/sources.list by `Ctrl + O` and `Enter`.
 4. Close /etc/apt/sources.list by `Ctrl + X`.
 
-Now the drivers for drivers for the various PicoScope devices can be included end eventually
-updated with *apt-get*:
+Now the drivers for the various PicoScope devices can be included end eventually updated with *apt-get*:
 
 ```bash
 wget -O - http://labs.picotech.com/debian/dists/picoscope/Release.gpg.key | sudo apt-key add -
