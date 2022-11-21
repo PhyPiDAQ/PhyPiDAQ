@@ -1,83 +1,91 @@
-# -*- coding: utf-8 -*-
-from __future__ import print_function, division, unicode_literals
-from __future__ import absolute_import
+import board
+import busio
 
-import sys
-
-# import relevant pieces from adafruit
-import Adafruit_ADS1x15
-
-ADS_I2CADDR = 0x48
+import adafruit_ads1x15.ads1115 as ADS
+from adafruit_ads1x15.analog_in import AnalogIn
 
 
 class ADS1115Config(object):
     """ADC ADS1115Config configuration and interface"""
 
-    def __init__(self, confdict=None):
-        if confdict is None:
-            confdict = {}
+    def __init__(self, config_dict=None):
+        if config_dict is None:
+            config_dict = {}
 
-        # -- i2c address
-        if 'I2CADDR' in confdict:
-            self.I2CAddr = confdict['I2CADDR']
-            print("ADS1115: I2C address set to %x " % (self.I2CAddr))
+        # I2C address
+        if "I2CADDR" in config_dict:
+            self.I2CADDR = config_dict["I2CADDR"]
+            print(f"ADS1115: I2C address set to {self.I2CADDR}")
         else:
-            self.I2CAddr = ADS_I2CADDR  # use default
+            self.I2CADDR = 0x48  # use the default address of the sensor
 
-        # -- chosen ADCChannels ADC ADS1115
-        if "ADCChannels" in confdict:
-            self.ADCChannels = confdict["ADCChannels"]
+        # Choose ADC-channels
+        if "ADCChannels" in config_dict:
+            self.ADCChannels = config_dict["ADCChannels"]
+            # Filter list, to keep only valid channels and ensure that it's free of duplicates
+            self.ADCChannels = list(set([x for x in self.ADCChannels if x in list(range(0, 4))]))
+            # Check, that there is at least on channel
+            if len(self.ADCChannels) == 0:
+                print(f"ADS1115: No channels specified. Defaulting to channel 0")
+                self.ADCChannels = [0]
         else:
+            print("ADS1115: No channels specified. Defaulting to channel 0")
             self.ADCChannels = [0]
+        # Calculate the number of channels
         self.NChannels = len(self.ADCChannels)
 
-        # -- differential mode
-        if 'DifModeChan' in confdict:
-            self.DifModeChan = confdict['DifModeChan']
+        # Select differential mode
+        if 'DifModeChan' in config_dict:
+            if len(config_dict['DifModeChan']) != len(self.ADCChannels):
+                print("ADS1115: DifModeChan length doesn't match ADCChannels length. Disabling DifModeChan!")
+                self.DifModeChan = [False for i, c in enumerate(self.ADCChannels)]
+            else:
+                self.DifModeChan = config_dict['DifModeChan']
         else:
+            # Use normal mode by default
             self.DifModeChan = [False for i, c in enumerate(self.ADCChannels)]
 
-        # -- gain configuration ADC ADS1115
-        if "Gain" in confdict:
-            self.gain = confdict["Gain"]
-            for i in range(self.NChannels):
-                if self.gain[i] == '2/3':
-                    self.gain[i] = 2 / 3
+        # Gain configuration for all channels
+        if "Gain" in config_dict:
+            if config_dict["Gain"] == '2/3':
+                self.gain = 2 / 3
+            elif config_dict["Gain"] in (1, 2, 4, 8, 16):
+                self.gain = config_dict["Gain"]
+            else:
+                print("ADS1115: Invalid gain specified. Defaulting to 2/3!")
         else:
-            self.gain = [2 / 3 for i in range(self.NChannels)]
+            # Default to default gain
+            self.gain = 2 / 3
 
         # -- sample rate ADC ADS1115
-        if "sampleRate" in confdict:
-            self.sampleRate = confdict["sampleRate"]
+        if "sampleRate" in config_dict:
+            if config_dict["sampleRate"] in (8, 16, 32, 64, 128, 250, 475, 860):
+                self.sampleRate = config_dict["sampleRate"]
+            else:
+                print("ADS1115: Invalid sample rate, defaulting to 860")
+                self.sampleRate = 860
         else:
-            self.sampleRate = 860  # sample rate
+            # Set the default sample rate
+            self.sampleRate = 860
 
-        # --- determine reference voltage for ADC calculation
+        # Create the I2C bus
+        self.i2c = None
+        # Create a ADC interface
+        self.adc = None
+
+        # Create channel array
+        self.channels = None
+
+        self.ChanUnits = ['V'] * self.NChannels
+
+        # Determine reference voltage for ADC calculation
         # possible values reference voltage
         self.ADCVRef = [6.114, 4.096, 2.048, 1.024, 0.512, 0.256]
         # determine the corresponding index
         self.VRef = [0., 0., 0., 0.]
         self.posGain = [2 / 3, 1, 2, 4, 8, 16]
         for i in range(self.NChannels):
-            self.VRef[i] = self.ADCVRef[self.posGain.index(self.gain[i])]
-
-        #   remove python 2 vs. python 3 incompatibility for gain: 2/3 (Adafruit_ADS1x15)
-        #   when using Python 2 Adafruit_ADS1x15 expects an integer
-        #   (in case of gain = 2/3 int(self.gain[i] = 0)
-        for i in range(self.NChannels):
-            if sys.version_info[:2] <= (2, 7):
-                if self.gain[i] == 2 / 3:
-                    self.gain[i] = int(self.gain[i])
-
-    def init(self):
-        # Hardware configuration:
-        try:
-            # Create an ADS1115 ADC (16-bit) instance.
-            self.ADS = Adafruit_ADS1x15.ADS1115(address=self.I2CAddr)
-        except Exception as e:
-            print("ADS1115Config: Error initialising device - exit")
-            print(str(e))
-            sys.exit(1)
+            self.VRef[i] = self.ADCVRef[self.posGain.index(self.gain)]
 
         # provide configuration parameters
         self.ChanLims = [0., 0.] * self.NChannels
@@ -91,9 +99,17 @@ class ADS1115Config(object):
                     self.ChanNams[i] = str(c - 1) + '-3'
             else:
                 self.ChanLims[i] = [0., self.VRef[i]]
-        self.ChanUnits = ['V'] * self.NChannels
+
+    def init(self):
+        # Hardware configuration:
+        self.i2c = busio.I2C(board.SCL, board.SDA)
+
+        self.adc = ADS.ADS1115(self.i2c, address=self.I2CADDR, gain=self.gain)
+
+        # TODO: Finish channel logic
 
     def acquireData(self, buf):
+        # TODO: Update function
         for i, c in enumerate(self.ADCChannels):
             # read data from ADC in differential mode
             if self.DifModeChan[i]:
@@ -105,5 +121,5 @@ class ADS1115Config(object):
                                            data_rate=self.sampleRate) * self.VRef[i] / 32767
 
     def closeDevice(self):
-        # nothing to do here
+        # Nothing to do here
         pass
