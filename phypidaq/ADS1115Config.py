@@ -26,7 +26,7 @@ class ADS1115Config(object):
             self.ADCChannels = list(set([x for x in self.ADCChannels if x in list(range(0, 4))]))
             # Check, that there is at least on channel
             if len(self.ADCChannels) == 0:
-                print(f"ADS1115: No channels specified. Defaulting to channel 0")
+                print("ADS1115: No channels specified. Defaulting to channel 0")
                 self.ADCChannels = [0]
         else:
             print("ADS1115: No channels specified. Defaulting to channel 0")
@@ -74,7 +74,7 @@ class ADS1115Config(object):
         self.adc = None
 
         # Create channel array
-        self.channels = None
+        self.channels = [None] * self.NChannels
 
         self.ChanUnits = ['V'] * self.NChannels
 
@@ -106,19 +106,41 @@ class ADS1115Config(object):
 
         self.adc = ADS.ADS1115(self.i2c, address=self.I2CADDR, gain=self.gain)
 
-        # TODO: Finish channel logic
+        for i in range(len(self.ADCChannels)):
+            if self.DifModeChan[i]:
+                # Set up the channels in diff mode
+                if self.ADCChannels[i] == 0:
+                    channel = AnalogIn(self.adc, ADS.P0, ADS.P1)
+                    self.channels[i] = channel
+                if self.ADCChannels[i] == 1:
+                    channel = AnalogIn(self.adc, ADS.P0, ADS.P3)
+                    self.channels[i] = channel
+                if self.ADCChannels[i] == 2:
+                    channel = AnalogIn(self.adc, ADS.P1, ADS.P3)
+                    self.channels[i] = channel
+                if self.ADCChannels[i] == 3:
+                    channel = AnalogIn(self.adc, ADS.P2, ADS.P3)
+                    self.channels[i] = channel
+            else:
+                # Set up the regular channels
+                if self.ADCChannels[i] == 0:
+                    channel = AnalogIn(self.adc, ADS.P0)
+                    self.channels[i] = channel
+                elif self.ADCChannels[i] == 1:
+                    channel = AnalogIn(self.adc, ADS.P1)
+                    self.channels[i] = channel
+                elif self.ADCChannels[i] == 2:
+                    channel = AnalogIn(self.adc, ADS.P2)
+                    self.channels[i] = channel
+                elif self.ADCChannels[i] == 3:
+                    channel = AnalogIn(self.adc, ADS.P3)
+                    self.channels[i] = channel
 
     def acquireData(self, buf):
-        # TODO: Update function
-        for i, c in enumerate(self.ADCChannels):
-            # read data from ADC in differential mode
-            if self.DifModeChan[i]:
-                buf[i] = self.ADS.read_adc_difference(self.ADCChannels[i], gain=self.gain[i],
-                                                      data_rate=self.sampleRate) * self.VRef[i] / 32767
-            else:
-                # read data from adc in single mode
-                buf[i] = self.ADS.read_adc(self.ADCChannels[i], gain=self.gain[i],
-                                           data_rate=self.sampleRate) * self.VRef[i] / 32767
+        # Iterate over all channels
+        for i in range(len(self.channels)):
+            # Get the voltage for each channel
+            buf[i] = self.channels[i].voltage
 
     def closeDevice(self):
         # Nothing to do here
