@@ -384,11 +384,17 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
                 return 1
 
         # if ok, write all files
-        fDAQ = open(fullDAQfile, 'w')
-        print(DAQconf, file=fDAQ)
-        self.DAQfile = DAQfile
-        fDAQ.close()
-        print('   - saved PhyPy configuration to ' + fullDAQfile)
+        try:
+            fDAQ = open(fullDAQfile, 'w')
+            print(DAQconf, file=fDAQ)
+            self.DAQfile = DAQfile
+            fDAQ.close()
+            print('   - saved PhyPy configuration to ' + fullDAQfile)
+        except Exception as e:
+            self.MB_Warning('Warning', 
+            'Failed to store ' + fullDAQfile + '\n' + str(e) )       
+            return 1
+  
 
         for i, DevFile in enumerate(DevFiles):
             cdir, fnam = os.path.split(DevFile)
@@ -398,8 +404,9 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
                     try:
                         os.makedirs(confdir + '/' + cdir)
                     except OSError:
-                        print("Couldn't create folder!")
-            fDev = open(confdir + '/' + DevFile, 'w')
+                        print("Couldn't create sub-directory ", cdir)
+            fullDevFile = confdir + '/' + DevFile
+            fDev = open(fullDevFile, 'w')
             print(DevConfs[i], file=fDev)
             fDev.close()
             print('   - saved Device configuration to ' + fullDevFile)
@@ -414,18 +421,26 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
         _file = self.ConfDir + '/' + str(self.lE_RunTag.text()).replace(' ', '') + '.daq'
         # select file and directory
         path2File = QtWidgets.QFileDialog.getSaveFileName(None,
-                                                          'save configuration as', _file, 'daq(*.daq)')
+                                        'save configuration as', _file, 'daq(*.daq)')
         fullDAQfile = str(path2File[0]).strip()
         if fullDAQfile != '':
             # remember new config directory
             self.ConfDir = os.path.dirname(fullDAQfile)
             DAQfile = os.path.basename(fullDAQfile)
         else:
+            print("   abort - no file name given") 
             return 1
         # set name and save all configs
         self.lE_DAQConfFile.setText(fullDAQfile)
-        return self.saveConfigs(self.ConfDir, DAQfile=DAQfile, verbose=0)
+        if self.saveConfigs(self.ConfDir, DAQfile=DAQfile, verbose=0):
+            print("   !!! failed to save configuration files")
+            return 1
+        else:
+            print("   - configuration files stored in directory " + self.ConfDir)
+            return 0 
 
+
+            
     def saveEnvironment(self):
         """ Save PhyPi configuration to file ~/CONFIG_ENVIRONMENT_file """
         if platform.system() == "Windows":
