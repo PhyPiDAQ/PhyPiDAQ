@@ -57,7 +57,7 @@ This is a quick-start guide on how to install the software package and run a dem
 The following requirements need to be met to work
 
 - Linux/Unix operating system
-- Python3.6 runtime or newer
+- Python 3.6 runtime or newer
 - `git`-package installed
 - If you want to use all supported sensors, you need a Raspberry Pi
 
