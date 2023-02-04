@@ -7,11 +7,17 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Documentation about `flake8` usage
+- `util` submodule, starting with path logic
 
 ### Changed
 
 - Changed scope of markdown linting to the root directory only
 - Display PhyPiDAQ Version number also in display window title
+
+### Fixed
+
+- Correct file path separator used on all platforms
+- File path checks are os independent now
 
 ## [1.2.1] - 2022-11-06
 
