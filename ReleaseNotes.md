@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Changed scope of markdown linting to the root directory only
+- Display PhyPiDAQ Version number also in display window title
 
 ## [1.2.1] - 2022-11-06
 
