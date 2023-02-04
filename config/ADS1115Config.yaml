@@ -13,8 +13,8 @@ ADCChannels: [0, 3]         # active ADC-Channels
                                 #          minus ADCChannel 3
                                 #  -  3 = ADCChannel 2 
                                 #          minus ADCChannel 3
-DifModeChan: [true, true]   # enable differential mode for Channels
-Gain: [2/3, 2/3]                # programmable gain of ADC-Channel
+DifModeChan: [true, true]     # enable differential mode for Channels
+Gain: 2/3              # programmable gain for all ADC-Channels
                               # possible values for Gain:
                               #  - 2/3 = +/-6.144V
                               #  -   1 = +/-4.096V
