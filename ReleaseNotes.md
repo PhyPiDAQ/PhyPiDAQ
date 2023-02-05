@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Implementation of the ADS1115
 - Changed scope of markdown linting to the root directory only
 - Display PhyPiDAQ Version number also in display window title
 
@@ -18,6 +19,7 @@ All notable changes to this project will be documented in this file.
 
 - Correct file path separator used on all platforms
 - File path checks are os independent now
+- Removed unused functions
 
 ## [1.2.1] - 2022-11-06
 

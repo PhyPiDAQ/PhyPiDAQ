@@ -169,24 +169,24 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
         self.pB_StartRun.clicked.connect(self.actionStartRun)
 
         # initialization dependent on DAQ config file
-        self.initDAQ(daq_config_file)
+        self.init_daq(daq_config_file)
 
-    def initDAQ(self, DAQconfFile):
+    def init_daq(self, daq_config_file):
         # initialize DAQ from config files - need absolute path
-        path = os.path.dirname(DAQconfFile)
+        path = os.path.dirname(daq_config_file)
         if path == '':
             path = '.'
         self.cwd = path
 
         try:
-            with open(DAQconfFile, 'r') as f:
+            with open(daq_config_file, 'r', encoding='utf-8') as f:
                 DAQconf = f.read()
             # check if file is valid yaml format
             try:
                 _confDict = yaml.load(DAQconf, Loader=yaml.Loader)
             except yaml.YAMLError as e:
                 print('Exception: ', e)
-                print('     DAQ configuration not valid yaml format' + DAQconfFile)
+                print('     DAQ configuration not valid yaml format' + daq_config_file)
                 return
 
             # Do another file check
@@ -194,19 +194,19 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
                 print("Config dictionary is empty!")
 
         except OSError:
-            print('Failed to read DAQ configuration file ' + DAQconfFile)
+            print('Failed to read DAQ configuration file ' + daq_config_file)
             DAQconf = 'missing !'
             return
 
-        self.lE_DAQConfFile.setText(DAQconfFile)
-        RunTag = os.path.split(DAQconfFile)[1].split('.')[0]
+        self.lE_DAQConfFile.setText(daq_config_file)
+        RunTag = os.path.split(daq_config_file)[1].split('.')[0]
         self.lE_RunTag.setText(RunTag)
 
-        print('   - PhyPi configuration from file ' + DAQconfFile)
+        print('   - PhyPi configuration from file ' + daq_config_file)
         # display config data in GUI
         self.pTE_phypiConfig.setPlainText(DAQconf)
 
-        # read device File(s) as specified in DAQConfFile
+        # read device File(s) as specified in daq_config_file
         self.DeviceFiles = 3 * ['']
         self.readDeviceConfig()
 
@@ -307,7 +307,7 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
             # print('selected File ' + str(FileName) )
             # remember new config directory
             self.config_directory = os.path.dirname(file_name)
-            self.initDAQ(file_name)
+            self.init_daq(file_name)
 
     def select_device_file0(self):
         file_name = self.get_file('Device config', self.config_directory, 'yaml(*.yaml)')
@@ -342,24 +342,6 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
         self.pTE_DeviceConfig0.setReadOnly(not checked)
         self.pTE_DeviceConfig1.setReadOnly(not checked)
         self.pTE_DeviceConfig2.setReadOnly(not checked)
-
-    def checkConfig(self, DAQconf):
-        # check validity of configuration files for valid yaml syntax
-        try:
-            yaml.load(DAQconf, Loader=yaml.Loader)
-        except yaml.YAMLError as e:
-            self.show_messagebox_warning('Warning', 'PhyPi Config is not valid yaml format \n' + str(e))
-            return 1
-
-        DevConfs = []
-        for i in range(self.NDeviceConfigs):
-            DevConfs.append(self.pTE_DeviceConfigs[i].toPlainText())
-            try:
-                _ = yaml.load(DevConfs[i], Loader=yaml.Loader)
-            except yaml.YAMLError as e:
-                self.show_messagebox_warning('Warning', 'Device Config %i is not valid yaml format \n' % i + str(e))
-                return 1
-        return 0
 
     def saveConfigs(self, config_directory, DAQfile=None, verbose=0):
         # save all Config files to config_directory
