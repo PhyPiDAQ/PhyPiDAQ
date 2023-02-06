@@ -13,8 +13,8 @@ device = MAX31855Config()
 # Initialize the device
 device.init()
 
-# reserve space for data (four channels here)
-data = np.array([0., 0., 0., 0.])
+# reserve space for data (one channels here)
+data = np.array([0.0])
 
 print('Starting readout. Type <Ctrl-C> to stop')
 
