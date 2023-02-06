@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Implementation of the ADS1115
+- Implementation of the ADXL345
 - Changed scope of markdown linting to the root directory only
 - Display PhyPiDAQ Version number also in display window title
 

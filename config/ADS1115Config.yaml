@@ -1,6 +1,6 @@
 # example of a configuration file for ADC ADS1115
 
-DAQModule: ADS1115Config  
+DAQModule: ADS1115Config
 
 ADCChannels: [0, 3]         # active ADC-Channels
                             # possible values: 0, 1, 2, 3
