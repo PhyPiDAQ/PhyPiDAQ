@@ -8,10 +8,15 @@ All notable changes to this project will be documented in this file.
 
 - Documentation about `flake8` usage
 - `util` submodule, starting with path logic
+- More examples
+  - Introduced `read_MCP3x08.py`
+  - `read_MAX31855.py` example
 
 ### Changed
 
 - Implementation of the ADS1115
+  - Renamed `read_analog.py` to `read_ADS1115.py`
+- Implementation of MAX31855
 - Changed scope of markdown linting to the root directory only
 - Display PhyPiDAQ Version number also in display window title
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""read_analog.py
+"""read_MCP3x08.py
      this script illustrates the general usage of package phypidaq
      prints data read from an analog channel
 """
@@ -9,13 +9,10 @@ import time
 import numpy as np
 
 # import module controlling readout device
-from phypidaq.ADS1115Config import *
-
-# from phypidaq.MCP3008Config import *
+from phypidaq.MCP3x08Config import *
 
 # create an instance of the device
-device = ADS1115Config()
-# device = MCP3008Config()
+device = MCP3x08Config()
 
 # initialize the device
 device.init()
