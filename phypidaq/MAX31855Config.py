@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-import sys
-
-# import relevant pieces for MAX31855
 import board
 import digitalio
 import adafruit_max31855
