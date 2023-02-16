@@ -15,10 +15,10 @@ import RPi.GPIO as gpio
 gpio.setmode(gpio.BCM)
 
 
-def LEDflash(pin, dt):
+def flash_led(pin, deltatime):
     # flash GPIO pin for time dt
     gpio.output(pin, 1)
-    time.sleep(dt)
+    time.sleep(deltatime)
     gpio.output(pin, 0)
 
 
@@ -35,7 +35,7 @@ try:
     dtcum = 0.
     T0 = time.time()
     while True:
-        flashThread = threading.Thread(target=LEDflash, args=(pLED, tflash,))
+        flashThread = threading.Thread(target=flash_led, args=(pLED, tflash,))
         flashThread.start()
         # generate exponentially distributed waiting time
         dt = -tau * math.log(random.uniform(0., 1.))

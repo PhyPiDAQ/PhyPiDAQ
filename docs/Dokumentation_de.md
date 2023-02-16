@@ -381,14 +381,14 @@ Um das Erstellen von eigenem Code für jede Messaufgabe zu vermeiden, liefert da
 
 **Auslese eines Analog-Digitalwandlers**
 
-Ein einfaches Beispiel zur Auslese des Digital-Analog-Wandlers *ADS1115* illustriert die Anwendung (Script
-`read_analog.py`):
+Ein einfaches Beispiel zur Auslese des Digital-Analog-Wandlers *ADS1115* illustriert die Anwendung (Skript
+`read_ADS1115.py`):
 
 ```python
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-'''read_analog.py
+'''read_ADS1115.py
      this script illustrates the general usage of package phypidaq
      prints data read from an analog channel
 '''
@@ -407,7 +407,7 @@ dt = 1.
 T0 = time.time()
 
 print(' starting readout,     type <ctrl-C> to stop')
-# readout loop, stop with <crtl>-C
+# readout loop, stop with <ctrl>-C
 while True:
   device.acquireData(dat)
   dT = time.time() - T0 
