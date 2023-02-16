@@ -53,6 +53,8 @@ class ADS1115Config(object):
                 self.gain = config_dict["Gain"]
             else:
                 print("ADS1115: Invalid gain specified. Defaulting to 2/3!")
+                # Set the default value
+                self.gain = 2 / 3
         else:
             # Default to default gain
             self.gain = 2 / 3
