@@ -106,9 +106,8 @@ of quantities measured by each sensor.
 - BME680 temperature, pressure, altitude, relative_humidity; resistance proportional to VOC particle amount
 - BMP280 temperature, pressure, altitude
 - BMP388 temperature, pressure, altitude
-- MAX31865 temperature, resistance
 - MAX31855 converter for thermocouple
-- MAX31856 converter for PT100 temperature sensor
+- MAX31865 temperature, resistance (used for PT100 and PT1000 temperature sensor)
 - MMA8451 accelerometer
 - MLX90393 magnetometer
 - TCS34752 RGB sensor
