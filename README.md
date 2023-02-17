@@ -46,8 +46,6 @@ Experimenten mit PhyPiDAQ suchen, schauen Sie sich bitte unsere anderen
 ### Derzeit verfügbare Dokumentation
 
 - [Anleitung für Lehrkräfte](https://github.com/PhyPiDAQ/EducatorsGuide/blob/main/Anleitung.md)
-- [Einführungskurs für Schülerinnen und Schüler](
-    https://github.com/PhyPiDAQ/EducatorsGuide/blob/main/docs/Kurs_digitale_Messwerterfassung_mit_PhyPiDAQ.md)
 - [Beschreibung der Software](https://github.com/PhyPiDAQ/PhyPiDAQ/blob/main/docs/Dokumentation_de.md)
 - [Bauanleitung Messkoffer](https://github.com/PhyPiDAQ/MeasuringCase/blob/main/Dokumentation_de.md)
 
