@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - More examples
   - Introduced `read_MCP3x08.py`
   - `read_MAX31855.py` example
+  - `read_ADXL345.py` example 
 
 ### Changed
 
