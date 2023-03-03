@@ -1,0 +1,12 @@
+# Example config file for the ADXL345 sensor
+
+DAQModule: ADXL345Config
+
+#I2CADDR: 0x53 # Change the I2C address of the sensor. Default is 0x53
+
+Range: 2G # Rage of measurement in quantities of earth gravitation. Default is 2G
+          # possible values:
+          #   2G
+          #   4G
+          #   8G
+          #  16G

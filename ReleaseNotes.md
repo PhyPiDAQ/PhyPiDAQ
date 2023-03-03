@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - Implementation of the ADS1115
   - Renamed `read_analog.py` to `read_ADS1115.py`
 - Implementation of MAX31855
+- Implementation of the ADXL345
 - Changed scope of markdown linting to the root directory only
 - Display PhyPiDAQ Version number also in display window title
 
