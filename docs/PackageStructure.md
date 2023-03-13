@@ -211,5 +211,5 @@
     measurement of gamma-ray dose with GDK101
 - `examples/config_files/ToyData.daq`
     generation and display of simulated data  
-- `examplesconfig_files//ReplayData.daq`
+- `examples/config_files/ReplayData.daq`
     data from file (for demo mode)
