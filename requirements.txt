@@ -21,5 +21,6 @@ pyusb==1.1.1
 rpi-ws281x==4.3.0
 RPi.GPIO==0.7.0
 sysv-ipc==1.1.0
+websockets==10.4
 PyYAML
 numpy
