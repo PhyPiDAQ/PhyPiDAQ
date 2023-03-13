@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-    read data from digital sensor: BMB 180 temperature and pressur
+    read data from digital sensor: BMB 180 temperature and pressure
     this script illustrates the general usage of package phypidaq prints data read from a digital sensor
     (BMP180 Temperature and Pressure Sensor)
 """

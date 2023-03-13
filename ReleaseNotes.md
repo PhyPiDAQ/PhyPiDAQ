@@ -22,6 +22,9 @@ All notable changes to this project will be documented in this file.
 - `MCP4725` DAC example
 - Changed scope of markdown linting to the root directory only
 - Display PhyPiDAQ Version number also in display window title
+- Structure of examples
+  - Improved naming
+  - Updated docs of the package structure
 
 ### Fixed
 

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-""" script readPipe.py
-    usage: readPipe [name of pipe]
+""" script read_Pipe.py
+    usage: read_Pipe [name of pipe]
 
     Read data from a named linux pipe
     filled by run_phypi.py with option

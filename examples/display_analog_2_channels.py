@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""display_analog2.py
+"""display_analog_2_channels.py
      illustrates the general usage of package phypidaq
      prints and displays data read from 2 analog channels
 """

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """PoissonLED
-   LED flashing according to a random Poission Process
+   LED flashing according to a random Poisson Process
 """
 from __future__ import print_function, division, unicode_literals
 from __future__ import absolute_import
