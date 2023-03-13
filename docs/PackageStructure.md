@@ -108,7 +108,7 @@
 - `config/INA219Config.yaml` current and voltage sensor
 - `config/DS18B20Config.yaml` digital temperature sensor
 - `config/BMP280Config.yaml` temperature and pressure sensor
-- ``config/BMP180Config.yaml` temperature and pressure sensor
+- `config/BMP180Config.yaml` temperature and pressure sensor
 - `config/GPIOCount.yaml`  frequency measurement via GPIO pin
 - `config/MAX31855Config.yaml` converter for thermocouple
 - `config/MAX31865Config.yaml` converter for PT-100

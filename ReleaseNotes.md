@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
   - Renamed `read_analog.py` to `read_ADS1115.py`
 - Implementation of MAX31855
 - Implementation of the ADXL345
+- `MCP4725` DAC example
 - Changed scope of markdown linting to the root directory only
 - Display PhyPiDAQ Version number also in display window title
 
