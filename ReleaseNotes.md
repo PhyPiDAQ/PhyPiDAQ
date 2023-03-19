@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - Structure of examples
   - Improved naming
   - Updated docs of the package structure
+- Improved install script `installlibs.sh`
 
 ### Fixed
 
