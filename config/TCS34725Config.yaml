@@ -1,4 +1,4 @@
-# example configuration for couning rate on GPIO pins
+# example configuration for counting rate on GPIO pins
 
 DAQModule: TCS34725Config
 
