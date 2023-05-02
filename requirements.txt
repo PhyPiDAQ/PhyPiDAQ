@@ -23,5 +23,6 @@ rpi-ws281x==4.3.0
 RPi.GPIO==0.7.0
 sysv-ipc==1.1.0
 websockets==10.4
+w1thermsensor==2.0.0
 PyYAML
 numpy

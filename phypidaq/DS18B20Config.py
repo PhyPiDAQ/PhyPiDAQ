@@ -5,7 +5,7 @@ from __future__ import absolute_import
 import sys
 
 # import relevant pieces for DS18B20
-from w1thermsensor import W1ThermSensor
+from w1thermsensor import W1ThermSensor, Unit
 
 
 class DS18B20Config(object):
@@ -21,17 +21,22 @@ class DS18B20Config(object):
         # -- unit configuration DS18B20
         if "Unit" in confdict:
             if confdict["Unit"] == "DEGREES_F":
-                self.unit = W1ThermSensor.DEGREES_F
+                self.unit = Unit.DEGREES_F
                 self.ChanLims = [[14., 230.]]
             elif confdict["Unit"] == "KELVIN":
-                self.unit = W1ThermSensor.KELVIN
+                self.unit = Unit.KELVIN
                 self.ChanLims = [[263.15, 383.15]]
             else:
-                self.unit = W1ThermSensor.DEGREES_C
+                self.unit = Unit.DEGREES_C
                 self.ChanLims = [[-10., 110.]]
         else:
-            self.unit = W1ThermSensor.DEGREES_C
+            self.unit = Unit.DEGREES_C
             self.ChanLims = [[-10., 110.]]
+
+        self.DS18B20 = None
+
+        # provide configuration parameters
+        self.ChanNams = ['DS18B20']
 
     def init(self):
         # Hardware configuration:
@@ -42,9 +47,6 @@ class DS18B20Config(object):
             print("DS18B20Config: Error initialising device - exit")
             print(str(e))
             sys.exit(1)
-
-        # provide configuration parameters
-        self.ChanNams = ['DS18B20']
 
     def acquireData(self, buf):
         buf[0] = self.DS18B20.get_temperature(self.unit)
