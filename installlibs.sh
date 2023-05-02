@@ -32,8 +32,6 @@ while true; do
 
           sudo pip3 install installlibs/whl/*.whl; # python wheels
 
-          sudo pip3 install installlibs/tgz/*.tar.gz; # python packages
-
           # Install all sensor drivers specified in the
           sudo pip3 install -r requirements.txt;
 
