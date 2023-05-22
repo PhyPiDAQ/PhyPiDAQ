@@ -13,7 +13,6 @@ from builtins import super
 """
 
 import os
-import platform
 import subprocess
 import sys
 import time
@@ -401,10 +400,8 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
             fDAQ.close()
             print('   - saved PhyPy configuration to ' + fullDAQfile)
         except Exception as e:
-            self.show_messagebox_warning("Warning",
-            'Failed to store ' + fullDAQfile + '\n' + str(e) )
+            self.show_messagebox_warning("Warning", 'Failed to store ' + fullDAQfile + '\n' + str(e))
             return 1
-
 
         for i, DevFile in enumerate(DevFiles):
             cdir, fnam = os.path.split(DevFile)
