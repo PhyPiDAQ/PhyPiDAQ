@@ -13,6 +13,7 @@ from builtins import super
 """
 
 import os
+import platform
 import subprocess
 import sys
 import time
@@ -393,11 +394,17 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
                 return 1
 
         # if ok, write all files
-        fDAQ = open(fullDAQfile, 'w')
-        print(DAQconf, file=fDAQ)
-        self.DAQfile = DAQfile
-        fDAQ.close()
-        print('   - saved PhyPy configuration to ' + fullDAQfile)
+        try:
+            fDAQ = open(fullDAQfile, 'w')
+            print(DAQconf, file=fDAQ)
+            self.DAQfile = DAQfile
+            fDAQ.close()
+            print('   - saved PhyPy configuration to ' + fullDAQfile)
+        except Exception as e:
+            self.show_messagebox_warning("Warning",
+            'Failed to store ' + fullDAQfile + '\n' + str(e) )
+            return 1
+
 
         for i, DevFile in enumerate(DevFiles):
             cdir, fnam = os.path.split(DevFile)
@@ -407,7 +414,7 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
                     try:
                         os.makedirs(config_directory + os.sep + cdir)
                     except OSError:
-                        print("Couldn't create folder!")
+                        print(f"Couldn't create folder {cdir}!")
             fDev = open(config_directory + os.sep + DevFile, 'w')
             print(DevConfs[i], file=fDev)
             fDev.close()
@@ -430,10 +437,16 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
             self.config_directory = os.path.dirname(fullDAQfile)
             DAQfile = os.path.basename(fullDAQfile)
         else:
+            print("   abort - no file name given")
             return 1
         # set name and save all configs
         self.lE_DAQConfFile.setText(fullDAQfile)
-        return self.saveConfigs(self.config_directory, DAQfile=DAQfile, verbose=0)
+        if self.saveConfigs(self.config_directory, DAQfile=DAQfile, verbose=0):
+            print("   !!! failed to save configuration files")
+            return 1
+        else:
+            print("   - configuration files stored in directory " + self.ConfDir)
+            return 0
 
     def saveEnvironment(self):
         """ Save PhyPi configuration to file ~/CONFIG_ENVIRONMENT_FILE """
