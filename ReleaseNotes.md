@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [1.3.0] - 2023-05-22
 
 ### Added
 
@@ -26,6 +26,8 @@ All notable changes to this project will be documented in this file.
   - Improved naming
   - Updated docs of the package structure
 - Improved install script `installlibs.sh`
+- Improved config writing error logging
+- Better code documentation 
 
 ### Fixed
 
