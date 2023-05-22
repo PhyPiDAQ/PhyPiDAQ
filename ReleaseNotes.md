@@ -27,7 +27,7 @@ All notable changes to this project will be documented in this file.
   - Updated docs of the package structure
 - Improved install script `installlibs.sh`
 - Improved config writing error logging
-- Better code documentation 
+- Better code documentation
 
 ### Fixed
 
