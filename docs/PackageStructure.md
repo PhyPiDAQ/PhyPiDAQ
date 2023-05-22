@@ -108,7 +108,7 @@
 - `config/INA219Config.yaml` current and voltage sensor
 - `config/DS18B20Config.yaml` digital temperature sensor
 - `config/BMP280Config.yaml` temperature and pressure sensor
-- ``config/BMP180Config.yaml` temperature and pressure sensor
+- `config/BMP180Config.yaml` temperature and pressure sensor
 - `config/GPIOCount.yaml`  frequency measurement via GPIO pin
 - `config/MAX31855Config.yaml` converter for thermocouple
 - `config/MAX31865Config.yaml` converter for PT-100
@@ -122,67 +122,94 @@
 
 ## Examples
 
-- `examples/read_analog.py`  
-    very minimalist example to read one channel from an analog-to-ditigal converter
-
-- ``examples/display_analog.py``  
-    very minimalist example to read one channel from an analog-to-ditigal converter and
+- ``examples/display_analog.py``
+    very minimalist example to read one channel from an analog-to-digital converter and
     display data as a history graph
 
-- ``examples/display_analog2.py``  
-    read two channels from an analog-to-ditigal converter and
-    display data as a history graph
+- ``examples/display_analog_2_channels.py``
+    read two channels from an analog-to-digital converter and display data as a history graph
 
-- `examples/read_INA210.py`  
-    read data from INA219 current and voltage sensor
+- `examples/FreqGen.py`
+    generate a fixed frequency signal on a GPIO pin
+
+- `examples/GPIO-In-Out.py`
+    example to control  GPIO pins: generate square signal on output pin from variable voltage on input pin
+
+- `examples/poissonLED.py`
+    generate a random signal following Poisson statistics on a GPIO pin
 
 - ``examples/read_18B20.py``s
      simple example to read the temperature sensor DS18B20
 
-- ``examples/readBMPx80.py``
-    simple example to read the digital temperature  and pressure sensor BMP180/280
+- `examples/read_ADS1115.py`
+    very minimalist example to read one channel from an analog-to-digital converter
 
-- ``examples/readMMA8541.py``
+- `examples/read_ADXL345.py`
+    read data from ADXL345 accelerometer
+
+- `examples/read_BMxx8x.py`
+    read data from various Bosch BMP/BME environment sensors  
+
+- ``examples/read_BMPx80.py``
+    simple example to read the digital temperature  and pressure sensor BMP180/280 (legacy support)
+
+- `examples/read_INA219.py`
+    read data from INA219 current and voltage sensor
+
+- `examples/read_MAX31855.py`
+    read data from MAX31855 thermocouple convertor
+
+- ``examples/read_MMA8541.py``
     simple example to read the digital accelerometer MMA8451
 
-- `examples/runOsci.py`  
+- `examples/read_Pipe.py`
+    read data from named linux pipe (*run_phypi.py* with option DAQfifo: \<pipe name\>)
+
+- `examples/read_test.py`
+    read random generated data
+
+- `examples/read_TSL45315.py`
+    read data from TSL45315 luminance sensor
+
+- `examples/read_Websocket.py`
+    read data from websocket
+
+- `examples/RePlot.py`
+    plot saved data
+
+- `examples/sendPipe2ws.py`
+    send data from pipe to websocket
+
+- `examples/set_MPC4725`
+    example to set voltage on MCP4725 digital-to-analog converter
+
+- `examples/oscilloscope/runOsci.py`
     run an oscilloscope display, configuration as specified in *.yaml* file (default is `PSOsci.yaml`)
 
-- `examples/GPIO-In-Out.py`  
-    example to control  GPIO pins: generate square signal on output pin from variable voltage on input pin
-
-- `examples/poissonLED.py`  
-    generate a random signal following Poisson statistics on a GPIO pin
-
-- `examples/FreqGen.py`  
-    generate a fixed frequency signal on a GPIO pin  
-
-- `examples/set_MPC4725`  
-    example to set voltage on MCP4725 digital-to-analog converter
+- `examples/utils/burnIn_BME680.py`
+    script to automatically to burn in the sensor before first usage to ensure accurate VOC data
 
 ## Configuration files for *run_phypi.py*
 
-- `examples/Amperemeter.daq`  
+- `examples/config_files/Amperemeter.daq`
     display current and eventually voltage read from INA219 sensor
-- ``examples/Barometer.daq``  
+- ``examples/config_files/Barometer.daq``
     uses BMB180 or BMP280 sensors to display temperature and air pressure
-- ``examples/Accelerometer.daq``  
+- ``examples/config_files/Accelerometer.daq``
     uses MMA8451 to display x-, y- and z-acceleration
-- ``examples/NoiseMeter.daq``  
+- ``examples/config_files/NoiseMeter.daq``
     measure noise with a microphone connected to PicoScope USB oscilloscope;
      displays the *rms* of 200 samples taken over a time periods of 20 ms.
     Can also be used with geophone SM-24
-- `examples/RGBsensor.daq`
+- `examples/config_files/RGBsensor.daq`
     RGB color sensor
-- `examples/ColorSpectrum.daq`
+- `examples/config_files/ColorSpectrum.daq`
     six channel color sensor
-- `examples/AS7265x.daq`
+- `examples/config_files/AS7265x.daq`
     18 channel spectral sensor
-- `examples/GammaDose.daq`  
+- `examples/config_files/GammaDose.daq`
     measurement of gamma-ray dose with GDK101
-- `examples/ToyData.daq`
+- `examples/config_files/ToyData.daq`
     generation and display of simulated data  
-- `examples/ReplayData.daq`  
+- `examples/config_files/ReplayData.daq`
     data from file (for demo mode)
-- `examples/readPipe.py`  
-    read data from named linux pipe (*run_phypi.py* with option DAQfifo: \<pipe name\>)

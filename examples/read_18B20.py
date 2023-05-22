@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""read_analog.py
+"""read_18B20.py
      this script illustrates the general usage of package phypidaq
-     pirints data read from a digital sensor  (DS18B20 Temperature Sensor)
+     prints data read from a digital sensor  (DS18B20 Temperature Sensor)
 """
 import time
 import numpy as np

@@ -10,7 +10,7 @@
     and send result to websocket on localhost:8314
 
     read data with script
-    readWebsocket.py ws://localhost:8314
+    read_Websocket.py ws://localhost:8314
 """
 
 import sys

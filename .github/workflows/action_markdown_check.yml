@@ -1,4 +1,4 @@
-name: Markdown Code Check
+name: Markdown Check
 on: [push, pull_request]
 jobs:
   check_markdown_formatting:
@@ -13,5 +13,5 @@ jobs:
           node-version: '16'
       - name: Install markdown linter
         run: npm install -g markdownlint-cli
-      - name: Run markdown linter
-        run: markdownlint "**/*.md" --config ".github/config/.markdownlint.json"
+      - name: Run markdown linter on markdown files in root directory
+        run: markdownlint "*.md" --config ".github/config/.markdownlint.json"

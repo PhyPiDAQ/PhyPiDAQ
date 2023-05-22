@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0] - 2023-05-22
+
+### Added
+
+- Documentation about `flake8` usage
+- `util` submodule, starting with path logic
+- More examples
+  - Introduced `read_MCP3x08.py`
+  - `read_MAX31855.py` example
+  - `read_ADXL345.py` example
+
+### Changed
+
+- Implementation of the ADS1115
+  - Renamed `read_analog.py` to `read_ADS1115.py`
+- Implementation of MAX31855
+- Implementation of the ADXL345
+- `MCP4725` DAC example
+- Changed scope of markdown linting to the root directory only
+- Display PhyPiDAQ Version number also in display window title
+- Structure of examples
+  - Improved naming
+  - Updated docs of the package structure
+- Improved install script `installlibs.sh`
+- Improved config writing error logging
+- Better code documentation
+
+### Fixed
+
+- Correct file path separator used on all platforms
+- File path checks are os independent now
+- Removed unused functions
+
 ## [1.2.1] - 2022-11-06
 
 ### Added
@@ -10,7 +43,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- Fixed wrong labeled parameter in BMP280 I2C-address config 
+- Fixed wrong labeled parameter in BMP280 I2C-address config
 
 ## [1.2.0] - 2022-10-23
 
@@ -22,7 +55,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Desktop link files are now created dynamically by the `install_user.sh`
-- Added `phypi.py` and `run_phypi.py` as package scripts 
+- Added `phypi.py` and `run_phypi.py` as package scripts
 
 ### Fixed
 

@@ -46,8 +46,6 @@ Experimenten mit PhyPiDAQ suchen, schauen Sie sich bitte unsere anderen
 ### Derzeit verfügbare Dokumentation
 
 - [Anleitung für Lehrkräfte](https://github.com/PhyPiDAQ/EducatorsGuide/blob/main/Anleitung.md)
-- [Einführungskurs für Schülerinnen und Schüler](
-    https://github.com/PhyPiDAQ/EducatorsGuide/blob/main/docs/Kurs_digitale_Messwerterfassung_mit_PhyPiDAQ.md)
 - [Beschreibung der Software](https://github.com/PhyPiDAQ/PhyPiDAQ/blob/main/docs/Dokumentation_de.md)
 - [Bauanleitung Messkoffer](https://github.com/PhyPiDAQ/MeasuringCase/blob/main/Dokumentation_de.md)
 
@@ -57,7 +55,7 @@ This is a quick-start guide on how to install the software package and run a dem
 The following requirements need to be met to work
 
 - Linux/Unix operating system
-- Python3.6 runtime or newer
+- Python 3.6 runtime or newer
 - `git`-package installed
 - If you want to use all supported sensors, you need a Raspberry Pi
 
@@ -108,9 +106,8 @@ of quantities measured by each sensor.
 - BME680 temperature, pressure, altitude, relative_humidity; resistance proportional to VOC particle amount
 - BMP280 temperature, pressure, altitude
 - BMP388 temperature, pressure, altitude
-- MAX31865 temperature, resistance
 - MAX31855 converter for thermocouple
-- MAX31856 converter for PT100 temperature sensor
+- MAX31865 temperature, resistance (used for PT100 and PT1000 temperature sensor)
 - MMA8451 accelerometer
 - MLX90393 magnetometer
 - TCS34752 RGB sensor

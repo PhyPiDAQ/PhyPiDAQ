@@ -12,6 +12,8 @@ import time
 import sys
 import multiprocessing as mp
 
+from phypidaq._version_info import _get_version_string
+
 import matplotlib
 from PyQt5 import QtWidgets, QtGui, QtCore
 
@@ -39,7 +41,7 @@ class Display(QMainWindow):
 
         # Setup a basic window
         super().__init__()
-        self.setWindowTitle("PhyPiDAQ Display")
+        self.setWindowTitle(f"PhyPiDAQ Display [{_get_version_string()}]")
         self.setMinimumSize(600, 300)
 
         # Center the window on the window

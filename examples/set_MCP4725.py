@@ -6,11 +6,16 @@ from __future__ import print_function, division, unicode_literals
 from __future__ import absolute_import
 
 import sys
-# Import the MCP4725 module.
-import Adafruit_MCP4725
+# Import the MCP4725 module and other required adafruit modules
+import board
+import busio
+import adafruit_mcp4725
+
+# Initialize I2C bus.
+i2c = busio.I2C(board.SCL, board.SDA)
 
 # Create a DAC instance.
-dac = Adafruit_MCP4725.MCP4725(address=0x60, busnum=1)
+dac = adafruit_mcp4725.MCP4725(i2c, address=0x60)
 
 V = 0.  # default 0V
 if len(sys.argv) > 1:
@@ -18,12 +23,18 @@ if len(sys.argv) > 1:
 
 VB = 5.
 
-print('setting Voltage=%.2f' % V)
+# Check if the passed value is in range
+if V > VB:
+    V = VB
+if V < 0:
+    V = 0
+
+print('Setting voltage=%.2f' % V)
 try:
-    dac.set_voltage(int(V / VB * 4095))
+    dac.normalized_value = V/VB
 
 except KeyboardInterrupt:
-    print("error setting Voltage")
+    print("Error setting voltage")
 
 finally:
     sys.exit(0)

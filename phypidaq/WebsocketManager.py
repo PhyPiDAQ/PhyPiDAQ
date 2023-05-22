@@ -8,7 +8,7 @@ class WebsocketManager(object):
     sends data to websocket on localhost:8314
 
     sent data can be read with script
-    readWebsocket.py ws://localhost:8314
+    read_Websocket.py ws://localhost:8314
     """
 
     def __init__(self, interval=0.1, config_dict=None, data_queue=None):
