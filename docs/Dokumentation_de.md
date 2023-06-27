@@ -24,7 +24,9 @@ Das Paket bietet eine Abstraktionsschicht für Messgeräte und Sensoren, die an 
 
 #### Weitere Information in deutscher Sprache: 
 
-Die Beschreibung des zu Grunde liegenden Konzepts, eine Liste der empfohlenen Komponenten und ausführlich dokumentierte Beispiele finden sich in der [Masterarbeit von Moritz Aupperle](http://ekp-invenio.physik.uni-karlsruhe.de/record/49063) .
+Die Beschreibung des zu Grunde liegenden Konzepts, eine Liste der empfohlenen Komponenten und
+ausführlich dokumentierte Beispiele finden sich in der
+[Masterarbeit von Moritz Aupperle](https://publish.etp.kit.edu/record/21520).
 
 Für viele typische Messaufgaben werden Vorverstärker zur Impedanzanpassung (z.B. Elektrometer-Verstärker), zur Pegelanpassung oder zur Verstärkung kleiner Signale im µV-Bereich benötigt. 
 Ein Vorschlag zur einfachen Realisierung solcher Schaltungen ist im Verzeichnis `Hardware/` und in der [Bachelor-Arbeit von Dominik Braig](https://publish.etp.kit.edu/record/21995) dokumentiert. 
