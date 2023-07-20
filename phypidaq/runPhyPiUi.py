@@ -442,7 +442,7 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
             print("   !!! failed to save configuration files")
             return 1
         else:
-            print("   - configuration files stored in directory " + self.ConfDir)
+            print("   - configuration files stored in directory " + self.config_directory)
             return 0
 
     def saveEnvironment(self):
