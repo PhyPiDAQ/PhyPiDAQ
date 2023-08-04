@@ -1,0 +1,106 @@
+"""Driver for RadiaCode 101/102 gamma spectrometer
+
+   relies on library *radiacode* by Maxim Andreev, 
+
+   https://github.com/cdump/radiacode
+
+   needs pyhon dependecy and packaging tool poetry. 
+   Installation of package radiacode:  
+
+     > `pip3 install poetry`   
+     > `pip3 install radiacode`
+"""
+
+import sys, yaml, numpy as np
+from radiacode import RadiaCode
+
+cname = "RC10xConfig"
+
+
+class RC10xConfig(object):
+    """CsJ(Tl) Gamma Detector RadiaCode 101/102"""
+
+    def __init__(self, confdict=None):
+        # define constants
+        self.confdict = {} if confdict == None else confdict
+      
+        BT_mac = None if 'bluetooth_mac' not in self.confdict \
+             else self.confdict['bluetooth_mac']
+        reset = True if 'reset' not in self.confdict \
+             else self.confdict['reset']
+        try:
+             self.rc = RadiaCode(bluetooth_mac=BT_mac)
+        except Exception as e:
+             print('Exception: ', e)
+             sys.exit(' !!! error !!!   failed to setup device')
+
+        self.show_spectrum = False if 'show_spectrum' not in self.confdict \
+            else self.confdict['show_spectrum']
+
+        # number of spectrum channels is 1024 fixed
+        self.NBins = 1024
+        if self.show_spectrum:
+            self.NChannels = self.NBins 
+            self.ChanUnits = ['#']
+            self.ChanNams =  ['counts']
+            self.ChanLims = [ [0, 100]]
+            self.xName = 'Energy'
+            self.xUnit = 'keV'
+        else: 
+            self.NChannels = 2 
+            self.ChanUnits = [' ', 'µGy/h']
+            self.ChanNams =  ['counts', 'dose', 'entries']
+            self.ChanLims = [ [0., 30.], [0., 30./60.]]
+         # some constants
+        rho_CsJ = 4.51                 # density of CsJ in g/cm^3
+        m_sensor = rho_CsJ * 1e-3      # Volume is 1 cm^3, mass in kg
+        keV2J = 1.602e-16
+        self.depE2dose = keV2J * 3600 * 1e6 / m_sensor # dose rate in µGy/h
+                 
+
+    def init(self):
+        """Initialize special features of device"""
+        
+        # default configuration
+        sound_on = False if 'sound' not in self.confdict \
+            else self.confdict['sound']
+        self.rc.set_sound_on(sound_on)
+        vibro_on = False if 'vibro' not in self.confdict \
+            else self.confdict['vibro']
+        self.rc.set_vibro_on(sound_on)
+        if 'reset' in self.confdict:
+            self.rc.spectrum_reset()
+            self.rc.dose_reset()
+        
+        # get calibration constants from device
+        self.Channels = np.asarray(range(self.NBins))+0.5
+        self.Chan2E = self.rc.energy_calib()
+        # self.chan2E = [-5.7, 2.38, 0.00048]
+        self.BinCenters = self.Chan2E[0]+self.Chan2E[1]*self.Channels +\
+                        self.Chan2E[2]*self.Channels*self.Channels
+        
+        self.counts0 = np.zeros(self.NBins)
+                          
+    def acquireData(self, buf):
+        """provide data in user-supplied buffer"""
+
+        # read spectrum data from device (counts since last call)
+        cumulated_counts = np.asarray(self.rc.spectrum().counts)
+        counts = cumulated_counts - self.counts0
+        self.counts0 = cumulated_counts
+        # number of counts                 
+        Ncounts = np.sum(counts)
+        # dose in µGy/h = µJ/(kg*h) 
+        deposited_energy = np.sum(counts*self.BinCenters) # in keV
+        dose = deposited_energy * self.depE2dose
+        # deliver data
+        
+        if self.show_spectrum:
+            buf[:] = counts
+        else:
+            buf[0] = Ncounts
+            buf[1] = dose
+                          
+    def closeDevide(self):
+        """disconnect device"""
+        pass
