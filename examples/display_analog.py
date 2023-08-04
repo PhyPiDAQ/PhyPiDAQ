@@ -11,17 +11,18 @@ import numpy as np
 from phypidaq.ADS1115Config import *
 
 # import display
-from phypidaq.Display import *
+from phypidaq.DisplayManager import DisplayManager
 
 # create an instance of device and display ...
 device = ADS1115Config()
-display = Display(interval=0.1)
+display = DisplayManager()
 # ... and initialize
 device.init()
 display.init()
 
 # reserve space for data (here only one channel)
 dat = np.array([0.])
+interval = 1.
 
 print(' starting readout,     type <ctrl-C> to stop')
 # start time
@@ -32,7 +33,8 @@ try:
         device.acquireData(dat)
         dT = time.time() - T0
         print('%.1f, %.4g' % (dT, dat))
-        display.show(dat)
+        display.showData(dat)
+        time.sleep(interval)
 except KeyboardInterrupt:
     print('ctrl-C received - ending')
     device.closeDevice()

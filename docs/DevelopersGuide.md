@@ -88,20 +88,26 @@ by beginners.
 In the simple example above, recorded data were simply displayed on the terminal. The *PhyPiDAQ* also offers
 modules to display data in real-time as bar-graph, history plot or as a 2d-representation for pairs of (x,y) data. 
 In many cases, an extension of the simple template of the user program shown above will do the job. In addition
-to the sensor, a display method must be initialised and called after acquisition of data. No *time.sleep(dt)*  is
-necessary in this case, as the display module also takes care of the proper waiting time.  
+to the sensor, a display method must be initialised and called after acquisition of data. 
 
 ```
         ...
         
+# import display manager
+from phypidaq.DisplayManager import DisplayManager
+      
+      ... 
+         
 # create an instance of device and display ...
 device = SENSORConfig()
-display = Display(interval=0.1)
+display = DisplayManager(config_dict = ???)  # default is DataLogger
 # ... and initialize
 device.init()
 display.init()
 
 print(' starting readout,     type <ctrl-C> to stop')
+# read-out interval in s
+dt = 1.
 # start time
 T0 = time.time()
 try:
@@ -110,7 +116,8 @@ try:
         device.acquireData(dat)
         dT = time.time() - T0
         print('%.1f, %.4g' % (dT, dat))
-        display.show(dat)
+        display.showData(dat)
+        time.sleep(dt)
 except KeyboardInterrupt:
     print('ctrl-C received - ending')
     device.closeDevice()
