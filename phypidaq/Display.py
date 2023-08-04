@@ -80,7 +80,7 @@ class Display(QMainWindow):
         if interval < 0.05:
             print(" !!! read-out intervals < 0.05 s not reliable, setting to 0.05 s")
             self.config_dict['Interval'] = 0.05
-            interval = 0.5
+            interval = 0.05
         self.interval = interval
 
         # XY mode is by default off
@@ -247,7 +247,7 @@ class Display(QMainWindow):
 
         if self.config_dict['startActive'] is False:
             # If the data acquisition wasn't active on window creation, then start it
-            self.cmd_queue.put('R')
+            if self.cmd_queue is not None: self.cmd_queue.put('R')
 
         # Set the start time
         self.start_time = QtCore.QDateTime.currentSecsSinceEpoch()
@@ -289,7 +289,8 @@ class Display(QMainWindow):
             sys.exit()
 
         self.animation = anim.FuncAnimation(DG.fig, DG, yield_event_from_queue,
-                                            interval=50, repeat=True, blit=True)
+                                            interval=50, repeat=True, blit=True,
+                                            cache_frame_data=False)
 
     def cmd_end(self):
         self.cmd_queue.put('E')
