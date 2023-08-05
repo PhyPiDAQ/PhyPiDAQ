@@ -7,7 +7,7 @@
      RadiaCode 102 Spectrometer with PhyPiDAQ
 """
 
-import argparse, time, numpy as np
+import argparse, sys, time, numpy as np
 from phypidaq.RC10xConfig import RC10xConfig
 from phypidaq.DisplayManager import DisplayManager
 
@@ -86,7 +86,8 @@ display.init()
 dat = np.zeros(device.NChannels)
 
 T0 = time.time()
-print(' time.asctime(time.gmtime(t0)): stating readout;  type <ctrl-C> to stop')
+print(f'   {time.asctime(time.gmtime(T0))} script {sys.argv[0]} starting' +\
+      '         type <ctrl-C> to stop')
 # readout loop, stop with <ctrl>-C
 while True:
     device.acquireData(dat)
