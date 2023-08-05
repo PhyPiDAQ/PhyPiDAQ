@@ -7,6 +7,6 @@ DAQModule: RC10xConfig
 # other options:
 # bluetooth_mac:   xxxx    # bluetooth MAC of device
 # reset:  false            # default: true, reset device memory on start
-# show_spectrum:   true    # default: false, return full spectrum
+show_spectrum:   true    # default: false, return full spectrum
 
 

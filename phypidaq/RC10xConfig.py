@@ -9,6 +9,13 @@
 
      > `pip3 install poetry`   
      > `pip3 install radiacode`
+
+   RETURNS:   
+
+     - counts if NChannels == 1
+     - counts and dose if NChannels == 2
+     - 1204 channel differential spectrum if show_spectrum 
+
 """
 
 import sys, yaml, numpy as np
@@ -101,7 +108,8 @@ class RC10xConfig(object):
             buf[:] = counts
         else:
             buf[0] = Ncounts
-            buf[1] = dose
+            if self.NChannels > 1:
+                buf[1] = dose
                           
     def closeDevice(self):
         """disconnect device"""

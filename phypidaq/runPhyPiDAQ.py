@@ -99,7 +99,12 @@ class runPhyPiDAQ(object):
             rc = 1
         elif cmd == 's':
             self.DAQ_ACTIVE = False
-            if self.RBuf is not None:
+            if self.sumData is not None:
+                print('\n storing data to file ', self.bufferFile, ' - now paused')
+                print(42 * ' ' + '  -> R(esume), E(nd) + <ret> ', end='', flush=True)
+                datRec = DataRecorder(self.bufferFile, self.PhyPiConfDict)
+                datRec(self.sumData)                
+            elif self.RBuf is not None:
                 print('\n storing data to file ', self.bufferFile, ' - now paused')
                 print(42 * ' ' + '  -> R(esume), E(nd) + <ret> ', end='', flush=True)
                 self.storeBufferData(self.bufferFile)
@@ -325,13 +330,18 @@ class runPhyPiDAQ(object):
         else:
             self.bufferFile = "PhyPiData"
             PhyPiConfDict['bufferData'] = self.bufferFile
-            # set-up a ring buffer
+        # set-up a ring buffer
         if self.bufferFile is not None:
             from .helpers import RingBuffer
             self.RBuf = RingBuffer(PhyPiConfDict['NHistoryPoints'])
         else:
             self.RBuf = None
 
+        if  PhyPiConfDict['DisplayModule'] == 'DataSpectrum':
+            self.sumData  = np.zeros(nc)
+        else:
+            self.sumData = None
+            
         # Configure a fifo for data output
         if 'DAQfifo' in PhyPiConfDict:
             self.DAQfifo = PhyPiConfDict['DAQfifo']
@@ -516,10 +526,12 @@ class runPhyPiDAQ(object):
                     if DisplayModule is not None:
                         display_manager.showData(self.data[:NChannels])
 
-                    # store (latest) data in ring buffer as a list ...
-                    if self.RBuf is not None:
+                    # cumulative sum of date (for hisograms or spectra) ...   
+                    if self.sumData is not None:
+                        self.sumData += self.data
+                    # ... else store (latest) data in ring buffer as a list ...
+                    elif self.RBuf is not None:
                         self.RBuf.store(self.data[:NChannels].tolist())
-
                     # ... and record all data to disc ...
                     if self.DatRec:
                         self.DatRec(self.data[:NChannels])

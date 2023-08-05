@@ -1,19 +1,19 @@
 # configuration for PhyPiDAQ 
 #  read gamma ray dose from FTLAB GDK101 gamma detector
 
-# device configuration file
-DeviceFile: RC10x.yaml  
 
-Title: 'Gamma Ray Rate and Dose'
-DisplayModule: DataLogger
-NHistoryPoints: 250 
+#Title: 'Gamma Ray Rate and Dose'
+#DeviceFile: RC10x.yaml  
+#DisplayModule: DataLogger
+#NHistoryPoints: 250 
 
-#Title: 'Gamma Ray Spectrum'
-#DisplayModule: DataSpectrum  # needs extra parameters, not yet read from driver
-#Chan2Val: [-5.7, 2.38, 0.00048] # factory calibration MCA Channel to E(gamma)
-#xName: Energy
-#xUnit: keV
-#NBins: 1024
+Title: 'Gamma Ray Spectrum'
+DeviceFile: RC10x_spectrum.yaml  
+DisplayModule: DataSpectrum  # needs extra parameters, not yet read from driver 
+Chan2Val: [-5.7, 2.38, 0.00048] # factory calibration MCA Channel to E(gamma)
+xName: Energy
+xUnit: keV
+NBins: 1024
 
 #ChanLabels: [Rate, Dosis]        # names and units for channels 
 #ChanLimits: [[0., 30.],[0., 0.5]]   # range
