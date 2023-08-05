@@ -102,8 +102,8 @@ class DataSpectrum(object):
             dose = np.sum(self.cumulative_counts * self.xValues)
             self.animtxt.set_text(
                   f'counts: {Ntot:.5g} \n'
-                  f'rate: {rate:.3g} Hz\n' +\
-                  f'dose: {dose:.4g} ({self.xUnit})' )        
+                  f'rate:   {rate:.3g} Hz\n' +\
+                  f'total:  {dose:.4g} {self.xUnit}' )        
         return (self.line, self.line_diff, self.animtxt)
 
     
