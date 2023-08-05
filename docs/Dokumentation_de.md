@@ -640,8 +640,9 @@ pretrig: 0.05      # 5% der Daten vor Triggerzeitpunkt anzeigen
 frqSG: 0.0    # Signalgenerator aus
 ```
 
-Zum Test reicht ein offenes Kabelende am Eingangskabel zu Kanal A, über das 50Hz-Einstreuungen
-aus dem Stromnetz aufgefangen werden. Höhere Störfrequenzen findet man in der Nähe von Schaltnetzteilen, z. B. dem Steckernetzteil des Raspberry Pi. 
+Zum Test reicht ein offenes Kabelende am Eingangskabel zu Kanal A, über das 50Hz-Einstreuungen aus 
+dem Stromnetz aufgefangen werden. Höhere Störfrequenzen findet man in der Nähe von Schaltnetzteilen,
+z. B. dem Steckernetzteil des Raspberry Pi. 
 
 
 
@@ -691,6 +692,8 @@ aus dem Stromnetz aufgefangen werden. Höhere Störfrequenzen findet man in der 
     Klasse für 18-Kanal Spektralsensor AS7265x  
 - `phypidaq/GDK101Config`  
     Klasse für Gamma-Detektor GDK101 von FTLAB
+- `phypidaq/RC10xConfig`  
+    Klasse für Gamma-Spectrometer RadiaCode101/102
 - `phypidaq/ToyDataConfig`  
     Klasse zur Erzeugung simulierter Daten (für Test, Fehlersuche oder Übungsaufgaben)
 - `phypidaq/ReplayConfig`  
@@ -737,6 +740,7 @@ aus dem Stromnetz aufgefangen werden. Höhere Störfrequenzen findet man in der 
 - `config/AS7265xConfig.yaml` 18-Kanal Spektralsensor
 - `config/VL53LxConfig.yaml` Abstandssensor
 - `config/GDK101.yaml` Detektor für Gammastrahlung
+- `config/RC10x.yaml` Spektrometer für Gammastrahlung
 - `config/PSConfig.yaml`  PicoScope USB-Oszilloskop
 
 

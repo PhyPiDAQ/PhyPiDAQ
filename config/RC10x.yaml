@@ -1,0 +1,12 @@
+# device config for RadiaCode 101/102 Gamma Spectrometer
+
+# returns gamma counts and dose calculated from spectrum in 1cm³ CsJ(Tl) crystal
+
+DAQModule: RC10xConfig
+
+# other options:
+# bluetooth_mac:   xxxx    # bluetooth MAC of device
+# reset:  false            # default: true, reset device memory on start
+show_spectrum:   true    # default: false, return full spectrum
+
+
