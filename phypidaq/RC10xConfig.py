@@ -16,12 +16,11 @@ from radiacode import RadiaCode
 
 cname = "RC10xConfig"
 
-
 class RC10xConfig(object):
     """CsJ(Tl) Gamma Detector RadiaCode 101/102"""
 
     def __init__(self, confdict=None):
-        # define constants
+        # initialize device and set default parameters
         self.confdict = {} if confdict == None else confdict
       
         BT_mac = None if 'bluetooth_mac' not in self.confdict \
@@ -40,13 +39,16 @@ class RC10xConfig(object):
         # number of spectrum channels is 1024 fixed
         self.NBins = 1024
         if self.show_spectrum:
+            # full spectrum requested
             self.NChannels = self.NBins 
             self.ChanUnits = ['#']
             self.ChanNams =  ['counts']
             self.ChanLims = [ [0, 100]]
+            # displaying a spectrum needs extara data for x-axis
             self.xName = 'Energy'
             self.xUnit = 'keV'
-        else: 
+        else:
+            # only count rate and dose from deposited Energy
             self.NChannels = 2 
             self.ChanUnits = [' ', 'µGy/h']
             self.ChanNams =  ['counts', 'dose', 'entries']
@@ -56,21 +58,20 @@ class RC10xConfig(object):
         m_sensor = rho_CsJ * 1e-3      # Volume is 1 cm^3, mass in kg
         keV2J = 1.602e-16
         self.depE2dose = keV2J * 3600 * 1e6 / m_sensor # dose rate in µGy/h
-                 
 
-    def init(self):
-        """Initialize special features of device"""
-        
-        # default configuration
+        # set device configuration
         sound_on = False if 'sound' not in self.confdict \
             else self.confdict['sound']
         self.rc.set_sound_on(sound_on)
         vibro_on = False if 'vibro' not in self.confdict \
             else self.confdict['vibro']
-        self.rc.set_vibro_on(sound_on)
+        self.rc.set_vibro_on(vibro_on)
         if 'reset' in self.confdict:
             self.rc.spectrum_reset()
-            self.rc.dose_reset()
+            self.rc.dose_reset()                       
+
+    def init(self):
+        """Initialize data processing"""
         
         # get calibration constants from device
         self.Channels = np.asarray(range(self.NBins))+0.5
@@ -78,7 +79,8 @@ class RC10xConfig(object):
         # self.chan2E = [-5.7, 2.38, 0.00048]
         self.BinCenters = self.Chan2E[0]+self.Chan2E[1]*self.Channels +\
                         self.Chan2E[2]*self.Channels*self.Channels
-        
+
+        # RC102 delivers accumulated counts, prepare array for previous readings 
         self.counts0 = np.zeros(self.NBins)
                           
     def acquireData(self, buf):
