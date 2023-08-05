@@ -103,6 +103,6 @@ class RC10xConfig(object):
             buf[0] = Ncounts
             buf[1] = dose
                           
-    def closeDevide(self):
+    def closeDevice(self):
         """disconnect device"""
         pass

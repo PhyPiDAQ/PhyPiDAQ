@@ -80,6 +80,9 @@ A list of all programs, classes, configuration files and examples is listed in t
 - `phypidaq/GDK101Config.py`  
     class for gamma ray detektor GDK101, FTLAB
 
+- `phypidaq/RC10xConfig.py`  
+    class for gamma ray spectrometer RadiaCode 101/102
+
 - `phypidaq/ToyDataConfig.py`  
     class to generate simulated data (for test, debugging or exercises)
 
@@ -136,7 +139,8 @@ A list of all programs, classes, configuration files and examples is listed in t
 - `config/AS7262Config.yaml` 6 channel color sensor
 - `config/AS7265xConfig.yaml` 18 channel spectral sensor
 - `config/VL53L1XConfig.yaml` distance sensor
-- `config/GDK101.yaml` gamma-ray detector
+- `config/GDK101.yaml` FTLAB GDK101 gamma-ray detector
+- `config/RC10x.yaml` RadiaCode gamma-ray spectrometer
 - `config/PSConfig.yaml`  PicoScope usb oscilloscope
 
 ### Examples
@@ -228,6 +232,8 @@ A list of all programs, classes, configuration files and examples is listed in t
     18 channel spectral sensor
 - `examples/config_files/GammaDose.daq`
     measurement of gamma-ray dose with GDK101
+- `examples/config_files/RC102_GammaDose.daq`
+    measurement of gamma-ray dose with RadiaCode 102 gamma spectrometer
 - `examples/config_files/ToyData.daq`
     generation and display of simulated data  
 - `examples/config_files/ReplayData.daq`

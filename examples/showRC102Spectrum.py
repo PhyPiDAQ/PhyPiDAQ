@@ -46,8 +46,6 @@ device.init()
 # complete confiuration dictionary from device information (if not supplied by user)
 NChannels = device.NChannels
 # complete configuration dictionary from defaults of driver
-if 'Chan2E' not in confdict:
-    confdict['Chan2Val'] = device.Chan2E
 if 'NChannels' not in confdict:
     confdict['NChannels'] = device.NChannels
 if 'ChanLimits' not in confdict:
@@ -71,7 +69,10 @@ else:
 
 # need additional information for Spectrum Display
 if confdict['DisplayModule'] == 'DataSpectrum':
-    confdict['NBins'] = device.NBins
+    if 'NBins' not in confdict:
+        confdict['NBins'] = device.NBins
+    if 'Chan2Val' not in confdict:
+        confdict['Chan2Val'] = device.Chan2E
     if 'xName' not in confdict:
         confdict['xName'] = device.xName
     if 'xUnit' not in confdict:
