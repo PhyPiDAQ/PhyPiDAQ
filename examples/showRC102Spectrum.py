@@ -11,7 +11,6 @@ import argparse, sys, time, numpy as np
 from phypidaq.RC10xConfig import RC10xConfig
 from phypidaq.DisplayManager import DisplayManager
 
-
 # parse command line arguments 
 parser = argparse.ArgumentParser(description=\
                         'read and display spectrum from RadioCode 102')
@@ -77,7 +76,10 @@ if confdict['DisplayModule'] == 'DataSpectrum':
         confdict['xName'] = device.xName
     if 'xUnit' not in confdict:
         confdict['xUnit'] = device.xUnit
-       
+elif confdict['DisplayModule'] == 'DataLogger':
+    if 'NHistoryPoints' not in confdict:
+        confdict['NHistoryPoints'] = 250
+
 #  initialize Display 
 display = DisplayManager(config_dict=confdict)
 display.init()
