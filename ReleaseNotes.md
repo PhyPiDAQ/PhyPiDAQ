@@ -2,9 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+### Added
+
+- Gamma Spectrometer RadiaCode 102
+- Histogram display DataSpectrum.py
+- DevelopersGuide.md
+
 ## [1.3.0] - 2023-05-22
 
-### Added
 
 - Documentation about `flake8` usage
 - `util` submodule, starting with path logic
