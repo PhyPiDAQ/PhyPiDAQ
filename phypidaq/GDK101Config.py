@@ -5,7 +5,6 @@ from __future__ import absolute_import
 """
   interface for FTLAB GDK 101 gamma radiation detector
 
-    attention: I²C interface needs level shifter 5.0 <-> 3.3 V
 """
 
 import sys
