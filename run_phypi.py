@@ -28,6 +28,9 @@ if __name__ == "__main__":  # - - - - - - - - - - - - - - - - - - - -
     # 2: verbose output
 
     daq.setup()
-    print("DAQ set-up:\n", yaml.dump(daq.PhyPiConfDict))
+    # print configuraion dictionary in compact format
+    for key in daq.PhyPiConfDict:
+        print(f"{key}: {daq.PhyPiConfDict[key]}")
+
 
     daq.run()
