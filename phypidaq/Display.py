@@ -290,8 +290,8 @@ class Display(QMainWindow):
 
         self.animation = anim.FuncAnimation(DG.fig, DG, yield_event_from_queue,
                                             interval=50, repeat=True, blit=True,
-                            # cache_frame_data=False #! not yet with buster
-                                            )
+                                            # cache_frame_data=False, #! not yet with buster
+                                            save_count=0)
 
     def cmd_end(self):
         self.cmd_queue.put('E')
