@@ -11,30 +11,28 @@ import argparse, sys, time, numpy as np
 from phypidaq.RC10xConfig import RC10xConfig
 from phypidaq.DisplayManager import DisplayManager
 
-# parse command line arguments 
-parser = argparse.ArgumentParser(description=\
+# parse command line arguments
+parser = argparse.ArgumentParser(description= \
                         'read and display spectrum from RadioCode 102')
 parser.add_argument('--bluetooth-mac', type=str, nargs='+', required=False,
-                        help='bluetooth MAC address of radiascan device')
+                    help='bluetooth MAC address of radiascan device')
 parser.add_argument('-n', '--noreset',
-                        action='store_const', const=True, default=False,
-                        help='do not reset spectrum stored in device')
-parser.add_argument('-i', '--interval', type=float, default = 1., 
-                        help='update interval')
+                    action='store_const', const=True, default=False,
+                    help='do not reset spectrum stored in device')
+parser.add_argument('-i', '--interval', type=float, default=1.,
+                    help='update interval')
 parser.add_argument('-d', '--show_dose',
-                        action='store_const', const=True, default=False,
-                        help='only show dose')
+                    action='store_const', const=True, default=False,
+                    help='only show dose')
 args = parser.parse_args()
-
 
 # process control in PhyPiDAQ relies on a dictionary; set it up first
 confdict = {}
 
-### if 'show_spectrum' not in confdict:
 confdict['show_spectrum'] = not args.show_dose
 confdict['bluetooth_mac'] = args.bluetooth_mac
 confdict['reset'] = not args.noreset
-confdict['Interval'] = args.interval   
+confdict['Interval'] = args.interval
 
 # initialize RadiaCode device
 device = RC10xConfig(confdict)
@@ -62,7 +60,7 @@ if 'DisplayModule' not in confdict:
        confdict['DisplayModule'] = 'DataLogger'
 
 if 'Interval' not in confdict:
-    interval= 1. 
+    interval = 1. 
     confdict['Interval'] = interval 
 else:
     interval = confdict['Interval']
@@ -81,7 +79,7 @@ elif confdict['DisplayModule'] == 'DataLogger':
     if 'NHistoryPoints' not in confdict:
         confdict['NHistoryPoints'] = 250
 
-#  initialize Display 
+#  initialize Display
 display = DisplayManager(config_dict=confdict)
 display.init()
 
