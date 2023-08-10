@@ -40,17 +40,17 @@ class DataSpectrum(object):
         return self.a0 + self.a1 * C + self.a2 * C*C
 
     def Val2Chan(self, E):
-       # convert Energies to Channel Numbers
-       # inverse E = a0 + a1*C + a2 C^2
-       c = self.a0 - E
-       return (np.sqrt(self.a1**2-4*self.a2*c) - self.a1) / (2*self.a2)
+        # convert Energies to Channel Numbers
+        # inverse E = a0 + a1*C + a2 C^2
+        c = self.a0 - E
+        return (np.sqrt(self.a1**2-4*self.a2*c) - self.a1) / (2*self.a2)
         
     def initgraph(self):
         fig = plt.figure("Gamma Spectrum", figsize=(5.0, 6.0))
         fig.suptitle('Spectrum ' + time.asctime(),
                      size='large', color='b')
         fig.subplots_adjust(left=0.12, bottom=0.1, right=0.95, top=0.85,
-                            wspace=None, hspace=.25)#
+                            wspace=None, hspace=.25)
         gs = fig.add_gridspec(nrows=4, ncols=1)
         # define subplots
         self.axE = fig.add_subplot(gs[:-1, :])
@@ -85,10 +85,10 @@ class DataSpectrum(object):
         self.line_diff.set_xdata(self.xValues)
 
         self.animtxt = self.axE.text(0.66, 0.8, '     ',
-                     transform=self.axE.transAxes,
-                     color='darkblue',
-                     # backgroundcolor='white', 
-                     alpha=0.7)    
+                                     transform=self.axE.transAxes,
+                                     color='darkblue',
+                                     # backgroundcolor='white', 
+                                     alpha=0.7)    
         return (self.line, self.line_diff, self.animtxt)
 
     def __call__(self, data):
@@ -102,8 +102,6 @@ class DataSpectrum(object):
             rate = np.sum(dat)
             dose = np.sum(self.cumulative_counts * self.xValues)
             self.animtxt.set_text(f'counts: {Ntot:.5g} \n'
-                                  f'rate:   {rate:.3g} Hz\n' +\
+                                  f'rate:   {rate:.3g} Hz\n' +
                                   f'total:  {dose:.4g} {self.xUnit}' )        
         return (self.line, self.line_diff, self.animtxt)
-
-    

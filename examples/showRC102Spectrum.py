@@ -1,18 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""show_RC102Spectrum.py   
+"""show_RC102Spectrum.py
 
-     Command-line example to read and display data from 
+     Command-line example to read and display data from
      RadiaCode 102 Spectrometer with PhyPiDAQ
 """
 
-import argparse, sys, time, numpy as np
+import argparse
+import sys
+import time
+import numpy as np
 from phypidaq.RC10xConfig import RC10xConfig
 from phypidaq.DisplayManager import DisplayManager
 
 # parse command line arguments
-parser = argparse.ArgumentParser(description= \
+parser = argparse.ArgumentParser(description=\
                         'read and display spectrum from RadioCode 102')
 parser.add_argument('--bluetooth-mac', type=str, nargs='+', required=False,
                     help='bluetooth MAC address of radiascan device')
@@ -60,7 +63,7 @@ if 'DisplayModule' not in confdict:
        confdict['DisplayModule'] = 'DataLogger'
 
 if 'Interval' not in confdict:
-    interval = 1. 
+    interval = 1.
     confdict['Interval'] = interval 
 else:
     interval = confdict['Interval']
@@ -87,13 +90,14 @@ display.init()
 dat = np.zeros(device.NChannels)
 
 T0 = time.time()
-print(f'   {time.asctime(time.gmtime(T0))} script {sys.argv[0]} starting' +\
+print(f'   {time.asctime(time.gmtime(T0))} script {sys.argv[0]} starting' +
       '         type <ctrl-C> to stop')
 # readout loop, stop with <ctrl>-C
 while True:
     device.acquireData(dat)
     dT = time.time() - T0
     if len(dat) <=2:
-       print(f'    active: {dT:.1f} s   counts: {dat[0]:.0f}   dose: {dat[1]:.3f}', end='          \r')
+        print(f'    active: {dT:.1f} s   counts: {dat[0]:.0f}   dose: {dat[1]:.3f}',
+              end='          \r')
     display.showData(dat[: NChannels])
     time.sleep(interval)
