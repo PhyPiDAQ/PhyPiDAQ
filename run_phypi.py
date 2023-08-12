@@ -32,5 +32,4 @@ if __name__ == "__main__":  # - - - - - - - - - - - - - - - - - - - -
     for key in daq.PhyPiConfDict:
         print(f"{key}: {daq.PhyPiConfDict[key]}")
 
-
     daq.run()

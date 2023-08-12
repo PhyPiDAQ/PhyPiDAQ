@@ -17,7 +17,7 @@ class DataSpectrum(object):
         self.ChanNams = [""] * self.NChan
         if "ChanNams" in ConfDict:
             v = ConfDict["ChanNams"]
-            self.ChanNams[0 : min(len(v), Nc)] = v[0 : min(len(v), Nc)]
+            self.ChanNams[0:min(len(v), Nc)] = v[0:min(len(v), Nc)]
         C2V = ConfDict["Chan2Val"]
         self.a0 = C2V[0]
         self.a1 = C2V[1]

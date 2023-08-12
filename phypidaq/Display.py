@@ -258,7 +258,7 @@ class Display(QMainWindow):
             while True:
                 if not self.data_queue.empty():
                     data = self.data_queue.get()
-                    if type(data) != np.ndarray:
+                    if not isinstance(data, np.ndarray):
                         break  # Received end event
                     cnt += 1
                     yield cnt, data
