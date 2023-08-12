@@ -30,8 +30,10 @@ from math import *
 # module .WebsocketManager only imported if needed
 # data recorder
 from .DataRecorder import DataRecorder
+
 # other helper functions
 from .helpers import DAQwait
+
 # modules imported only if needed
 # from .helpers import generateCalibrationFunction
 # from .helpers import RingBuffer
@@ -40,7 +42,6 @@ from .helpers import DAQwait
 
 
 class runPhyPiDAQ(object):
-
     def __init__(self, verbose=1):
         self.verbose = verbose
 
@@ -49,24 +50,25 @@ class runPhyPiDAQ(object):
 
         class tc:
             """define terminal color codes"""
-            r = '\033[1;31;48m'
-            g = '\033[1;32;48m'  # green color
-            b = '\033[1;34;48m'
-            k = '\033[1;30;48m'
-            y = '\033[1;33;48m'   # yellow color
-            p = '\033[1;35;48m'
-            c = '\033[1;36;48m'
-            B = '\033[1;37;48m'   # bold
-            U = '\033[4;37;48m'   # underline
-            E = '\033[1;37;0m'    # end color
-            # prompt for user input
-            prompt = '   type -> P(ause), R(esume), E(nd) or s(ave) + <ret> '
 
-        status = tc.b+tc.g+'Running'+tc.E if self.DAQ_ACTIVE else tc.b+tc.y+'Paused '+tc.E
-        print('\r' + 5*' ' + status + 5*' ' + tc.prompt, end='')
+            r = "\033[1;31;48m"
+            g = "\033[1;32;48m"  # green color
+            b = "\033[1;34;48m"
+            k = "\033[1;30;48m"
+            y = "\033[1;33;48m"  # yellow color
+            p = "\033[1;35;48m"
+            c = "\033[1;36;48m"
+            B = "\033[1;37;48m"  # bold
+            U = "\033[4;37;48m"  # underline
+            E = "\033[1;37;0m"  # end color
+            # prompt for user input
+            prompt = "   type -> P(ause), R(esume), E(nd) or s(ave) + <ret> "
+
+        status = tc.b + tc.g + "Running" + tc.E if self.DAQ_ACTIVE else tc.b + tc.y + "Paused " + tc.E
+        print("\r" + 5 * " " + status + 5 * " " + tc.prompt, end="")
 
     def keyboard_input(self, cmd_queue):
-        """ Read keyboard input, run as background-thread to avoid blocking """
+        """Read keyboard input, run as background-thread to avoid blocking"""
 
         first = True
         while self.ACTIVE:
@@ -77,39 +79,39 @@ class runPhyPiDAQ(object):
 
     def decodeCommand(self, cmdQ):
         """
-          evaluate keyboard commands
-          returns:  0 invalid command
-                    1 status change
-                    2 exit
+        evaluate keyboard commands
+        returns:  0 invalid command
+                  1 status change
+                  2 exit
         """
 
         cmd = cmdQ.get()
         rc = 0
-        if cmd == 'E':
+        if cmd == "E":
             if self.verbose > 1:
-                print('\n' + sys.argv[0] + ': End command received')
-            print('')
+                print("\n" + sys.argv[0] + ": End command received")
+            print("")
             self.ACTIVE = False
             rc = 2
-        elif cmd == 'P':
+        elif cmd == "P":
             self.DAQ_ACTIVE = False
             rc = 1
-        elif cmd == 'R':
+        elif cmd == "R":
             self.DAQ_ACTIVE = True
             rc = 1
-        elif cmd == 's':
+        elif cmd == "s":
             self.DAQ_ACTIVE = False
             if self.sumData is not None:
-                print('\n storing data to file ', self.bufferFile, ' - now paused')
-                print(42 * ' ' + '  -> R(esume), E(nd) + <ret> ', end='', flush=True)
+                print("\n storing data to file ", self.bufferFile, " - now paused")
+                print(42 * " " + "  -> R(esume), E(nd) + <ret> ", end="", flush=True)
                 datRec = DataRecorder(self.bufferFile, self.PhyPiConfDict)
-                datRec(self.sumData)                
+                datRec(self.sumData)
             elif self.RBuf is not None:
-                print('\n storing data to file ', self.bufferFile, ' - now paused')
-                print(42 * ' ' + '  -> R(esume), E(nd) + <ret> ', end='', flush=True)
+                print("\n storing data to file ", self.bufferFile, " - now paused")
+                print(42 * " " + "  -> R(esume), E(nd) + <ret> ", end="", flush=True)
                 self.storeBufferData(self.bufferFile)
             else:
-                print('\n buffer storage not active - no action')
+                print("\n buffer storage not active - no action")
             rc = 1
 
         self.prompt()  # update status
@@ -123,17 +125,17 @@ class runPhyPiDAQ(object):
 
     def setup(self):
         """
-          Set up data source(s), display module and options
+        Set up data source(s), display module and options
 
-          interval:            sampling interval
-          PhyPiConfDict:       dictionary with config options
-          DEVs:                list of instances of device classes
-          ChanIdx_ofDevice:    index to store 1st channel of device i
-          NHWChannels          number of active hardware channels
-          CalibFuncts:         functions for calibration of raw channel readings
-          Formulae:            list of formulae to apply to hardware channels
-          NFormulae:           number of formulae
-          DatRec:              instance of DataRecorder
+        interval:            sampling interval
+        PhyPiConfDict:       dictionary with config options
+        DEVs:                list of instances of device classes
+        ChanIdx_ofDevice:    index to store 1st channel of device i
+        NHWChannels          number of active hardware channels
+        CalibFuncts:         functions for calibration of raw channel readings
+        Formulae:            list of formulae to apply to hardware channels
+        NFormulae:           number of formulae
+        DatRec:              instance of DataRecorder
         """
 
         # check for / read command line arguments
@@ -146,48 +148,48 @@ class runPhyPiDAQ(object):
         if len(sys.argv) >= 2:
             PhyPiConfFile = sys.argv[1]
         else:
-            PhyPiConfFile = 'PhyPiConf.daq'
+            PhyPiConfFile = "PhyPiConf.daq"
 
         # read DAQ configuration file
         if self.verbose:
-            print('  Configuration from file ' + PhyPiConfFile)
+            print("  Configuration from file " + PhyPiConfFile)
         try:
             with open(PhyPiConfFile) as f:
                 PhyPiConfDict = yaml.load(f, Loader=yaml.Loader)
         except (OSError, yaml.YAMLError) as exception:
-            print('!!! failed to read configuration file ' + PhyPiConfFile)
+            print("!!! failed to read configuration file " + PhyPiConfFile)
             print(str(exception))
             exit(1)
 
         # set default options:
-        if 'Interval' not in PhyPiConfDict:
-            PhyPiConfDict['Interval'] = self.interval
+        if "Interval" not in PhyPiConfDict:
+            PhyPiConfDict["Interval"] = self.interval
         else:
-            self.interval = PhyPiConfDict['Interval']
-        if PhyPiConfDict['Interval'] < 0.05:
+            self.interval = PhyPiConfDict["Interval"]
+        if PhyPiConfDict["Interval"] < 0.05:
             print(" !!! read-out intervals < 0.05 s not reliable, setting to 0.05 s")
-            PhyPiConfDict['Interval'] = 0.05
+            PhyPiConfDict["Interval"] = 0.05
 
-        if 'NHistoryPoints' not in PhyPiConfDict:  # length of stored history
-            PhyPiConfDict['NHistoryPoints'] = 120
+        if "NHistoryPoints" not in PhyPiConfDict:  # length of stored history
+            PhyPiConfDict["NHistoryPoints"] = 120
 
-        if 'XYmode' not in PhyPiConfDict:  # default is XY mode off
-            PhyPiConfDict['XYmode'] = False
+        if "XYmode" not in PhyPiConfDict:  # default is XY mode off
+            PhyPiConfDict["XYmode"] = False
 
-        if 'DataFile' not in PhyPiConfDict:  # default is not to write output file
-            PhyPiConfDict['DataFile'] = None
+        if "DataFile" not in PhyPiConfDict:  # default is not to write output file
+            PhyPiConfDict["DataFile"] = None
 
-        if 'DisplayModule' not in PhyPiConfDict:  # default display is DataLogger
-            PhyPiConfDict['DisplayModule'] = 'DataLogger'
+        if "DisplayModule" not in PhyPiConfDict:  # default display is DataLogger
+            PhyPiConfDict["DisplayModule"] = "DataLogger"
 
-        if 'startActive' not in PhyPiConfDict:  # default is to start in Paused mode
-            PhyPiConfDict['startActive'] = False
+        if "startActive" not in PhyPiConfDict:  # default is to start in Paused mode
+            PhyPiConfDict["startActive"] = False
 
         # read Device configuration(s) and instantiate device handler(s)
-        if 'DeviceFile' in PhyPiConfDict:
-            DevFiles = PhyPiConfDict['DeviceFile']
+        if "DeviceFile" in PhyPiConfDict:
+            DevFiles = PhyPiConfDict["DeviceFile"]
         else:
-            DevFiles = 'ADS1115Config.yaml'
+            DevFiles = "ADS1115Config.yaml"
             print("!!! no device config given - trying ADC ADS1115")
 
         # if not a list, make it one
@@ -203,7 +205,7 @@ class runPhyPiDAQ(object):
                 DEVconfDicts.append(yaml.load(f, Loader=yaml.Loader))
                 f.close()
             except (OSError, yaml.YAMLError) as exception:
-                print('!!! failed to read configuration file ' + fnam)
+                print("!!! failed to read configuration file " + fnam)
                 print(str(exception))
                 exit(1)
 
@@ -217,27 +219,27 @@ class runPhyPiDAQ(object):
 
         DEVs = []
         for i in range(NDevices):
-            if 'DAQModule' in DEVconfDicts[i]:
-                DEVNames.append(DEVconfDicts[i]['DAQModule'])
+            if "DAQModule" in DEVconfDicts[i]:
+                DEVNames.append(DEVconfDicts[i]["DAQModule"])
             else:  # try to derive from name of Device Config File
                 cdir, cfnam = os.path.split(DeviceFiles[i])
-                DEVNames.append(cfnam.split('.')[0])
+                DEVNames.append(cfnam.split(".")[0])
 
             if self.verbose:
-                print('  configuring device ' + DEVNames[i])
+                print("  configuring device " + DEVNames[i])
             # import device class ...
-            exec('from .' + DEVNames[i] + ' import ' + DEVNames[i])
+            exec("from ." + DEVNames[i] + " import " + DEVNames[i])
             # ...  and instantiate device handler
             #      exec('global DEVs;  DEVs.append(' + DEVNames[i] + '(DEVconfDicts[i]) )' )
-            exec('DEVs.append(' + DEVNames[i] + '(DEVconfDicts[i]) )')
+            exec("DEVs.append(" + DEVNames[i] + "(DEVconfDicts[i]) )")
             DEVs[i].init()
             ChanIdx_ofDevice.append(NHWChannels)
             nC = DEVs[i].NChannels
             NHWChannels += nC
-            ChanNams += DEVs[i].ChanNams[0: nC]
-            ChanLims += DEVs[i].ChanLims[0: nC]
+            ChanNams += DEVs[i].ChanNams[0:nC]
+            ChanLims += DEVs[i].ChanLims[0:nC]
             try:
-                ChanUnits += DEVs[i].ChanUnits[0: nC]
+                ChanUnits += DEVs[i].ChanUnits[0:nC]
             except (TypeError, AttributeError):
                 ChanUnits = None
 
@@ -250,14 +252,15 @@ class runPhyPiDAQ(object):
 
         # set up calibration Functions
         CalibFuncts = None
-        if 'ChanCalib' in PhyPiConfDict:
+        if "ChanCalib" in PhyPiConfDict:
             from .helpers import generateCalibrationFunction
+
             CalibFuncts = [None] * NHWChannels
-            calibData = PhyPiConfDict['ChanCalib']
+            calibData = PhyPiConfDict["ChanCalib"]
             if self.verbose > 1:
-                print('  Calibrating channels:')
+                print("  Calibrating channels:")
                 for ic in range(NHWChannels):
-                    print('   Chan ', ic, '   ', calibData[ic])
+                    print("   Chan ", ic, "   ", calibData[ic])
             for ic in range(NHWChannels):
                 if calibData[ic] is not None:
                     CalibFuncts[ic] = generateCalibrationFunction(calibData[ic])
@@ -266,104 +269,107 @@ class runPhyPiDAQ(object):
         # Apply Formula(e) to calibrated channel reading(s)
         Formulae = None
         NFormulae = 0
-        if 'ChanFormula' in PhyPiConfDict:
-            Formulae = PhyPiConfDict['ChanFormula']
+        if "ChanFormula" in PhyPiConfDict:
+            Formulae = PhyPiConfDict["ChanFormula"]
             NFormulae = len(Formulae)
             if self.verbose > 1:
-                print('applying formulae:')
+                print("applying formulae:")
                 for ifc in range(NFormulae):
                     if Formulae[ifc]:
-                        print('   FChan ', ifc, '   ', Formulae[ifc])
+                        print("   FChan ", ifc, "   ", Formulae[ifc])
         self.Formulae = Formulae
         self.NFormulae = NFormulae
         # re-set number of Channels if Formulae are defined
         nc = NFormulae if NFormulae else NHWChannels
-        PhyPiConfDict['NChannels'] = nc
+        PhyPiConfDict["NChannels"] = nc
 
         # Add information for graphical display(s) to PhyPiConfDict
-        if 'ChanNams' not in PhyPiConfDict:
+        if "ChanNams" not in PhyPiConfDict:
             if NFormulae > NHWChannels:
-                self.ChanNams += (NFormulae - NHWChannels) * ['F']
+                self.ChanNams += (NFormulae - NHWChannels) * ["F"]
             else:
                 self.ChanNams = self.ChanNams[:nc]
             for ifc in range(NFormulae):
                 if Formulae[ifc]:
-                    self.ChanNams[ifc] = 'F' + str(ifc)
-            PhyPiConfDict['ChanNams'] = self.ChanNams
+                    self.ChanNams[ifc] = "F" + str(ifc)
+            PhyPiConfDict["ChanNams"] = self.ChanNams
 
-        if 'ChanUnits' not in PhyPiConfDict:
+        if "ChanUnits" not in PhyPiConfDict:
             if self.ChanUnits is not None:
-                PhyPiConfDict['ChanUnits'] = self.ChanUnits
+                PhyPiConfDict["ChanUnits"] = self.ChanUnits
             else:
-                PhyPiConfDict['ChanUnits'] = [''] * nc
-        length = len(PhyPiConfDict['ChanUnits'])
+                PhyPiConfDict["ChanUnits"] = [""] * nc
+        length = len(PhyPiConfDict["ChanUnits"])
         if length < nc:
-            PhyPiConfDict['ChanUnits'] += (nc - length) * ['']
+            PhyPiConfDict["ChanUnits"] += (nc - length) * [""]
 
-        if 'ChanLabels' not in PhyPiConfDict:
-            PhyPiConfDict['ChanLabels'] = [''] * nc
+        if "ChanLabels" not in PhyPiConfDict:
+            PhyPiConfDict["ChanLabels"] = [""] * nc
         else:
-            length = len(PhyPiConfDict['ChanLabels'])
+            length = len(PhyPiConfDict["ChanLabels"])
             if length < nc:
-                PhyPiConfDict['ChanLabels'] += (nc - length) * ['']
+                PhyPiConfDict["ChanLabels"] += (nc - length) * [""]
 
-        if 'ChanLimits' not in PhyPiConfDict:
+        if "ChanLimits" not in PhyPiConfDict:
             if NFormulae > 0:
-                print('PhyPiDAQ: forumla(e) defined, but no ChanLimits supplied ')
-                print('     results may become unpredictable - exiting')
+                print("PhyPiDAQ: forumla(e) defined, but no ChanLimits supplied ")
+                print("     results may become unpredictable - exiting")
                 exit(1)
-            PhyPiConfDict['ChanLimits'] = ChanLims  # take from hw devices if not set
+            PhyPiConfDict["ChanLimits"] = ChanLims  # take from hw devices if not set
 
         # start data recording to disk if required
-        if PhyPiConfDict['DataFile'] is not None:
-            FName = PhyPiConfDict['DataFile']
+        if PhyPiConfDict["DataFile"] is not None:
+            FName = PhyPiConfDict["DataFile"]
             self.DatRec = DataRecorder(FName, PhyPiConfDict)
             if self.verbose:
-                print('  storing data to file ', FName)
+                print("  storing data to file ", FName)
         else:
             self.DatRec = None
-            PhyPiConfDict['DataFile'] = self.DatRec
+            PhyPiConfDict["DataFile"] = self.DatRec
 
         # buffer the latest data (number of data points given by NHistoryPoints)
-        if 'bufferData' in PhyPiConfDict:
-            self.bufferFile = PhyPiConfDict['bufferData']
+        if "bufferData" in PhyPiConfDict:
+            self.bufferFile = PhyPiConfDict["bufferData"]
         else:
             self.bufferFile = "PhyPiData"
-            PhyPiConfDict['bufferData'] = self.bufferFile
+            PhyPiConfDict["bufferData"] = self.bufferFile
         # set-up a ring buffer
         if self.bufferFile is not None:
             from .helpers import RingBuffer
-            self.RBuf = RingBuffer(PhyPiConfDict['NHistoryPoints'])
+
+            self.RBuf = RingBuffer(PhyPiConfDict["NHistoryPoints"])
         else:
             self.RBuf = None
 
-        if  PhyPiConfDict['DisplayModule'] == 'DataSpectrum':
-            self.sumData  = np.zeros(nc)
+        if PhyPiConfDict["DisplayModule"] == "DataSpectrum":
+            self.sumData = np.zeros(nc)
         else:
             self.sumData = None
-            
+
         # Configure a fifo for data output
-        if 'DAQfifo' in PhyPiConfDict:
-            self.DAQfifo = PhyPiConfDict['DAQfifo']
+        if "DAQfifo" in PhyPiConfDict:
+            self.DAQfifo = PhyPiConfDict["DAQfifo"]
         else:
             self.DAQfifo = None
-            PhyPiConfDict['DAQfifo'] = self.DAQfifo
+            PhyPiConfDict["DAQfifo"] = self.DAQfifo
         if self.DAQfifo:
-            print('PhyPiDAQ: opening fifo ', self.DAQfifo)
-            print('   start process reading from fifo')
+            print("PhyPiDAQ: opening fifo ", self.DAQfifo)
+            print("   start process reading from fifo")
             from .helpers import FifoManager
+
             self.send_to_fifo = FifoManager(self.DAQfifo)
 
         # Configure a websocket for data transfer
-        if 'DAQwebsocket' in PhyPiConfDict:
-            self.DAQwebsocket = PhyPiConfDict['DAQwebsocket']
+        if "DAQwebsocket" in PhyPiConfDict:
+            self.DAQwebsocket = PhyPiConfDict["DAQwebsocket"]
         else:
             self.DAQwebsocket = None
-            PhyPiConfDict['DAQwebsocket'] = self.DAQwebsocket
+            PhyPiConfDict["DAQwebsocket"] = self.DAQwebsocket
         if self.DAQwebsocket:
             from .WebsocketManager import WebsocketManager
-            print('PhyPiDAQ: opening websocket')
-            print('   start process reading websocket')
+
+            print("PhyPiDAQ: opening websocket")
+            print("   start process reading websocket")
             try:
                 self.send_to_websocket = WebsocketManager(interval=self.interval, config_dict=PhyPiConfDict)
             except Exception as e:
@@ -372,32 +378,32 @@ class runPhyPiDAQ(object):
                 exit(1)
 
         # LED indicators on GPIO pins
-        if 'RunLED' in PhyPiConfDict or 'ReadoutLED' in PhyPiConfDict:
+        if "RunLED" in PhyPiConfDict or "ReadoutLED" in PhyPiConfDict:
             from .pulseGPIO import pulseGPIO
-        if 'RunLED' in PhyPiConfDict:
-            self.RunLED = pulseGPIO(PhyPiConfDict['RunLED'])
+        if "RunLED" in PhyPiConfDict:
+            self.RunLED = pulseGPIO(PhyPiConfDict["RunLED"])
         else:
             self.RunLED = None
-        if 'ReadoutLED' in PhyPiConfDict:
-            self.ReadoutLED = pulseGPIO(PhyPiConfDict['ReadoutLED'])
+        if "ReadoutLED" in PhyPiConfDict:
+            self.ReadoutLED = pulseGPIO(PhyPiConfDict["ReadoutLED"])
         else:
             self.ReadoutLED = None
 
         # Print configuration
         if self.verbose > 1:
-            print('\nPhyPiDAQ Configuration:')
+            print("\nPhyPiDAQ Configuration:")
             print(yaml.dump(PhyPiConfDict))
         self.PhyPiConfDict = PhyPiConfDict
 
     def apply_calibs(self):
         """
-          apply calibration functions to hardware channels
+        apply calibration functions to hardware channels
 
-          input: Calibration Functions as calculated by
-                 generateCalibrationFunctions() from interpolated
-                 values in calibration table calibData[]
+        input: Calibration Functions as calculated by
+               generateCalibrationFunctions() from interpolated
+               values in calibration table calibData[]
 
-          output: calibrated channel values
+        output: calibrated channel values
         """
 
         for i in range(self.NHWChannels):
@@ -406,26 +412,26 @@ class runPhyPiDAQ(object):
 
     def apply_formulae(self):
         """
-          Calculate new quantities from hardware channels c0, c1, ...
-           replace entries in data by calculated quantities
+        Calculate new quantities from hardware channels c0, c1, ...
+         replace entries in data by calculated quantities
 
-          input:  - data from hardware channels
-                  - list of formulae
-                  data in hw channels c0, c1, ...
+        input:  - data from hardware channels
+                - list of formulae
+                data in hw channels c0, c1, ...
 
-          formula expressions are valid python expressions, where
-          all functions from math package can be used
+        formula expressions are valid python expressions, where
+        all functions from math package can be used
 
-          output: calculated quantities by applying formula
-                f1(c0, c1 ...), f2(c0, c1, ...), ...
+        output: calculated quantities by applying formula
+              f1(c0, c1 ...), f2(c0, c1, ...), ...
 
-          number of formulae may exceed number of hardware channels
+        number of formulae may exceed number of hardware channels
         """
 
         #  copy data from hardware channels
         # for ifc in range(self.NFormulae):
         for ifc in range(self.NHWChannels):
-            exec('c' + str(ifc) + ' = self.data[' + str(ifc) + ']')
+            exec("c" + str(ifc) + " = self.data[" + str(ifc) + "]")
 
         #  apply formulae to signal data
         for ifc in range(self.NFormulae):
@@ -439,47 +445,47 @@ class runPhyPiDAQ(object):
         """
 
         if self.verbose:
-            print('*==* script ' + sys.argv[0] + ': data taking active \n')
+            print("*==* script " + sys.argv[0] + ": data taking active \n")
 
-        longInterval = 5.  # definiton of a "long" readout interval
+        longInterval = 5.0  # definiton of a "long" readout interval
 
-        interval = self.PhyPiConfDict['Interval']
-        NChannels = self.PhyPiConfDict['NChannels']
-        DisplayModule = self.PhyPiConfDict['DisplayModule']
+        interval = self.PhyPiConfDict["Interval"]
+        NChannels = self.PhyPiConfDict["NChannels"]
+        DisplayModule = self.PhyPiConfDict["DisplayModule"]
 
         cmdQ = mp.Queue(1)  # Queue for command input
         datQ = mp.Queue(1)  # Queue to spy on data transfer inside class Display
-        if 'startActive' not in self.PhyPiConfDict:
-            self.PhyPiConfDict['startActive'] = False  # start in paused-mode
-        if 'DAQCntrl' not in self.PhyPiConfDict:
-            self.PhyPiConfDict['DAQCntrl'] = True  # enable run control buttons
+        if "startActive" not in self.PhyPiConfDict:
+            self.PhyPiConfDict["startActive"] = False  # start in paused-mode
+        if "DAQCntrl" not in self.PhyPiConfDict:
+            self.PhyPiConfDict["DAQCntrl"] = True  # enable run control buttons
 
         if DisplayModule is not None:
             from .DisplayManager import DisplayManager
-            display_manager = DisplayManager(interval=None,
-                                             config_dict=self.PhyPiConfDict,
-                                             cmd_queue=cmdQ,
-                                             data_queue=datQ)
+
+            display_manager = DisplayManager(
+                interval=None, config_dict=self.PhyPiConfDict, cmd_queue=cmdQ, data_queue=datQ
+            )
             display_manager.init()
 
         self.ACTIVE = True  # background process(es) active
 
-        if self.PhyPiConfDict['startActive']:
+        if self.PhyPiConfDict["startActive"]:
             self.DAQ_ACTIVE = True  # Data Acquisition active
         else:
             # start in paused-mode
             self.DAQ_ACTIVE = False  # Data Acquisition inactive
-            print('  starting in Paused mode - type R to resume')
+            print("  starting in Paused mode - type R to resume")
 
         # start keyboard control
-        kbdthrd = threading.Thread(name='kbdInput', target=self.keyboard_input, args=(cmdQ,))
+        kbdthrd = threading.Thread(name="kbdInput", target=self.keyboard_input, args=(cmdQ,))
         kbdthrd.daemon = True
         kbdthrd.start()
 
         # set up space for data
         self.data = np.zeros(max(NChannels, self.NHWChannels))
 
-        tflash = min(0.2, interval / 2.)  # pulse duration for readout LED
+        tflash = min(0.2, interval / 2.0)  # pulse duration for readout LED
         if self.RunLED:
             self.RunLED.pulse(0)  # switch on status LED
 
@@ -492,7 +498,6 @@ class runPhyPiDAQ(object):
             wait = DAQwait(interval)  # initialize wait timer
 
             while self.ACTIVE:
-
                 # regularly check for command input for long intervals
                 if interval > longInterval and self.DAQ_ACTIVE:
                     cmd = 0
@@ -501,7 +506,7 @@ class runPhyPiDAQ(object):
                             cmd = self.decodeCommand(cmdQ)
                             if cmd:
                                 break  # got valid command
-                        time.sleep(longInterval / 300.)
+                        time.sleep(longInterval / 300.0)
                     if cmd >= 2:
                         break  # end command received
 
@@ -509,7 +514,7 @@ class runPhyPiDAQ(object):
                     cnt += 1
                     # read data
                     for i, DEV in enumerate(self.DEVs):
-                        DEV.acquireData(self.data[self.ChanIdx_ofDevice[i]:])
+                        DEV.acquireData(self.data[self.ChanIdx_ofDevice[i] :])
 
                     if self.ReadoutLED:
                         self.ReadoutLED.pulse(tflash)  # pulse readout LED
@@ -526,7 +531,7 @@ class runPhyPiDAQ(object):
                     if DisplayModule is not None:
                         display_manager.showData(self.data[:NChannels])
 
-                    # cumulative sum of date (for hisograms or spectra) ...   
+                    # cumulative sum of date (for hisograms or spectra) ...
                     if self.sumData is not None:
                         self.sumData += self.data
                     # ... else store (latest) data in ring buffer as a list ...
@@ -538,8 +543,13 @@ class runPhyPiDAQ(object):
 
                     if self.DAQfifo is not None or self.DAQwebsocket is not None:
                         # transform data to csv format
-                        csv_data = ','.join(['{0:.3f}'.format(cnt * interval)] +
-                                            ['{0:.4g}'.format(d) for d in self.data[:NChannels]])+'\n'
+                        csv_data = (
+                            ",".join(
+                                ["{0:.3f}".format(cnt * interval)]
+                                + ["{0:.4g}".format(d) for d in self.data[:NChannels]]
+                            )
+                            + "\n"
+                        )
                         # ... write to fifo ...
                         if self.DAQfifo is not None:
                             self.send_to_fifo(csv_data)
@@ -551,7 +561,7 @@ class runPhyPiDAQ(object):
                     wait()
 
                 else:  # paused mode
-                    time.sleep(min(interval / 10., 0.2))
+                    time.sleep(min(interval / 10.0, 0.2))
 
                 # check for control input (from keyboard or display module)
                 if not cmdQ.empty():
@@ -562,11 +572,11 @@ class runPhyPiDAQ(object):
         except KeyboardInterrupt:
             self.DAQ_ACTIVE = False
             self.ACTIVE = False
-            print('\n' + sys.argv[0] + ': keyboard interrupt - closing down ...')
+            print("\n" + sys.argv[0] + ": keyboard interrupt - closing down ...")
 
         except BaseException:
             # 'except Exception as e' leaves some errors unnoted
-            print('\n!!! ' + sys.argv[0] + ': exception in data-taking loop')
+            print("\n!!! " + sys.argv[0] + ": exception in data-taking loop")
             print(sys.exc_info()[1])
 
         finally:
@@ -577,10 +587,10 @@ class runPhyPiDAQ(object):
             if self.DatRec:
                 self.DatRec.close()
             if self.DAQfifo:
-                self.send_to_fifo('')  # empty record to inform clients
+                self.send_to_fifo("")  # empty record to inform clients
                 self.send_to_fifo.close()
             if self.DAQwebsocket:
-                self.send_to_websocket('\n')  # empty record to inform clients
+                self.send_to_websocket("\n")  # empty record to inform clients
                 time.sleep(0.1)
                 self.send_to_websocket.close()
             for DEV in self.DEVs:
@@ -591,24 +601,27 @@ class runPhyPiDAQ(object):
                 self.RunLED.close()
             if self.ReadoutLED is not None:
                 self.ReadoutLED.close()
-            time.sleep(1.)
+            time.sleep(1.0)
 
             if self.verbose:
-                print('\n*==* ' + sys.argv[0] + ': normal end - type <ret>')
+                print("\n*==* " + sys.argv[0] + ": normal end - type <ret>")
             sys.exit()
 
 
 # execute only if called directly, but not when imported
 if __name__ == "__main__":  # - - - - - - - - - - - - - - - - - - - - - -
-
     from .helpers import keyboard_wait
 
     if len(sys.argv) != 2:
-        print("\n!!! run_phypi.py usage:\n" + 10 * ' ' + "run_phypi.py <config>.daq\n")
-        prompt = "    starting demo mode from configuration PhyPiDemo.daq" \
-                 + "\n" + 25 * ' ' + "type <ret> to continue, 'E+<ret>' to exit -> "
+        print("\n!!! run_phypi.py usage:\n" + 10 * " " + "run_phypi.py <config>.daq\n")
+        prompt = (
+            "    starting demo mode from configuration PhyPiDemo.daq"
+            + "\n"
+            + 25 * " "
+            + "type <ret> to continue, 'E+<ret>' to exit -> "
+        )
         answer = keyboard_wait(prompt)
-        if answer == '':
+        if answer == "":
             sys.argv.append("PhyPiDemo.daq")
         else:
             print("     exiting")

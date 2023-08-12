@@ -17,7 +17,7 @@ from phypidaq._version_info import _get_version_string
 import matplotlib
 from PyQt5 import QtWidgets, QtGui, QtCore
 
-matplotlib.use('Qt5Agg')
+matplotlib.use("Qt5Agg")
 
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QPushButton, QLabel, QFileDialog  # noqa: E402
 
@@ -73,65 +73,65 @@ class Display(QMainWindow):
         self.animation = None
 
         # Set default options for graphical display
-        if 'Interval' not in self.config_dict:
-            self.config_dict['Interval'] = interval
+        if "Interval" not in self.config_dict:
+            self.config_dict["Interval"] = interval
         else:
-            interval = self.config_dict['Interval']
+            interval = self.config_dict["Interval"]
         if interval < 0.05:
             print(" !!! read-out intervals < 0.05 s not reliable, setting to 0.05 s")
-            self.config_dict['Interval'] = 0.05
+            self.config_dict["Interval"] = 0.05
             interval = 0.05
         self.interval = interval
 
         # XY mode is by default off
-        if 'XYmode' not in self.config_dict:
-            self.config_dict['XYmode'] = False
+        if "XYmode" not in self.config_dict:
+            self.config_dict["XYmode"] = False
 
         # The default display is DataLogger
-        if 'DisplayModule' not in self.config_dict:
-            self.config_dict['DisplayModule'] = 'DataLogger'
+        if "DisplayModule" not in self.config_dict:
+            self.config_dict["DisplayModule"] = "DataLogger"
 
         # Default mode is paused
-        if 'startActive' not in self.config_dict:
-            self.config_dict['startActive'] = False
+        if "startActive" not in self.config_dict:
+            self.config_dict["startActive"] = False
 
         # No run control buttons by default
-        if 'DAQCntrl' not in self.config_dict:
-            self.config_dict['DAQCntrl'] = False
+        if "DAQCntrl" not in self.config_dict:
+            self.config_dict["DAQCntrl"] = False
 
         # Set channel properties
-        if 'NChannels' not in self.config_dict:
-            self.config_dict['NChannels'] = 1
+        if "NChannels" not in self.config_dict:
+            self.config_dict["NChannels"] = 1
 
-        NC = self.config_dict['NChannels']
-        if 'ChanLimits' not in self.config_dict:
-            self.config_dict['ChanLimits'] = [[0., 5.]] * NC
-        if 'ChanNams' not in self.config_dict:
-            self.config_dict['ChanNams'] = [''] * NC
-        if 'ChanUnits' not in self.config_dict:
-            self.config_dict['ChanUnits'] = ['V'] * NC
+        NC = self.config_dict["NChannels"]
+        if "ChanLimits" not in self.config_dict:
+            self.config_dict["ChanLimits"] = [[0.0, 5.0]] * NC
+        if "ChanNams" not in self.config_dict:
+            self.config_dict["ChanNams"] = [""] * NC
+        if "ChanUnits" not in self.config_dict:
+            self.config_dict["ChanUnits"] = ["V"] * NC
 
-        if 'ChanLabels' not in self.config_dict:
-            self.config_dict['ChanLabesl'] = [''] * NC
+        if "ChanLabels" not in self.config_dict:
+            self.config_dict["ChanLabesl"] = [""] * NC
 
         # Name of the display module
-        module_name = self.config_dict['DisplayModule']
+        module_name = self.config_dict["DisplayModule"]
 
         # TODO: Check if there are safer ways for doing this
         # import relevant library
         try:
-            command = 'from .' + module_name + ' import *'
+            command = "from ." + module_name + " import *"
             exec(command, globals(), locals())
         except Exception as e:
-            print(' !!! Display: failed to import module - exiting')
+            print(" !!! Display: failed to import module - exiting")
             print(str(e))
             sys.exit(1)
 
         try:
-            command = 'global DG; DG = ' + module_name + '(self.config_dict)'
+            command = "global DG; DG = " + module_name + "(self.config_dict)"
             exec(command, globals(), locals())
         except Exception as e:
-            print(' !!! Display: failed to initialize module - exiting')
+            print(" !!! Display: failed to initialize module - exiting")
             print(str(e))
             sys.exit(1)
 
@@ -147,46 +147,46 @@ class Display(QMainWindow):
 
         button_h = 24
         button_w = 100
-        if self.config_dict['startActive']:
+        if self.config_dict["startActive"]:
             self.button_resume = QPushButton("&Resume")
         else:
             self.button_resume = QPushButton("&Run")
         self.button_resume.clicked.connect(self.cmd_resume)
         self.button_resume.setFixedHeight(button_h)
         self.button_resume.setFixedWidth(button_w)
-        self.button_resume.setShortcut('Shift+r')
-        self.button_resume.setShortcut('r')
+        self.button_resume.setShortcut("Shift+r")
+        self.button_resume.setShortcut("r")
 
         self.button_pause = QPushButton("&Pause")
         self.button_pause.clicked.connect(self.cmd_pause)
         self.button_pause.setFixedHeight(button_h)
         self.button_pause.setFixedWidth(button_w)
-        self.button_pause.setShortcut('Shift+p')
+        self.button_pause.setShortcut("Shift+p")
 
         self.button_save_data = QPushButton("&Save Data")
         self.button_save_data.clicked.connect(self.cmd_save_data)
         self.button_save_data.setFixedHeight(button_h)
         self.button_save_data.setFixedWidth(button_w)
-        self.button_save_data.setShortcut('S')
+        self.button_save_data.setShortcut("S")
 
         self.button_save_graph = QPushButton("&save Graph")
         self.button_save_graph.clicked.connect(self.cmd_save_graph)
         self.button_save_graph.setFixedHeight(button_h)
         self.button_save_graph.setFixedWidth(button_w)
-        self.button_save_graph.setShortcut('s')
+        self.button_save_graph.setShortcut("s")
 
         self.button_end = QPushButton("&End")
         self.button_end.clicked.connect(self.cmd_end)
         self.button_end.setFixedHeight(button_h)
         self.button_end.setFixedWidth(button_w)
-        self.button_end.setShortcut('Shift+e')
-        self.button_end.setShortcut('e')
+        self.button_end.setShortcut("Shift+e")
+        self.button_end.setShortcut("e")
 
         # Create a label for the passed time
         self.time_label = QLabel("0s")
         self.time_label.setFixedHeight(button_h)
         self.time_label.setFixedWidth(button_w)
-        self.lagging_label = QLabel('')
+        self.lagging_label = QLabel("")
         self.lagging_label.setStyleSheet("color: red")
         self.lagging_label.setFixedHeight(button_h)
         self.lagging_label.setFixedWidth(button_w)
@@ -199,28 +199,21 @@ class Display(QMainWindow):
 
         # Start automatically, if there are no controls
         self.started = False
-        if self.config_dict['DAQCntrl'] is False:
+        if self.config_dict["DAQCntrl"] is False:
             self.button_layout.addWidget(self.time_label)
             self.button_layout.addWidget(self.lagging_label)
             self.cmd_start()
         else:
             # Add the buttons to the layout
-            self.button_layout.addWidget(self.button_resume,
-                                         alignment=QtCore.Qt.AlignLeft)
-            self.button_layout.addWidget(self.button_pause,
-                                         alignment=QtCore.Qt.AlignLeft)
-            self.button_layout.addWidget(self.button_save_data,
-                                         alignment=QtCore.Qt.AlignLeft)
-            self.button_layout.addWidget(self.button_save_graph,
-                                         alignment=QtCore.Qt.AlignLeft)
-            self.button_layout.addWidget(self.button_end,
-                                         alignment=QtCore.Qt.AlignLeft)
-            self.button_layout.addWidget(self.time_label,
-                                         alignment=QtCore.Qt.AlignLeft)
-            self.button_layout.addWidget(self.lagging_label,
-                                         alignment=QtCore.Qt.AlignRight)
+            self.button_layout.addWidget(self.button_resume, alignment=QtCore.Qt.AlignLeft)
+            self.button_layout.addWidget(self.button_pause, alignment=QtCore.Qt.AlignLeft)
+            self.button_layout.addWidget(self.button_save_data, alignment=QtCore.Qt.AlignLeft)
+            self.button_layout.addWidget(self.button_save_graph, alignment=QtCore.Qt.AlignLeft)
+            self.button_layout.addWidget(self.button_end, alignment=QtCore.Qt.AlignLeft)
+            self.button_layout.addWidget(self.time_label, alignment=QtCore.Qt.AlignLeft)
+            self.button_layout.addWidget(self.lagging_label, alignment=QtCore.Qt.AlignRight)
 
-            if self.config_dict['startActive']:
+            if self.config_dict["startActive"]:
                 # Start the display
                 self.cmd_start()
             else:
@@ -236,8 +229,8 @@ class Display(QMainWindow):
         # Disable the Run/Resume button and rename it from Run to Resume
         self.button_resume.setEnabled(False)
         self.button_resume.setText("&Resume")
-        self.button_resume.setShortcut('Shift+r')
-        self.button_resume.setShortcut('r')
+        self.button_resume.setShortcut("Shift+r")
+        self.button_resume.setShortcut("r")
 
         # Enable all others buttons
         self.button_pause.setEnabled(True)
@@ -245,9 +238,10 @@ class Display(QMainWindow):
         self.button_save_graph.setEnabled(True)
         self.button_end.setEnabled(True)
 
-        if self.config_dict['startActive'] is False:
+        if self.config_dict["startActive"] is False:
             # If the data acquisition wasn't active on window creation, then start it
-            if self.cmd_queue is not None: self.cmd_queue.put('R')
+            if self.cmd_queue is not None:
+                self.cmd_queue.put("R")
 
         # Set the start time
         self.start_time = QtCore.QDateTime.currentSecsSinceEpoch()
@@ -277,27 +271,33 @@ class Display(QMainWindow):
                 if delta_time - self.interval < self.interval * 0.01:
                     if lagging:
                         lagging = False
-                        self.lagging_label.setText('')
+                        self.lagging_label.setText("")
                 else:
                     if not lagging:
                         lagging = True
-                        self.lagging_label.setText('! lagging !')
+                        self.lagging_label.setText("! lagging !")
                 # Update the timestamp
                 timestamp_last = timestamp
 
             # End of yieldEvt_fromQ
             sys.exit()
 
-        self.animation = anim.FuncAnimation(DG.fig, DG, yield_event_from_queue,
-                                            interval=50, repeat=True, blit=True,
-                                            # cache_frame_data=False, #! not yet with buster
-                                            save_count=0)
+        self.animation = anim.FuncAnimation(
+            DG.fig,
+            DG,
+            yield_event_from_queue,
+            interval=50,
+            repeat=True,
+            blit=True,
+            # cache_frame_data=False, #! not yet with buster
+            save_count=0,
+        )
 
     def cmd_end(self):
-        self.cmd_queue.put('E')
+        self.cmd_queue.put("E")
 
     def cmd_pause(self):
-        self.cmd_queue.put('P')
+        self.cmd_queue.put("P")
         self.button_pause.setEnabled(False)
         self.button_resume.setEnabled(True)
         # Stop the timer
@@ -305,7 +305,7 @@ class Display(QMainWindow):
 
     def cmd_resume(self):
         if self.started:
-            self.cmd_queue.put('R')
+            self.cmd_queue.put("R")
             self.button_resume.setEnabled(False)
             self.button_pause.setEnabled(True)
             # Reset the start time and restart the time
@@ -316,7 +316,7 @@ class Display(QMainWindow):
             self.cmd_start()
 
     def cmd_save_data(self):
-        self.cmd_queue.put('s')
+        self.cmd_queue.put("s")
         # Pause the plotting
         self.cmd_pause()
 
@@ -326,8 +326,9 @@ class Display(QMainWindow):
 
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        file_name, _ = QFileDialog.getSaveFileName(self, "Save Graph", "plot.png", "PNG (*.png);;JPG (*.jpg *.jpeg)",
-                                                   options=options)
+        file_name, _ = QFileDialog.getSaveFileName(
+            self, "Save Graph", "plot.png", "PNG (*.png);;JPG (*.jpg *.jpeg)", options=options
+        )
 
         if file_name:
             if not (file_name.endswith(".png") or file_name.endswith(".jpg") or file_name.endswith(".jpeg")):
