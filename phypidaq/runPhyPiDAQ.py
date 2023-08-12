@@ -514,7 +514,7 @@ class runPhyPiDAQ(object):
                     cnt += 1
                     # read data
                     for i, DEV in enumerate(self.DEVs):
-                        DEV.acquireData(self.data[self.ChanIdx_ofDevice[i] :])
+                        DEV.acquireData(self.data[self.ChanIdx_ofDevice[i]:])
 
                     if self.ReadoutLED:
                         self.ReadoutLED.pulse(tflash)  # pulse readout LED
@@ -636,5 +636,4 @@ if __name__ == "__main__":  # - - - - - - - - - - - - - - - - - - - - - -
     # print configuraion dictionary in compact format
     for key in daq.PhyPiConfDict:
         print(f"{key}: {daq.PhyPiConfDict[key]}")
-
     daq.run()
