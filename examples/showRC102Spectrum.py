@@ -55,16 +55,16 @@ if 'ChanUnits' not in confdict:
     confdict['ChanUnits'] = device.ChanUnits
 if 'ChanNams' not in confdict:
     confdict['ChanNams'] = device.ChanNams
-    
+
 if 'DisplayModule' not in confdict:
     if confdict['show_spectrum']:
-       confdict['DisplayModule'] = 'DataSpectrum'
+        confdict['DisplayModule'] = 'DataSpectrum'
     else:
-       confdict['DisplayModule'] = 'DataLogger'
+        confdict['DisplayModule'] = 'DataLogger'
 
 if 'Interval' not in confdict:
     interval = 1.
-    confdict['Interval'] = interval 
+    confdict['Interval'] = interval
 else:
     interval = confdict['Interval']
 
