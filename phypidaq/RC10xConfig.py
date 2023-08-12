@@ -24,6 +24,7 @@ from radiacode import RadiaCode
 
 cname = "RC10xConfig"
 
+
 class RC10xConfig():
     """CsJ(Tl) Gamma Detector RadiaCode 101/102"""
 
@@ -51,8 +52,8 @@ class RC10xConfig():
             # full spectrum requested
             self.NChannels = self.NBins
             self.ChanUnits = ['#']
-            self.ChanNams =  ['counts']
-            self.ChanLims = [ [0, 100]]
+            self.ChanNams = ['counts']
+            self.ChanLims = [[0, 100]]
             # displaying a spectrum needs extara data for x-axis
             self.xName = 'Energy'
             self.xUnit = 'keV'
@@ -60,14 +61,14 @@ class RC10xConfig():
             # only count rate and dose from deposited Energy
             self.NChannels = 2
             self.ChanUnits = [' ', 'µGy/h']
-            self.ChanNams =  ['counts', 'dose', 'entries']
-            self.ChanLims = [ [0., 30.], [0., 30./60.]]
+            self.ChanNams = ['counts', 'dose', 'entries']
+            self.ChanLims = [[0., 30.], [0., 30./60.]]
 
         # some constants
         rho_CsJ = 4.51                 # density of CsJ in g/cm^3
         m_sensor = rho_CsJ * 1e-3      # Volume is 1 cm^3, mass in kg
         keV2J = 1.602e-16
-        self.depE2dose = keV2J * 3600 * 1e6 / m_sensor # dose rate in µGy/h
+        self.depE2dose = keV2J * 3600 * 1e6 / m_sensor  # dose rate in µGy/h
 
         # RC102 delivers accumulated counts, prepare array for previous readings
         self.counts0 = np.zeros(self.NBins)
@@ -77,7 +78,6 @@ class RC10xConfig():
         self.Chan2E = [-5.7, 2.38, 0.00048]
         self.BinCenters = self.Chan2E[0]+self.Chan2E[1]*self.Channels +\
                         self.Chan2E[2]*self.Channels*self.Channels
-
 
     def init(self):
         """Initialize device and data processing"""
@@ -96,9 +96,8 @@ class RC10xConfig():
         # get calibration constants from device
         self.Channels = np.asarray(range(self.NBins))+0.5
         self.Chan2E = self.rc.energy_calib()
-        self.BinCenters = self.Chan2E[0]+self.Chan2E[1]*self.Channels +\
+        self.BinCenters = self.Chan2E[0]+self.Chan2E[1]*self.Channels + \
                         self.Chan2E[2]*self.Channels*self.Channels
-
 
     def acquireData(self, buf):
         """provide data in user-supplied buffer"""
@@ -110,7 +109,7 @@ class RC10xConfig():
         # number of counts
         Ncounts = np.sum(counts)
         # dose in µGy/h = µJ/(kg*h)
-        deposited_energy = np.sum(counts*self.BinCenters) # in keV
+        deposited_energy = np.sum(counts*self.BinCenters)  # in keV
         dose = deposited_energy * self.depE2dose
         # deliver data
         if self.show_spectrum:

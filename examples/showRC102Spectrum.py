@@ -96,7 +96,7 @@ print(f'   {time.asctime(time.gmtime(T0))} script {sys.argv[0]} starting' +
 while True:
     device.acquireData(dat)
     dT = time.time() - T0
-    if len(dat) <=2:
+    if len(dat) <= 2:
         print(f'    active: {dT:.1f} s   counts: {dat[0]:.0f}   dose: {dat[1]:.3f}',
               end='          \r')
     display.showData(dat[: NChannels])
