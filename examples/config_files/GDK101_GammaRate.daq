@@ -19,21 +19,21 @@ Title: 'Gamma Ray Dose'
 # translate to detected gamma rate in Hz
 #Title: 'Gamma Rate'
 ChanLabels: ['Rate', 'Rate']        # names and units for channels 
-ChanLimits: [[0., 0.6],[0., 0.6]]   # range
 ChanColors: [darkblue, darkgreen] # channel colours for display
 
 # in Hz
 #ChanUnits: ['Hz', 'Hz']     # unit(s)
+ChanLimits: [[0., 0.4],[0., 0.4]]   # range
 #ChanCalib:
-# - 0.12
-# - 0.12
+# - 0.138889
+# - 0.138889
 
 # in Counts per Minute
-ChanUnits: ['cpm', 'cpm']     # unit(s)
+ChanUnits: ['cpm', 'cpm']         # unit(s)
+ChanLimits: [[0., 24.],[0., 24.]] # range
 ChanCalib:
- - 7.2
- - 7.2
-
+ - 8.33333
+ - 8.33333
 
 Interval: 60.                 # logging interval 
 startActive: true             # start in "active" mode
