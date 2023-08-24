@@ -23,7 +23,7 @@ ChanColors: [darkblue, darkgreen] # channel colours for display
 
 # in Hz
 #ChanUnits: ['Hz', 'Hz']     # unit(s)
-ChanLimits: [[0., 0.4],[0., 0.4]]   # range
+#ChanLimits: [[0., 0.4],[0., 0.4]]   # range
 #ChanCalib:
 # - 0.138889
 # - 0.138889
