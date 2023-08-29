@@ -47,7 +47,7 @@ class DataSpectrum(object):
     def initgraph(self):
         fig = plt.figure("Gamma Spectrum", figsize=(5.0, 6.0))
         fig.suptitle("Spectrum " + time.asctime(), size="large", color="b")
-        fig.subplots_adjust(left=0.12, bottom=0.1, right=0.95, top=0.85, wspace=None, hspace=0.25)
+        fig.subplots_adjust(left=0.12, bottom=0.1, right=0.95, top=0.85, wspace=None, hspace=0.03)
         gs = fig.add_gridspec(nrows=4, ncols=1)
         # define subplots
         self.axE = fig.add_subplot(gs[:-1, :])
@@ -55,6 +55,7 @@ class DataSpectrum(object):
         self.axE.set_xlim(0.0, self.xValues[1023])
         self.axE.set_ylim(0.5, self.ymax)
         plt.locator_params(axis="x", nbins=12)
+        self.axE.set_xticklabels([])  # no labels
         self.axE.grid(linestyle="dotted", which="both")
         self.axE.set_yscale("log")
         # a second x-axis for channels
@@ -81,16 +82,24 @@ class DataSpectrum(object):
         (self.line_diff,) = self.axEdiff.plot([1], [0.5])
         self.line_diff.set_xdata(self.xValues)
 
-        self.animtxt = self.axE.text(
+        self.animtxtE = self.axE.text(
             0.66,
-            0.8,
+            0.9,
             "     ",
             transform=self.axE.transAxes,
             color="darkblue",
             # backgroundcolor='white',
             alpha=0.7,
         )
-        return (self.line, self.line_diff, self.animtxt)
+        self.animtxt_diff = self.axEdiff.text(
+            0.66,
+            0.66,
+            "   diff  ",
+            transform=self.axEdiff.transAxes,
+            color="darkblue",
+            # backgroundcolor='white', alpha=0.7,
+        )
+        return (self.line, self.line_diff, self.animtxtE, self.animtxt_diff)
 
     def __call__(self, data):
         if data is not None:
@@ -99,10 +108,10 @@ class DataSpectrum(object):
             self.cumulative_counts += dat
             self.line.set_ydata(self.cumulative_counts)
             self.line_diff.set_ydata(dat)
+            rate = np.sum(dat) / self.dT
             Ntot = np.sum(self.cumulative_counts)
-            rate = np.sum(dat)
-            dose = np.sum(self.cumulative_counts * self.xValues)
-            self.animtxt.set_text(
-                f"counts: {Ntot:.5g} \n" f"rate:   {rate:.3g} Hz\n" + f"total:  {dose:.4g} {self.xUnit}"
-            )
-        return (self.line, self.line_diff, self.animtxt)
+            Sum_x = np.sum(self.cumulative_counts * self.xValues)
+            sum_x = np.sum(dat * self.xValues) / self.dT
+            self.animtxtE.set_text(f"#: {Ntot:.5g} \n" + f"$\Sigma_x$:  {Sum_x:.4g} {self.xUnit}")
+            self.animtxt_diff.set_text(f"rate:   {rate:.3g} Hz\n" + f"$\Sigma_x$:  {sum_x:.4g} {self.xUnit}/s")
+        return (self.line, self.line_diff, self.animtxtE, self.animtxt_diff)
