@@ -112,6 +112,6 @@ class DataSpectrum(object):
             Ntot = np.sum(self.cumulative_counts)
             Sum_x = np.sum(self.cumulative_counts * self.xValues)
             sum_x = np.sum(dat * self.xValues) / self.dT
-            self.animtxtE.set_text(f"#: {Ntot:.5g} \n" + f"$\Sigma_x$:  {Sum_x:.4g} {self.xUnit}")
-            self.animtxt_diff.set_text(f"rate:   {rate:.3g} Hz\n" + f"$\Sigma_x$:  {sum_x:.4g} {self.xUnit}/s")
+            self.animtxtE.set_text(f"#: {Ntot:.5g} \n" + f"$\\Sigma_x$:  {Sum_x:.4g} {self.xUnit}")
+            self.animtxt_diff.set_text(f"rate:   {rate:.3g} Hz\n" + f"$\\Sigma_x$:  {sum_x:.4g} {self.xUnit}/s")
         return (self.line, self.line_diff, self.animtxtE, self.animtxt_diff)
