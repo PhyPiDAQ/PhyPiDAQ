@@ -56,7 +56,7 @@ class RC10xConfig:
             self.xUnit = "keV"
         else:
             # only count rate and dose from deposited Energy
-            self.NChannels = 2
+            self.NChannels = 2 if "NChannels" not in self.confdict else self.confdict["NChannels"]
             self.ChanUnits = [" ", "µGy/h"]
             self.ChanNams = ["counts", "dose", "entries"]
             self.ChanLims = [[0.0, 30.0], [0.0, 30.0 / 60.0]]
