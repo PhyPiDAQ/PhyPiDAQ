@@ -98,8 +98,14 @@ A list of all programs, classes, configuration files and examples is listed in t
 - `phypidaq/DataGraph`  
     general display module for data as bar graphs, history plots and xy-graphs
 
-- `phypidaq/DataRecorde`  
+- `phypidaq/DataRecorder`  
     store data in CSV format
+    
+- `phypidaq/DataSpectrum`  
+    Class to display spektra from Radiacode102 Gamma Spectrometer  
+
+- `phypidaq/DisplayPoissonEvent`
+    Class to display a pulse corresponding to a single Poisson Event 
 
 - `phypidaq/pulseGPIO`
     class to set or pulse GPIO pin of raspberry py
@@ -238,3 +244,5 @@ A list of all programs, classes, configuration files and examples is listed in t
     generation and display of simulated data  
 - `examples/config_files/ReplayData.daq`
     data from file (for demo mode)
+- `examples/poissonFlash.py`
+    generate random events according to a Poisson process and display as a flash 

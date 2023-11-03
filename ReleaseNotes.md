@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- DisplayPoissonEvent
 - Gamma Spectrometer RadiaCode 102
 - Histogram display DataSpectrum.py
 - DevelopersGuide.md

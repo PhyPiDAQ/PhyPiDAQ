@@ -704,7 +704,11 @@ z. B. dem Steckernetzteil des Raspberry Pi.
     Klasse zur Anzeige von Datenverlauf und xy-Diagrammen
 - `phypidaq/DataGraphs`  
     allgemeine Klasse zur Anzeige von Balkendiagrammen, Datenverläufen und xy-Diagrammen
-- `phypidaq/DataRecorde`  
+- `phypidaq/DataSpectrum`  
+    Klasse zur Anzeige von Spektren (für Gamma-Spektrometer Radiacode102)  
+- `phypidaq/DisplayPoissonEvent`
+    Klasse zur Anzeige eines Pulses entsprechend einem einzelnen Poisson-Ereignisses
+- `phypidaq/DataRecorder`  
     Speichern von Daten im CSV-Format
 - `phypidaq/pulseGPIO`
     Setzen oder Pulsen eines GPIO-Pins des Raspberry Pi
@@ -785,9 +789,12 @@ z. B. dem Steckernetzteil des Raspberry Pi.
 - `examples/readPipe.py`  
     liest Daten aus einer Linux-Pipe (*run_phypi.py* mit der Option DAQfifo:  \<name of pipe \>)
 
-- `examples/set_MCP4725.py`    
-
+- `examples/set_MCP4725.py`  
     Beispiel zum Setzen des Spannungswerts für Analog-Digital-Wandler MCP4725
+
+- `examples/poissonFlash.py`
+    erzeugt zufällige Poisson-Ereignisse, Anzeige als kurzer Blitz sowie als History-Graph
+
 
 ### Konfigurationsdateien für *run_phypi.py*
 
