@@ -35,10 +35,13 @@ import random
 from phypidaq.DisplayPoissonEvent import *
 
 
+# ---- helper functions -------
+
+
 def showFlash(mpQ, rate, mean):
     """Background process to show Poisson event as a flashing circle
 
-    relies on class DisPlayPoissionEvent
+    relies on class DisplayPoissionEvent
     """
     flasher = DisplayPoissonEvent(mpQ, rate, mean)
     flasher()
@@ -64,12 +67,17 @@ def poissonEventGenerator(mpQ, rate):
         print("  lag: %.1f ms " % ((dt_wait - dt_cor) * 1000), end='\r')
 
 
-# get command line  parameters
+# ---- end helper functions
+
 if __name__ == "__main__":  # ------------------------------------------------
     if sys.platform.startswith('win'):
         # On Windows calling this function is necessary.
         mp.freeze_support()
 
+    # set data source
+    eventSource = poissonEventGenerator
+
+    # get command line  parameters
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('-r', '--rate', type=float, default=1.0, help='average event rate in Hz')
     parser.add_argument('-m', '--mean', type=float, default=4.0, help='average Poisson mean for history ')
@@ -105,8 +113,8 @@ if __name__ == "__main__":  # ------------------------------------------------
     # generator process, must be last in list !
     procs.append(
         mp.Process(
-            name="poissonEventGenerator",
-            target=poissonEventGenerator,
+            name="eventSource",
+            target=eventSource,
             args=(
                 generatorQ,
                 rate,
