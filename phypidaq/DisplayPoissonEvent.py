@@ -68,6 +68,7 @@ class DisplayPoissonEvent:
 
         self.tflash = max(self.tau / 20, 0.050)  # flash time for object indicating event occurance
         #       self.flash_color = '#ffff80' # yellowish
+        self.title_color = "goldenrod"
         self.flash_color = '#AFCFFF'  # blueish
         self.bg_color = 'black'
 
@@ -75,7 +76,7 @@ class DisplayPoissonEvent:
         self.fig = plt.figure("PoissonFlash 𝜏=%.3g" % (self.tau), figsize=(6.0, 8.0))
         self.fig.canvas.mpl_connect('close_event', self.on_mpl_window_closed)
         self.mpl_active = True
-        self.fig.suptitle('Poisson Statistics   ' + time.asctime(), size='large', color='y')
+        self.fig.suptitle('Poisson Statistics', size='x-large', color=self.title_color)
         self.fig.subplots_adjust(left=0.1, bottom=0.1, right=0.95, top=0.95, wspace=None, hspace=0.15)
         gs = self.fig.add_gridspec(nrows=4, ncols=1)
         # 1st graph for "Poisson Flash"
@@ -132,7 +133,7 @@ class DisplayPoissonEvent:
 
         self.xplt = np.linspace(-self.Npoints * self.interval, 0.0, self.Npoints)
         self.counts = np.zeros(self.Npoints) - 1.0
-        (self.hline,) = self.axrate.plot(self.xplt, self.counts, '.--', markersize=6, color="ivory")
+        (self.hline,) = self.axrate.plot(self.xplt, self.counts, '.--', lw=1, markersize=6, color="ivory", mec="orange")
         plt.ion()
         plt.show()
 
