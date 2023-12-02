@@ -73,6 +73,8 @@ class DisplayPoissonEvent:
 
         # initialize an (interactive) figure
         self.fig = plt.figure("PoissonFlash 𝜏=%.3g" % (self.tau), figsize=(6.0, 8.0))
+        self.fig.canvas.mpl_connect('close_event', self.on_mpl_window_closed)
+        self.mpl_active = True
         self.fig.suptitle('Poisson Statistics   ' + time.asctime(), size='large', color='y')
         self.fig.subplots_adjust(left=0.1, bottom=0.1, right=0.95, top=0.95, wspace=None, hspace=0.15)
         gs = self.fig.add_gridspec(nrows=4, ncols=1)
@@ -134,13 +136,17 @@ class DisplayPoissonEvent:
         plt.ion()
         plt.show()
 
+    def on_mpl_window_closed(self, ax):
+        # detect when matplotlib window is closed
+        self.mpl_active = False
+        
     def __call__(self):
         """Flash object"""
         N = 0
         Nlast = 0
         lastbin = 0
         T0 = time.time()
-        while True:
+        while self.mpl_active:
             t = self.mpQ.get()
             if t >= 0:
                 # show colored object

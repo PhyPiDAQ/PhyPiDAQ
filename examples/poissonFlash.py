@@ -133,13 +133,18 @@ if __name__ == "__main__":  # ------------------------------------------------
     start_time = time.time()
     t = 0
     try:
-        while t < run_time:
+        while t < run_time and procs[0].is_alive():
             t = generatorQ.get()
             flasherQ.put(t)
             times[icount % NHistory] = t
             icount += 1
         procs[-1].terminate()  # terminate generator
-        a = input(15 * ' ' + "!!! time over, type <ret> to end ==> ")
+        if t > run_time:    
+          a = input(15 * ' ' + "!!! time over, type <ret> to end ==> ")
+        else: 
+          print(15 * ' ' + "window closed, exiting")
+
+          
 
     except KeyboardInterrupt:
         print("\n keyboard interrupt - ending   ")
