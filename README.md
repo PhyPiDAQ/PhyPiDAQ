@@ -58,6 +58,7 @@ The following requirements need to be met to work
 - Python 3.6 runtime or newer
 - `git`-package installed
 - If you want to use all supported sensors, you need a Raspberry Pi
+  running under the legacy operating system Debian 11 (bullseye).
 
 1. Open a terminal and go to the folder where the software should be installed.
 2. Download the latest release using the following command

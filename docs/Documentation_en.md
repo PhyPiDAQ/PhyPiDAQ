@@ -206,6 +206,9 @@ Examples of other devices like the analog-to-digital converter MCP3008, of rate 
 
 **Get PhyPiDAQ code and dependencies**
 
+Attention, the installation procedure described here requires the legacy version
+(Debian 11, bullseye) to be installed on your Raspberry Pi!
+
 After setting up your Raspberry pi with the most recent version of the Debian Release *stretch*, enter the following commands in the console window:
 
 ```bash

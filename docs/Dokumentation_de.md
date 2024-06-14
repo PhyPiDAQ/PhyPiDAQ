@@ -242,6 +242,9 @@ Beispiele für andere Geräte, wie den Analog-Digital-Wandler MCP3008, für Rate
 
 **Beziehen des PhyPiDAQ Codes und einfache Installation**
 
+Achtung, diese Anleitung setzt voraus, dass auf dem Raspberry Pi
+die "legacy Version (Debian 11, bullseye) des Betriebssystems installiert ist !
+
 Bitte beachten Sie , dass Ihr Raspberry Pi für die folgenden Schritte mit dem Internet verbunden sein muss. Mit dem Befehl *git* lassen sich alle Dateien des Pakets `PhyPiDAQ` herunter laden. 
 Zur Installation von *git* geben Sie nach dem Einrichten Ihres Raspberry Pi mit dem aktuellen Debian-Release *stretch* im Konsolenfenster folgenden Befehl ein : 
 
