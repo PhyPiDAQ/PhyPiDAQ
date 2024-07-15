@@ -17,7 +17,7 @@
 # Import version info
 from ._version_info import *
 # and set version
-_version_suffix = 'beta'  # for suffixes such as 'rc' or 'beta' or 'alpha'
+_version_suffix = 'b1'  # for suffixes such as 'rc' or 'beta' or 'alpha'
 __version__ = _version_info._get_version_string()
 __version__ += _version_suffix
 
@@ -30,4 +30,4 @@ __all__ = ["helpers", "Display", "DataLogger", "DataRecorder", "DataGraphs",
            "TCS34725Config", "AS7262Config", "AS7265xConfig", "GDK101Config",
            "MLX90393Config", "BME280Config", "BMP280Config", "BME680Config",
            "BMP388Config", "TSL45315Config", "RC10xConfig" , "DataSpectrum",
-           "DisplayPoissonEvent", ]
+           "DisplayPoissonEvent", "PL1000Config", ]

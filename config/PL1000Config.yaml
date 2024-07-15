@@ -1,0 +1,7 @@
+# example of a configuration file for PicoLog 1000 Series data logger
+
+DAQModule: PL1000Config         
+
+# channel configuration
+Channels: [1, 2]
+number_of_samples: 100   # samples/data-point with 1MHz sample rate
