@@ -1,13 +1,13 @@
 """
 .. module:: _version_info
    :platform: python 3.6+
-   :synopsis: Version 0.7.1 of picodaq, rel. Apr. 28, 2018
+   :synopsis: Version 1.1.4 of picodaq, rel. July 2024
 
 .. moduleauthor:: Guenter Quast <guenter.quast@online.de>
 """
 
 major = 1
-minor = 3
+minor = 4
 revision = 0
 
 
