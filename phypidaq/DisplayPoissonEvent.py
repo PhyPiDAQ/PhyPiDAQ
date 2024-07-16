@@ -1,5 +1,4 @@
 import numpy as np
-import time
 from scipy.special import loggamma
 from scipy.optimize import newton
 import matplotlib as mpl
@@ -40,7 +39,7 @@ def Poisson_CI(lam, sigma=1.0):
     cp = newton(f, x0=lam + dl, x1=lam, args=(lam, dlL))
     try:  # may not converge for small lambda, as there is no intersection < lam
         cm = newton(f, x0=lam - dlm, x1=lam, args=(lam, dlL))
-    except Exception as e:
+    except Exception:
         cm = 0.0
     if (cp - cm) < lam / 100.0:  # found same intersection,
         cm = 0.0  # set 1st one to 0.
