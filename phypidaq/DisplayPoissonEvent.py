@@ -116,7 +116,7 @@ class DisplayPoissonEvent:
         _ = self.axrate.text(
             0.02,
             0.88,
-            "$\Delta$t=%2gs  $\Rightarrow$  mean=%.2f" % (self.mean / self.rate, self.mean),
+            r"$\Delta$t=%2gs  $\Rightarrow$  mean=%.2f" % (self.mean / self.rate, self.mean),
             transform=self.axrate.transAxes,
             color="orangered",
         )
