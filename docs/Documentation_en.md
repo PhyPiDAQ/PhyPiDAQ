@@ -44,6 +44,7 @@ DeviceFile: config/ADS1115Config.yaml    # 16 bit ADC, I2C bus
 #DeviceFile: config/MCP3208Config.yaml   # 12 bit ADC, SPI bus
 #DeviceFile: config/groveADCConfig.yaml  # 12 bit ADC on grove RPI shield
 #DeviceFile: config/PSConfig.yaml        # PicoTechnology USB scope 
+#DeviceFile: config/PL1000Config.yaml     # PicoTechnology USB series 1000 data logger 
 #DeviceFile: config/MAX31865Config.yaml  # Pt 100 sensor
 #DeviceFile: config/GPIOCount.yaml       # frequency count
 #DeviceFile: config/DS18B20Config.yaml   # digital temperature sensor

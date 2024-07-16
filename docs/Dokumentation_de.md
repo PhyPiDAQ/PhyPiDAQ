@@ -78,6 +78,7 @@ DeviceFile: config/ADS1115Config.yaml    # 16 bit ADC, I2C bus
 #DeviceFile: config/MCP3208Config.yaml   # 12 bit ADC, SPI-Bus
 #DeviceFile: config/groveADCConfig.yaml  # 12 bit ADC auf Grove RPI Shield
 #DeviceFile: config/PSConfig.yaml        # PicoTechnology USB-Oszilloskop 
+#DeviceFile: config/PL1000Config.yaml    # PicoTechnology series 1000 USB Datenlogger 
 #DeviceFile: config/MAX31865Config.yaml  # pt100 Temperatursensor
 #DeviceFile: config/GPIOCount.yaml       # Frequenzzaehler
 #DeviceFile: config/DS18B20Config.yaml   # digitaler Temperatursensor
@@ -349,8 +350,6 @@ sudo pip3 install installlibs/tgz/*.tar.gz # python packages
 sudo dpkg -i installlibs/picoscopelibs/*.deb # picoscope 
 sudo usermod -a -G tty pi # grant acces to USB for user pi
 ```
-
-
 
 Die Treiber für PicoTech-Oszilloskope können auch von der Webseite des Herstellers bezogen
 werden; das picotech-raspbian-Repository kann dazu hinzugefügt werden:
@@ -685,6 +684,8 @@ z. B. dem Steckernetzteil des Raspberry Pi.
     Klasse für den Widerstand-nach-digial-Wandler MAX31865
 - `phypidaq/PSConfig.py`  
     Klasse für PicoScope USB-Oszilloskope
+- `phypidaq/PL1000Config.py`  
+    Klasse für PicoLog 1000 series USB data logger
 - `phypidaq/VL53L1XConfig`  
     Klasse zur Ansteuerung des Abstandssensors VL53L1X 
 - `phypidaq/TCS34725Config`  

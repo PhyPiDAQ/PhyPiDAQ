@@ -65,6 +65,9 @@ A list of all programs, classes, configuration files and examples is listed in t
 - `phypidaq/PSConfig.py`  
     class for PicoScope USB oscilloscopes
 
+- `phypidaq/PL1000Config.py`  
+    class for PicoTech PicoLog Series 1000 USB data logger
+
 - `phypidaq/VL53LxConfig`  
     class for VL53L1X distance sensor
 
@@ -92,7 +95,7 @@ A list of all programs, classes, configuration files and examples is listed in t
 - `phypidaq/Display`  
     interface and background-process handling data visualisation
 
-- `phypidaq/DataLogge`  
+- `phypidaq/DataLogger`  
     class for display of data histories and xy diagrams
 
 - `phypidaq/DataGraph`  
@@ -148,6 +151,7 @@ A list of all programs, classes, configuration files and examples is listed in t
 - `config/GDK101.yaml` FTLAB GDK101 gamma-ray detector
 - `config/RC10x.yaml` RadiaCode gamma-ray spectrometer
 - `config/PSConfig.yaml`  PicoScope usb oscilloscope
+- `config/PL1000Config.yaml`  PicoTech PicoLog series 1000 USB data logger
 
 ### Examples
 

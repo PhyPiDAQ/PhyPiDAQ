@@ -118,6 +118,7 @@ of quantities measured by each sensor.
 - TSL45315 Luminance sensor
 - GDK101 gamma-ray detector
 - PicoScope USB oscilloscopes
+- PicoLog 100 Sereis USB data loggers
 - rate measurements via GPIO pins
 
 ### Legacy support
