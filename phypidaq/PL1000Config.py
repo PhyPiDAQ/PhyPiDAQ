@@ -1,6 +1,3 @@
-import numpy as np
-import sys
-
 # import relevant pieces from picodaqa ...
 from picodaqa.picolog1000Config import picolog1000config
 
@@ -11,7 +8,7 @@ class PL1000Config(object):
     def __init__(self, confdict=None):
         if confdict is None:
             self.confdict = {}
-            print('No configuration specified - using channel 1')
+            print("No configuration specified - using channel 1")
         else:
             self.confdict = confdict
 
@@ -22,10 +19,9 @@ class PL1000Config(object):
 
         # collect/set configuration parameters
         self.NChannels = self.PL.NChannels
-        self.ChanNams = ["ch"+str(self.PL.channels[i]) for i in range(self.NChannels)]
-        self.ChanLims = [[0., 2500.]] * self.NChannels
-        self.ChanUnits = ['mV'] * self.NChannels
-
+        self.ChanNams = ["ch" + str(self.PL.channels[i]) for i in range(self.NChannels)]
+        self.ChanLims = [[0.0, 2500.0]] * self.NChannels
+        self.ChanUnits = ["mV"] * self.NChannels
 
     def acquireData(self, buf):
         # read data from PicoLog

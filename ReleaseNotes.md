@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## recent additions
 
-- PL1000Config for PicoLog Series 1000 USB data loggers 
+- PL1000Config for PicoLog Series 1000 USB data loggers
 - DisplayPoissonEvent
 - Gamma Spectrometer RadiaCode 102
 - Histogram display DataSpectrum.py
