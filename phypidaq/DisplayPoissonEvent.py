@@ -3,12 +3,10 @@ import time
 from scipy.special import loggamma
 from scipy.optimize import newton
 import matplotlib as mpl
-
-mpl.use("Qt5Agg")
-
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
+mpl.use("Qt5Agg")
 plt.style.use("dark_background")  # dark canvas background
 
 
@@ -42,10 +40,10 @@ def Poisson_CI(lam, sigma=1.0):
     cp = newton(f, x0=lam + dl, x1=lam, args=(lam, dlL))
     try:  # may not converge for small lambda, as there is no intersection < lam
         cm = newton(f, x0=lam - dlm, x1=lam, args=(lam, dlL))
-    except:
+    except Exception as e:
         cm = 0.0
     if (cp - cm) < lam / 100.0:  # found same intersection,
-        cm = 0.0  #  set 1st one to 0.
+        cm = 0.0  # set 1st one to 0.
     return cm, cp
 
 
@@ -144,9 +142,7 @@ class DisplayPoissonEvent:
     def __call__(self):
         """Flash object"""
         N = 0
-        Nlast = 0
         lastbin = 0
-        T0 = time.time()
         while self.mpl_active:
             t = self.mpQ.get()
             if t >= 0:
@@ -167,7 +163,7 @@ class DisplayPoissonEvent:
                 hbin = int(t / self.interval) % self.Npoints
                 if hbin != lastbin:
                     k = lastbin % self.Npoints
-                    self.hline.set_ydata(np.concatenate((self.counts[k + 1 :], self.counts[: k + 1])))
+                    self.hline.set_ydata(np.concatenate((self.counts[k + 1:], self.counts[: k + 1])))
                     lastbin = hbin
                     self.counts[hbin] = 0  # initialize counter for next bin
                 self.counts[hbin] += 1
