@@ -2,15 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-### Added
+## recent additions
 
+- PL1000Config for PicoLog Series 1000 USB data loggers 
 - DisplayPoissonEvent
 - Gamma Spectrometer RadiaCode 102
 - Histogram display DataSpectrum.py
 - DevelopersGuide.md
 
 ## [1.3.0] - 2023-05-22
-
 
 - Documentation about `flake8` usage
 - `util` submodule, starting with path logic
