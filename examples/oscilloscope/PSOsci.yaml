@@ -14,10 +14,9 @@ Nsamples: 400
 
 # trigger
 
-
 trgActive: true  # true to activate
 trgChan: A
-trgThr: 1.0
+trgThr: 0.25
 trgTyp: Rising
 trgTO: 1000  # set short time-out for A series
           # vlaues < 4 lead to readout instabilities
