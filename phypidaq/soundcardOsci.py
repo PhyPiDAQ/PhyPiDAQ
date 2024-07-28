@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 
 class SoundCardOsci:
-    """configuration and interface for reading  wave forms from sound-card
+    """configuration and interface for reading wave forms from sound-card
 
     requirements: pyaudio package
 
@@ -26,27 +26,17 @@ class SoundCardOsci:
         self.verbose = verbose
         # read configuration dictionary
         self.confdict = {} if confdict is None else confdict
-        self.channels = (
-            [1] if "channels" not in self.confdict else self.confdict["channels"]
-        )
-        self.NSamples = (
-            1024
-            if "number_of_samples" not in self.confdict
-            else self.confdict["number_of_samples"]
-        )
+        self.channels = [1] if "channels" not in self.confdict else self.confdict["channels"]
+        self.NSamples = 1024 if "number_of_samples" not in self.confdict else self.confdict["number_of_samples"]
         self.NChannels = len(self.channels)
         if self.verbose:
             print(f"{self.NChannels} active channels: {self.SCchannels}")
-        self.sampling_rate = (
-            44100 if "sampling_rate" not in confdict else confdict["sampling_rate"]
-        )
+        self.sampling_rate = 44100 if "sampling_rate" not in confdict else confdict["sampling_rate"]
         # trigger config
         self.trgActive = 0 if "trgActive" not in confdict else confdict["trgActive"]
         self.trgChan = 1 if "trgChan" not in confdict else confdict["trgChan"]
         self.trgFalling = 0 if "trgFalling" not in confdict else confdict["trgFalling"]
-        self.trgThreshold = (
-            100 if "trgThreshold" not in confdict else confdict["trgThreshold"]
-        )
+        self.trgThreshold = 100 if "trgThreshold" not in confdict else confdict["trgThreshold"]
         # set reasonable default for format
         self.sample_format = pyaudio.paInt16  # 16 bits per sample
         self.maxADC = 2**15  # for 16 bit soundcard
@@ -101,31 +91,21 @@ class SoundCardOsci:
 class scOsciDisplay:
     """simple, animated display for sound card data
 
-       fast blitting is used to  only redraw the wave form 
+    fast blitting is used to only redraw the waveform line(s)
     """
 
     def __init__(self, confdict=None):
         self.confdict = {} if confdict is None else confdict
-        self.channels = (
-            [1] if "channels" not in self.confdict else self.confdict["channels"]
-        )
-        self.NSamples = (
-            1024
-            if "number_of_samples" not in self.confdict
-            else self.confdict["number_of_samples"]
-        )
+        self.channels = [1] if "channels" not in self.confdict else self.confdict["channels"]
+        self.NSamples = 1024 if "number_of_samples" not in self.confdict else self.confdict["number_of_samples"]
         self.NChannels = len(self.channels)
-        self.sampling_rate = (
-            44100 if "sampling_rate" not in confdict else confdict["sampling_rate"]
-        )
+        self.sampling_rate = 44100 if "sampling_rate" not in confdict else confdict["sampling_rate"]
         self.max = 2**15 if "range" not in confdict else confdict["range"]
         # create a figure
         self.fig = plt.figure("Audio", figsize=(8.0, 6.0))
         self.fig.suptitle("sound card data")
         self.ax = self.fig.add_subplot(111)
-        self.fig.subplots_adjust(
-            left=0.15, bottom=0.12, right=0.98, top=0.90, wspace=None, hspace=0.1
-        )  #
+        self.fig.subplots_adjust(left=0.15, bottom=0.12, right=0.98, top=0.90, wspace=None, hspace=0.1)  #
         self.ax.grid(linestyle="dotted", color="blue")
         self.ax.set_ylabel("aplitude (counts)")
         self.ax.set_xlabel("time (ms)")
@@ -140,7 +120,7 @@ class scOsciDisplay:
         self.bg = self.fig.canvas.copy_from_bbox(self.fig.bbox)
         self.ax.draw_artist(self.pline)
         if self.NChannels == 2:
-                self.ax.draw_artist(self.pline2)
+            self.ax.draw_artist(self.pline2)
 
     def __call__(self, data):
         # update line data and redraw
