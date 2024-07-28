@@ -672,8 +672,7 @@ z. B. dem Steckernetzteil des Raspberry Pi.
 - `phypidaq/DS18B20Config.py`  
     Klasse zur Handhabung des digitalen Thermometers DS18B20
 - `phypidaq/BMPx80Config.py`  
-    Klasse zur Handhabung des digitalen Temperatur- und Drucksensors BMP180/280
-    oder BME280
+    Klasse zur Handhabung des digitalen Temperatur- und Drucksensors BMP180/280 oder BME280
 - `phypidaq/MMA8451Config.py`  
     Klasse zur Handhabung des digitalen Beschleunigungssensors MMA8451
 - `phypidaq/GPIOCount.py`   
@@ -684,6 +683,8 @@ z. B. dem Steckernetzteil des Raspberry Pi.
     Klasse für den Widerstand-nach-digial-Wandler MAX31865
 - `phypidaq/PSConfig.py`  
     Klasse für PicoScope USB-Oszilloskope
+- `phypidaq/soundcardOsci.py`  
+    Klasse zur Aufzweichnung von Wellenformen mit der Soundkarte
 - `phypidaq/PL1000Config.py`  
     Klasse für PicoLog 1000 series USB data logger
 - `phypidaq/VL53L1XConfig`  
@@ -826,3 +827,7 @@ z. B. dem Steckernetzteil des Raspberry Pi.
     Erzeugung und Anzeige von simulierten Daten 
 - `examples/ReplayData.daq`  
     Daten aus Datei (für Demo-Zwecke)
+- `examples/poissonFlash.py`
+    Zufallsereignisse entsprechend einem Poisson-Prozes und Anzeige als Blitz
+- `examples/oscilloscope/soundcardOsci.py`
+    Lesen und Anzeigen von Wellenformdaten von einer Soundkarte (Anwendunbeispiel für Klasse SouncCardOsci)

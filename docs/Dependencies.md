@@ -80,3 +80,7 @@ for data visualization:
 - numpy
   - Link: [https://numpy.org/](https://numpy.org/)
   - Scientific paper: [https://doi.org/10.1038/s41586-020-2649-2](https://doi.org/10.1038/s41586-020-2649-2)
+
+## Sound Card
+
+- pyaudio

@@ -120,6 +120,7 @@ of quantities measured by each sensor.
 - PicoScope USB oscilloscopes
 - PicoLog 100 Sereis USB data loggers
 - rate measurements via GPIO pins
+- wave form recording from soundcard
 
 ### Legacy support
 

@@ -65,6 +65,9 @@ A list of all programs, classes, configuration files and examples is listed in t
 - `phypidaq/PSConfig.py`  
     class for PicoScope USB oscilloscopes
 
+- `phypidaq/soundcardOsci.py`  
+    class for waveform recording from sound card
+
 - `phypidaq/PL1000Config.py`  
     class for PicoTech PicoLog Series 1000 USB data logger
 
@@ -250,3 +253,5 @@ A list of all programs, classes, configuration files and examples is listed in t
     data from file (for demo mode)
 - `examples/poissonFlash.py`
     generate random events according to a Poisson process and display as a flash 
+- `examples/oscilloscope/soundcardOsci.py`
+    read and display waveform data from soundcad (appliction example for class SouncCardOsci)
