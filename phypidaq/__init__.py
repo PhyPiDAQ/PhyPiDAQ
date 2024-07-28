@@ -30,4 +30,4 @@ __all__ = ["helpers", "Display", "DataLogger", "DataRecorder", "DataGraphs",
            "TCS34725Config", "AS7262Config", "AS7265xConfig", "GDK101Config",
            "MLX90393Config", "BME280Config", "BMP280Config", "BME680Config",
            "BMP388Config", "TSL45315Config", "RC10xConfig", "DataSpectrum",
-           "DisplayPoissonEvent", "PL1000Config", ]
+           "DisplayPoissonEvent", "PL1000Config", "soundcardOsci"]
