@@ -110,9 +110,10 @@ class scOsciDisplay:
         self.ax.set_ylabel("aplitude (counts)")
         self.ax.set_xlabel("time (ms)")
         tplt = (np.linspace(0, self.NSamples, self.NSamples) + 0.5) / self.sampling_rate
-        (self.pline,) = self.ax.plot(tplt, np.zeros(self.NSamples), animated=True)
+        self.iStep = int(self.NSamples/150)+1
+        (self.pline,) = self.ax.plot(tplt[::self.iStep], np.zeros(self.NSamples)[::self.iStep], animated=True)
         if self.NChannels == 2:
-            (self.pline2,) = self.ax.plot(tplt, np.zeros(self.NSamples), animated=True)
+            (self.pline2,) = self.ax.plot(tplt[::self.iStep], np.zeros(self.NSamples)[::self.iStep], animated=True)
         self.ax.set_ylim(-self.max, self.max)
         # plt.ion()
         plt.show(block=False)
@@ -125,10 +126,10 @@ class scOsciDisplay:
     def __call__(self, data):
         # update line data and redraw
         self.fig.canvas.restore_region(self.bg)
-        self.pline.set_ydata(data[0])
+        self.pline.set_ydata(data[0][::self.iStep])
         self.ax.draw_artist(self.pline)
         if self.NChannels == 2:
-            self.pline2.set_ydata(data[1])
+            self.pline2.set_ydata(data[1][::self.iStep])
             self.ax.draw_artist(self.pline2)
         self.fig.canvas.blit(self.fig.bbox)
         self.fig.canvas.flush_events()

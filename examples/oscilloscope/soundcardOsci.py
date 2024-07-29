@@ -8,9 +8,19 @@ application example for class SoundCardOsci
 """
 
 import time
-
+import threading
 from phypidaq.soundcardOsci import SoundCardOsci, scOsciDisplay
+from phypidaq.helpers import DAQwait
 
+
+def displayOsci():
+    t_lastupd= time.time()
+    wait_time= 0.1
+    while True:
+        count, data = scO()  # get data
+        if (time.time() - t_lastupd) > wait_time:
+            Display(data)  # show subset of data
+            t_lastupd = time.time()
 
 # set parameters
 sampling_rate = 48000  # 44100, 48000, 96000 or 192000
@@ -35,32 +45,35 @@ scO = SoundCardOsci(confdict=confd)
 scO.init()
 Display = scOsciDisplay(confdict=confd)
 
+osciThread = threading.Thread(target = displayOsci, args = (), daemon=True )
+
 # start data acquisition loop
+wait_time= 1. 
+wait = DAQwait(wait_time)
+n0 = 0
 t_start = time.time()
 t0 = t_start
-n0 = 0
+runtime = 0.0
 print("\n --> reading from Soundcard ...          <cntrlC to exit>")
 try:
-    runtime = 0.0
-    t_lastupd = 0.0
+    osciThread.start()
     while runtime < run_seconds:
-        count, data = scO()  # get data
+        wait()
+        # calculate trigger rate and update status display line
+        count = scO.event_count
         now = time.time()  # time stamp
         runtime = now - t_start
-        Display(data)  # show data
-        # update status display line
-        if runtime - t_lastupd > 1:
-            rate = (count - n0) / (now - t0)
-            n0 = count
-            t0 = now
-            t_lastupd = runtime
-            print(
-                f"active: {runtime:.1f}   triggers: {count}   rate: {rate:.1f} Hz        ",
-                end="\r",
-            )
+        rate = (count - n0) / (now - t0)
+        n0 = count
+        t0 = now
+        runtime 
+        print(f"active: {runtime:.1f}  triggers: {count}  rate: {rate:.1f} Hz",
+              10*' ', end="\r",)
+    # -- end while
     print("\n" + " *** time over - ending ...")
 except KeyboardInterrupt:
     print("\n" + " !!! keyboard interrupt - ending ...")
 finally:
     print("             closing Soundcard stream")
+    osciThread.terminate()
     scO.close()
