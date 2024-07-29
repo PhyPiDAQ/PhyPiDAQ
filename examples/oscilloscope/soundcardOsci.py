@@ -14,13 +14,14 @@ from phypidaq.helpers import DAQwait
 
 
 def displayOsci():
-    t_lastupd= time.time()
-    wait_time= 0.1
+    t_lastupd = time.time()
+    wait_time = 0.1
     while True:
         count, data = scO()  # get data
         if (time.time() - t_lastupd) > wait_time:
             Display(data)  # show subset of data
             t_lastupd = time.time()
+
 
 # set parameters
 sampling_rate = 48000  # 44100, 48000, 96000 or 192000
@@ -45,10 +46,10 @@ scO = SoundCardOsci(confdict=confd)
 scO.init()
 Display = scOsciDisplay(confdict=confd)
 
-osciThread = threading.Thread(target = displayOsci, args = (), daemon=True )
+osciThread = threading.Thread(target=displayOsci, args=(), daemon=True)
 
 # start data acquisition loop
-wait_time= 1. 
+wait_time = 1.0
 wait = DAQwait(wait_time)
 n0 = 0
 t_start = time.time()
@@ -66,9 +67,11 @@ try:
         rate = (count - n0) / (now - t0)
         n0 = count
         t0 = now
-        runtime 
-        print(f"active: {runtime:.1f}  triggers: {count}  rate: {rate:.1f} Hz",
-              10*' ', end="\r",)
+        print(
+            f"active: {runtime:.1f}  triggers: {count}  rate: {rate:.1f} Hz",
+            10 * " ",
+            end="\r",
+        )
     # -- end while
     print("\n" + " *** time over - ending ...")
 except KeyboardInterrupt:
