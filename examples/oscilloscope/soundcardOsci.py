@@ -13,18 +13,21 @@ from phypidaq.soundcardOsci import SoundCardOsci, scOsciDisplay
 from phypidaq.helpers import DAQwait
 
 
-def displayOsci():
+def runOsci():
     t_lastupd = time.time()
     wait_time = 0.1
-    while True:
-        count, data = scO()  # get data
-        if (time.time() - t_lastupd) > wait_time:
-            Display(data)  # show subset of data
-            t_lastupd = time.time()
+    while active:
+        try:
+            count, data = scO()  # get data
+            if (time.time() - t_lastupd) > wait_time:
+                Display(data)  # show subset of data
+                t_lastupd = time.time()
+        except Exception:
+            return
 
 
 # set parameters
-sampling_rate = 48000  # 44100, 48000, 96000 or 192000
+sampling_rate = 96000  # 44100, 48000, 96000 or 192000
 sample_size = 2048
 channels = 2  # 1 or 2
 display_range = 2**12  # maximum is 2**15 for 16bit sound card
@@ -46,7 +49,7 @@ scO = SoundCardOsci(confdict=confd)
 scO.init()
 Display = scOsciDisplay(confdict=confd)
 
-osciThread = threading.Thread(target=displayOsci, args=(), daemon=True)
+osciThread = threading.Thread(target=runOsci, args=(), daemon=True)
 
 # start data acquisition loop
 wait_time = 1.0
@@ -57,6 +60,7 @@ t0 = t_start
 runtime = 0.0
 print("\n --> reading from Soundcard ...          <cntrlC to exit>")
 try:
+    active = True
     osciThread.start()
     while runtime < run_seconds:
         wait()
@@ -78,5 +82,6 @@ except KeyboardInterrupt:
     print("\n" + " !!! keyboard interrupt - ending ...")
 finally:
     print("             closing Soundcard stream")
-    osciThread.terminate()
+    active = False
+    time.sleep(1.0)
     scO.close()
