@@ -9,12 +9,24 @@ application example for class SoundCardOsci
 
 import time
 import threading
+import multiprocessing as mp
 from phypidaq.soundcardOsci import SoundCardOsci, scOsciDisplay
 from phypidaq.helpers import DAQwait
+from phypidaq.DisplayPoissonEvent import DisplayPoissonEvent
+
+
+def showFlash(mpQ, interval):
+    """Background process to show Poisson event as a flashing circle
+
+    relies on class DisplayPoissionEvent
+    """
+    flasher = DisplayPoissonEvent(mpQ, interval=interval)
+    flasher()
 
 
 def runOsci():
-    t_lastupd = time.time()
+    t_start = time.time()
+    t_lastupd = t_start
     wait_time = 0.1
     while active:
         try:
@@ -22,9 +34,11 @@ def runOsci():
             if _d is None:  #
                 return
             count, data = _d
-            if (time.time() - t_lastupd) > wait_time:
+            now = time.time()
+            flasherQ.put(now - t_start)
+            if (now - t_lastupd) > wait_time:
                 Display(data)  # show subset of data
-                t_lastupd = time.time()
+                t_lastupd = now
         except Exception:
             return
 
@@ -35,8 +49,10 @@ sample_size = 250
 channels = 1  # 1 or 2
 display_range = 2**14  # maximum is 2**15 for 16bit sound card
 run_seconds = 3600  # run-time in seconds
-trgThreshold = 2000 # for CERN DIY particle detector 
+trgThreshold = 5000  # for CERN DIY particle detector
+trgFalling = False
 trgActive = True
+interval = 60
 
 # create a configuration dictionary
 confd = {
@@ -45,15 +61,24 @@ confd = {
     "channels": [i + 1 for i in range(channels)],
     "range": display_range,
     "trgActive": trgActive,
-    "trgThreshold":trgThreshold,
-    "trgFalling": False,
+    "trgThreshold": trgThreshold,
+    "trgFalling": trgFalling,
 }
+
+# background process to show event in real-time as "flash"
+flasherQ = mp.Queue()
+flasherProc = mp.Process(
+    name="Gamma Event",
+    target=showFlash,
+    args=(flasherQ, 60.0),
+)
+flasherProc.start()
 
 # initialze sound card interface
 scO = SoundCardOsci(confdict=confd)
 scO.init()
+# process to read oscilloscope and display wave forms
 Display = scOsciDisplay(confdict=confd)
-
 osciThread = threading.Thread(target=runOsci, args=(), daemon=True)
 
 # start data acquisition loop
@@ -64,9 +89,12 @@ t_start = time.time()
 t0 = t_start
 runtime = 0.0
 print("\n --> reading from Soundcard ...          <cntrlC to exit>")
+active = True
+osciThread.start()
+if not flasherProc.is_alive():
+    print("!!! failed to start event display")
 try:
-    active = True
-    osciThread.start()
+    # daq loop
     while runtime < run_seconds:
         wait()
         # calculate trigger rate and update status display line
@@ -88,5 +116,6 @@ except KeyboardInterrupt:
 finally:
     print("             closing Soundcard stream")
     active = False
+    flasherProc.terminate()
     time.sleep(1.0)
     scO.close()
