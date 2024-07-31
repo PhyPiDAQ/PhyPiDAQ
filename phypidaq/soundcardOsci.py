@@ -115,7 +115,7 @@ class scOsciDisplay:
         self.ax.set_ylabel("aplitude (counts)")
         self.ax.set_xlabel("time (ms)")
         tplt = (np.linspace(0, self.NSamples, self.NSamples) + 0.5) / self.sampling_rate
-        self.iStep = int(self.NSamples / 150) + 1
+        self.iStep = int(self.NSamples / 333) + 1
         (self.pline,) = self.ax.plot(tplt[:: self.iStep], np.zeros(self.NSamples)[:: self.iStep], animated=True)
         if self.NChannels == 2:
             (self.pline2,) = self.ax.plot(

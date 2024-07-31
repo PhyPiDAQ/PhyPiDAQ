@@ -30,11 +30,13 @@ def runOsci():
 
 
 # set parameters
-sampling_rate = 96000  # 44100, 48000, 96000 or 192000
-sample_size = 2048
-channels = 2  # 1 or 2
-display_range = 2**12  # maximum is 2**15 for 16bit sound card
-run_seconds = 60  # run-time in seconds
+sampling_rate = 192000  # 44100, 48000, 96000 or 192000
+sample_size = 250
+channels = 1  # 1 or 2
+display_range = 2**14  # maximum is 2**15 for 16bit sound card
+run_seconds = 3600  # run-time in seconds
+trgThreshold = 2000 # for CERN DIY particle detector 
+trgActive = True
 
 # create a configuration dictionary
 confd = {
@@ -42,8 +44,8 @@ confd = {
     "number_of_samples": sample_size,
     "channels": [i + 1 for i in range(channels)],
     "range": display_range,
-    "trgActive": True,
-    "trgThreshold": 250,
+    "trgActive": trgActive,
+    "trgThreshold":trgThreshold,
     "trgFalling": False,
 }
 
