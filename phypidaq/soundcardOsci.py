@@ -55,32 +55,37 @@ class SoundCardOsci:
         )
         # (re-)set trigger event count
         self.event_count = 0
+        self.active = True
 
     def __call__(self):
         """read data stream and return data if trigger condition is met"""
 
-        self.event_count += 1
         # read data from sound card
         _d = np.frombuffer(self.stream.read(self.NSamples), dtype=np.int16)
         data = [_d] if self.NChannels == 1 else [_d[0::2], _d[1::2]]
-
-        if not self.trgActive:
+        # return data if in free-running mode
+        if not self.active and self.trgActive:
+            self.event_count += 1
             return (self.event_count, data)
-
-        # check for trigger condition in sample
+        # else check trigger condition
         _triggered = False
-        while not _triggered:
+        while self.active and not _triggered:
             if self.trgFalling:
                 idx = np.argwhere(data[self.trgChan - 1] < self.trgThreshold)
             else:
                 idx = np.argwhere(data[self.trgChan - 1] > self.trgThreshold)
             if len(idx) > 0:
+                self.event_count += 1
                 _triggered = True
                 return (self.event_count, data)
             _d = np.frombuffer(self.stream.read(self.NSamples), dtype=np.int16)
             data = [_d] if self.NChannels == 1 else [_d[0::2], _d[1::2]]
+        # return None if called but not active (can be used  by clients)
+        return None
 
     def close(self):
+        self.active = False
+        time.sleep(1.0)
         # Stop and close the stream
         self.stream.stop_stream()
         self.stream.close()
@@ -110,10 +115,14 @@ class scOsciDisplay:
         self.ax.set_ylabel("aplitude (counts)")
         self.ax.set_xlabel("time (ms)")
         tplt = (np.linspace(0, self.NSamples, self.NSamples) + 0.5) / self.sampling_rate
-        self.iStep = int(self.NSamples/150)+1
-        (self.pline,) = self.ax.plot(tplt[::self.iStep], np.zeros(self.NSamples)[::self.iStep], animated=True)
+        self.iStep = int(self.NSamples / 150) + 1
+        (self.pline,) = self.ax.plot(tplt[:: self.iStep], np.zeros(self.NSamples)[:: self.iStep], animated=True)
         if self.NChannels == 2:
-            (self.pline2,) = self.ax.plot(tplt[::self.iStep], np.zeros(self.NSamples)[::self.iStep], animated=True)
+            (self.pline2,) = self.ax.plot(
+                tplt[:: self.iStep],
+                np.zeros(self.NSamples)[:: self.iStep],
+                animated=True,
+            )
         self.ax.set_ylim(-self.max, self.max)
         # plt.ion()
         plt.show(block=False)
@@ -126,10 +135,10 @@ class scOsciDisplay:
     def __call__(self, data):
         # update line data and redraw
         self.fig.canvas.restore_region(self.bg)
-        self.pline.set_ydata(data[0][::self.iStep])
+        self.pline.set_ydata(data[0][:: self.iStep])
         self.ax.draw_artist(self.pline)
         if self.NChannels == 2:
-            self.pline2.set_ydata(data[1][::self.iStep])
+            self.pline2.set_ydata(data[1][:: self.iStep])
             self.ax.draw_artist(self.pline2)
         self.fig.canvas.blit(self.fig.bbox)
         self.fig.canvas.flush_events()
