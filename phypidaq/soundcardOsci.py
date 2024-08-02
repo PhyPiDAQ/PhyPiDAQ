@@ -64,9 +64,9 @@ class SoundCardOsci:
         _d = np.frombuffer(self.stream.read(self.NSamples), dtype=np.int16)
         data = [_d] if self.NChannels == 1 else [_d[0::2], _d[1::2]]
         # return data if in free-running mode
-        if not self.active and self.trgActive:
+        if self.active and not self.trgActive:
             self.event_count += 1
-            return (self.event_count, data)
+            return (self.event_count, None, data)
         # else check trigger condition
         _triggered = False
         while self.active and not _triggered:
@@ -77,7 +77,7 @@ class SoundCardOsci:
             if len(idx) > 0:
                 self.event_count += 1
                 _triggered = True
-                return (self.event_count, data)
+                return (self.event_count, idx[0][0], data)
             _d = np.frombuffer(self.stream.read(self.NSamples), dtype=np.int16)
             data = [_d] if self.NChannels == 1 else [_d[0::2], _d[1::2]]
         # return None if called but not active (can be used  by clients)
@@ -123,6 +123,7 @@ class scOsciDisplay:
                 np.zeros(self.NSamples)[:: self.iStep],
                 animated=True,
             )
+        self.trgline = self.ax.axvline(0.0, ymin=0.0, ymax=0.75, color="red", linestyle="dashed", animated=True)
         self.ax.set_ylim(-self.max, self.max)
         # plt.ion()
         plt.show(block=False)
@@ -131,8 +132,9 @@ class scOsciDisplay:
         self.ax.draw_artist(self.pline)
         if self.NChannels == 2:
             self.ax.draw_artist(self.pline2)
+        self.ax.draw_artist(self.trgline)
 
-    def __call__(self, data):
+    def __call__(self, data, trg_idx=None):
         # update line data and redraw
         self.fig.canvas.restore_region(self.bg)
         self.pline.set_ydata(data[0][:: self.iStep])
@@ -140,6 +142,9 @@ class scOsciDisplay:
         if self.NChannels == 2:
             self.pline2.set_ydata(data[1][:: self.iStep])
             self.ax.draw_artist(self.pline2)
+        if trg_idx is not None:
+            self.trgline.set_xdata(trg_idx / self.sampling_rate)
+            self.ax.draw_artist(self.trgline)
         self.fig.canvas.blit(self.fig.bbox)
         self.fig.canvas.flush_events()
 

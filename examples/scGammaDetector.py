@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 
-"""script soudcardOsci.py
+"""script scGammaDetektor.py
 
-read data from soundcard and disply wave forms
+read data from soundcard and disply random events and wave form data
 
 application example for class SoundCardOsci
 """
 
 import time
+import numpy as np
 import threading
 import multiprocessing as mp
 from phypidaq.soundcardOsci import SoundCardOsci, scOsciDisplay
@@ -27,18 +28,32 @@ def showFlash(mpQ, interval):
 def runOsci():
     t_start = time.time()
     t_lastupd = t_start
-    wait_time = 0.1
+    osc_wait_time = 0.1
+    maxADC = np.float32(display_range)
     while active:
         try:
             _d = scO()  # get data
             if _d is None:  #
                 return
-            count, data = _d
+            count, trg_idx, data = _d
             now = time.time()
-            flasherQ.put(now - t_start)
-            if (now - t_lastupd) > wait_time:
-                Display(data)  # show subset of data
-                t_lastupd = now
+            # extract data of size 100 around trigger
+            if trg_idx is not None:
+                i0 = max(trg_idx - 25, 0)
+                i1 = min(trg_idx + 75, len(data[0]))
+                d = i1 - i0
+                if d < 100:
+                    if i0 == 0:
+                        i1 += 100 - d
+                    else:
+                        i0 -= 100 - d
+                flasherQ.put((now - t_start, data[0][i0:i1] / maxADC))
+            else:
+                flasherQ.put(now - t_start)
+            if Display is not None:
+                if (now - t_lastupd) > osc_wait_time:
+                    Display(data, trg_idx)  # show subset of data
+                    t_lastupd = now
         except Exception:
             return
 
@@ -48,11 +63,12 @@ sampling_rate = 192000  # 44100, 48000, 96000 or 192000
 sample_size = 250
 channels = 1  # 1 or 2
 display_range = 2**14  # maximum is 2**15 for 16bit sound card
-run_seconds = 3600  # run-time in seconds
-trgThreshold = 5000  # for CERN DIY particle detector
+run_seconds = 36000  # run-time in seconds
+trgThreshold = 5500  # for CERN DIY particle detector
 trgFalling = False
 trgActive = True
 interval = 60
+osc_display = True
 
 # create a configuration dictionary
 confd = {
@@ -78,7 +94,10 @@ flasherProc.start()
 scO = SoundCardOsci(confdict=confd)
 scO.init()
 # process to read oscilloscope and display wave forms
-Display = scOsciDisplay(confdict=confd)
+if osc_display:
+    Display = scOsciDisplay(confdict=confd)
+else:
+    Display = None
 osciThread = threading.Thread(target=runOsci, args=(), daemon=True)
 
 # start data acquisition loop

@@ -21,9 +21,9 @@ def runOsci():
             _d = scO()  # get data
             if _d is None:  #
                 return
-            count, data = _d
+            count, trg_idx, data = _d
             if (time.time() - t_lastupd) > wait_time:
-                Display(data)  # show subset of data
+                Display(data, trg_idx)  # show subset of data
                 t_lastupd = time.time()
         except Exception:
             return
@@ -31,10 +31,13 @@ def runOsci():
 
 # set parameters
 sampling_rate = 96000  # 44100, 48000, 96000 or 192000
-sample_size = 2048
-channels = 2  # 1 or 2
-display_range = 2**12  # maximum is 2**15 for 16bit sound card
-run_seconds = 60  # run-time in seconds
+sample_size = 512
+channels = 1  # 1 or 2
+display_range = 2**13  # maximum is 2**15 for 16bit sound card
+run_seconds = 36000  # run-time in seconds
+trgThreshold = 100  #
+trgFalling = False
+trgActive = False
 
 # create a configuration dictionary
 confd = {
@@ -42,10 +45,11 @@ confd = {
     "number_of_samples": sample_size,
     "channels": [i + 1 for i in range(channels)],
     "range": display_range,
-    "trgActive": True,
-    "trgThreshold": 250,
-    "trgFalling": False,
+    "trgActive": trgActive,
+    "trgThreshold": trgThreshold,
+    "trgFalling": trgFalling,
 }
+
 
 # initialze sound card interface
 scO = SoundCardOsci(confdict=confd)

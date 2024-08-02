@@ -56,7 +56,7 @@ class DisplayPoissonEvent:
           -  mpQ: multiprocessing queue for input
           -  rate: generated rate for Poisson process
           -  mean: desired expected mean / bin
-          -  interval: bin width for history plot if not derived from rate and moen
+          -  interval: bin width for history plot if not derived from rate and mean
     """
 
     def __init__(self, mpQ, rate=None, mean=None, interval=None):
@@ -66,18 +66,14 @@ class DisplayPoissonEvent:
         self.mean = mean  # desired mean value for time bin
         if rate is not None:
             self.tau = 1.0 / rate  # average time between events
-            self.tflash = (
-                max(self.tau / 20, 0.050) if self.tau < 1.0 else 0.01
-            )  # flash duration
+            self.tflash = max(self.tau / 20, 0.050) if self.tau < 1.0 else 0.01  # flash duration
             self.interval = self.mean / self.rate  # bin width
         #       self.flash_color = '#ffff80' # yellowish
         elif interval is not None:
             self.tflash = 0.01  # flash duration
             self.interval = interval  # bin width
         else:
-            sys.exit(
-                "!!! DisplayPoissonEvent: input error - either rate and mean or inerval must be given"
-            )
+            sys.exit("!!! DisplayPoissonEvent: input error - either rate and mean or inerval must be given")
         if self.interval <= 20:
             time_unit = "s"
             self.unit_factor = 1.0
@@ -90,22 +86,16 @@ class DisplayPoissonEvent:
 
         # initialize an (interactive) figure
         if rate is not None:
-            self.fig = plt.figure(
-                "PoissonFlash 𝜏=%.3g" % (self.tau), figsize=(6.0, 8.0)
-            )
+            self.fig = plt.figure("PoissonFlash 𝜏=%.3g" % (self.tau), figsize=(6.0, 8.0))
         else:
             self.fig = plt.figure("EventFlash", figsize=(6.0, 8.0))
         self.fig.canvas.mpl_connect("close_event", self.on_mpl_window_closed)
         self.mpl_active = True
         if self.interval is None:
-            self.fig.suptitle(
-                "Poisson Statistics", size="x-large", color=self.title_color
-            )
+            self.fig.suptitle("Poisson Statistics", size="x-large", color=self.title_color)
         else:
-            self.fig.suptitle("", size="x-large", color=self.title_color)
-        self.fig.subplots_adjust(
-            left=0.1, bottom=0.1, right=0.95, top=0.95, wspace=None, hspace=0.15
-        )
+            self.fig.suptitle("Event Display", size="x-large", color=self.title_color)
+        self.fig.subplots_adjust(left=0.1, bottom=0.1, right=0.95, top=0.95, wspace=None, hspace=0.15)
         gs = self.fig.add_gridspec(nrows=4, ncols=1)
         # 1st graph for "Poisson Flash"
         self.ax = self.fig.add_subplot(gs[:-1, :])
@@ -124,6 +114,10 @@ class DisplayPoissonEvent:
         self.flashobj = self.ax.add_patch(c2)  # body of detector
         self.flashobj = self.ax.add_patch(c1)  # border
         self.flashobj = self.ax.add_patch(c)  # light-emitting surface
+        #  add a graph
+        self.flashxplt = np.linspace(-1.0, 1.0, 100)
+        (self.flashline,) = self.ax.plot(self.flashxplt, 100 * [None])
+        # add rate value from generator input
         if rate is not None:
             _ = self.ax.text(
                 0.05,
@@ -132,9 +126,8 @@ class DisplayPoissonEvent:
                 transform=self.ax.transAxes,
                 color="yellow",
             )
-        self.txt = self.ax.text(
-            0.05, 0.92, " ", transform=self.ax.transAxes, color="azure"
-        )
+        self.txt = self.ax.text(0.05, 0.92, " ", transform=self.ax.transAxes, color="azure")
+        #
         # 2nd graph for rate history
         self.axrate = self.fig.add_subplot(gs[-1, :])
         self.Npoints = 150
@@ -154,17 +147,14 @@ class DisplayPoissonEvent:
             _ = self.axrate.text(
                 0.02,
                 0.88,
-                r"$\Delta$t=%2gs  $\Rightarrow$  mean=%.2f"
-                % (self.mean / self.rate, self.mean),
+                r"$\Delta$t=%2gs  $\Rightarrow$  mean=%.2f" % (self.mean / self.rate, self.mean),
                 transform=self.axrate.transAxes,
                 color="orangered",
             )
             self.axrate.axhline(self.mean, color="red", linestyle="dashed")
             if self.mean > 1.5:
                 z_value = 1.0
-                cm1, cp1 = Poisson_CI(
-                    self.mean, sigma=z_value
-                )  # 68%  confidence intervall
+                cm1, cp1 = Poisson_CI(self.mean, sigma=z_value)  # 68%  confidence intervall
                 rect1 = patches.Rectangle(
                     (self.xmin, cm1),
                     self.xmax - self.xmin,
@@ -184,9 +174,7 @@ class DisplayPoissonEvent:
                 )
                 self.axrate.add_patch(rect2)
 
-        self.xplt = np.linspace(
-            -self.Npoints * self.interval * self.unit_factor, 0.0, self.Npoints
-        )
+        self.xplt = np.linspace(-self.Npoints * self.interval * self.unit_factor, 0.0, self.Npoints)
         self.counts = np.zeros(self.Npoints) - 0.1
         (self.hline,) = self.axrate.plot(
             self.xplt,
@@ -205,40 +193,49 @@ class DisplayPoissonEvent:
         self.mpl_active = False
 
     def __call__(self):
-        """Flash object"""
+        """Flash object
+
+        Data via input queu mpQ: time and, optionally, waveform data
+
+          flashpulse:  wave form data with 100 samples normalised to one
+
+        """
+
+        flashpulse = None
         N = 0
         lastbin = 0
         self.counts[0] = 0
         max_y = 3
         while self.mpl_active:
-            t = self.mpQ.get()
+            _d = self.mpQ.get()
+            if isinstance(_d, tuple):
+                t = _d[0]
+                flashpulse = _d[1]
+            else:
+                t = _d
+
             if t >= 0:
-                # show colored object
+                # show colored object ("flash")
                 t_last = t
+                self.flashline.set_ydata(100 * [None])
                 self.flashobj.set_facecolor(self.flash_color)
                 self.fig.canvas.start_event_loop(0.5 * self.tflash)
                 # replaces plt.pause() without stealing focus
                 # collect statistics
                 N += 1
                 rate = N / t if N > 2 else 0.0
-                status_text = (
-                    "active %.1f s" % t
-                    + 15 * " "
-                    + "counts %d" % N
-                    + 5 * " "
-                    + "average rate %.3f Hz" % rate
-                )
-                # display statistics and make flash object invisible
+                status_text = "active %.1f s" % t + 15 * " " + "counts %d" % N + 5 * " " + "average rate %.3f Hz" % rate
+                # display statistics and make flash object invisible again
                 self.txt.set_text(status_text)
                 self.flashobj.set_facecolor(self.bg_color)
+                if flashpulse is not None:
+                    self.flashline.set_ydata(flashpulse)
                 self.fig.canvas.start_event_loop(0.5 * self.tflash)
                 # calculate entries for rate histogram
                 hbin = int(t / self.interval) % self.Npoints
                 if hbin != lastbin:
                     k = lastbin % self.Npoints
-                    self.hline.set_ydata(
-                        np.concatenate((self.counts[k + 1:], self.counts[: k + 1]))
-                    )
+                    self.hline.set_ydata(np.concatenate((self.counts[k + 1 :], self.counts[: k + 1])))
                     if self.counts[lastbin] > max_y:
                         max_y = self.counts[lastbin]
                         self.axrate.set_ylim(0.0, max_y + 0.1)
