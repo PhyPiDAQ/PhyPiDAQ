@@ -139,7 +139,7 @@ flasherQ = mp.Queue()
 flasherProc = mp.Process(
     name="Gamma Event",
     target=showFlash,
-    args=(flasherQ, 60.0),
+    args=(flasherQ, interval),
 )
 flasherProc.start()
 
