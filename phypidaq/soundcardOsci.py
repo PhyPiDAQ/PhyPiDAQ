@@ -106,6 +106,11 @@ class scOsciDisplay:
         self.NChannels = len(self.channels)
         self.sampling_rate = 44100 if "sampling_rate" not in confdict else confdict["sampling_rate"]
         self.max = 2**15 if "range" not in confdict else confdict["range"]
+        # trigger config
+        self.trgActive = 0 if "trgActive" not in confdict else confdict["trgActive"]
+        self.trgChan = 1 if "trgChan" not in confdict else confdict["trgChan"]
+        self.trgFalling = 0 if "trgFalling" not in confdict else confdict["trgFalling"]
+        self.trgThreshold = 100 if "trgThreshold" not in confdict else confdict["trgThreshold"]
         # create a figure
         self.fig = plt.figure("Audio", figsize=(8.0, 6.0))
         self.fig.suptitle("sound card data")
@@ -123,7 +128,13 @@ class scOsciDisplay:
                 np.zeros(self.NSamples)[:: self.iStep],
                 animated=True,
             )
-        self.trgline = self.ax.axvline(0.0, ymin=0.0, ymax=0.75, color="red", linestyle="dashed", animated=True)
+        if self.trgFalling:
+            mx = 1.0
+            mn = 0.5 * (1 + self.trgThreshold / self.max)
+        else:
+            mn = 0.0
+            mx = 0.5 * (1 + self.trgThreshold / self.max)
+        self.trgline = self.ax.axvline(0.0, ymin=mn, ymax=mx, color="red", linestyle="dashed", animated=True)
         self.ax.set_ylim(-self.max, self.max)
         # plt.ion()
         plt.show(block=False)
