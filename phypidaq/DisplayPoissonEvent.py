@@ -187,7 +187,9 @@ class DisplayPoissonEvent:
         )
         plt.ion()
         plt.show()
-
+        # draw initial graph
+        self.fig.canvas.start_event_loop(0.5 * self.tflash)
+        
     def on_mpl_window_closed(self, ax):
         # detect when matplotlib window is closed
         self.mpl_active = False
@@ -235,7 +237,7 @@ class DisplayPoissonEvent:
                 hbin = int(t / self.interval) % self.Npoints
                 if hbin != lastbin:
                     k = lastbin % self.Npoints
-                    self.hline.set_ydata(np.concatenate((self.counts[k + 1 :], self.counts[: k + 1])))
+                    self.hline.set_ydata(np.concatenate((self.counts[k + 1:], self.counts[: k + 1])))
                     if self.counts[lastbin] > max_y:
                         max_y = self.counts[lastbin]
                         self.axrate.set_ylim(0.0, max_y + 0.1)
