@@ -30,8 +30,7 @@ def showFlash(mpQ, interval):
 
 
 def runDAQ():
-    """run data acquistion as thread
-    """
+    """run data acquistion as thread"""
     t_start = time.time()
     t_lastupd = t_start
     osc_wait_time = 0.1
@@ -46,7 +45,9 @@ def runDAQ():
             now = time.time()
             # save to file
             if csvfile is not None:
-                csvfile.write(count, str(now))
+                print(f"{count}, {now-t_start}", file=csvfile)
+                if count % 5:
+                    csvfile.flush()
             # show oscillogram of raw wave form
             if oscDisplay is not None:
                 if (now - t_lastupd) > osc_wait_time:
@@ -72,21 +73,11 @@ def runDAQ():
 
 
 # parse command line arguments
-parser = argparse.ArgumentParser(
-    description="Read waveforms from soundcard and display and optionally store data"
-)
-parser.add_argument(
-    "-q", "--quiet", action="store_true", help="no status output to terminal"
-)
-parser.add_argument(
-    "-o", "--oscilloscope", action="store_true", help="oscilloscope display"
-)
-parser.add_argument(
-    "-n", "--noeventdisplay", action="store_true", help="deactivate event display"
-)
-parser.add_argument(
-    "-f", "--file", type=str, default="", help="base filename to store results"
-)
+parser = argparse.ArgumentParser(description="Read waveforms from soundcard and display and optionally store data")
+parser.add_argument("-q", "--quiet", action="store_true", help="no status output to terminal")
+parser.add_argument("-o", "--oscilloscope", action="store_true", help="oscilloscope display")
+parser.add_argument("-n", "--noeventdisplay", action="store_true", help="deactivate event display")
+parser.add_argument("-f", "--file", type=str, default="", help="base filename to store results")
 parser.add_argument("-t", "--time", type=int, default=3600, help="run time in seconds")
 #
 parser.add_argument(
@@ -97,26 +88,14 @@ parser.add_argument(
     default=96000,
     help="sampling rate",
 )
-parser.add_argument(
-    "-c", "--channels", type=int, choices={1, 2}, default=1, help="number of channels"
-)
-parser.add_argument(
-    "-l", "--trglevel", type=float, default=5000, help="level of trigger"
-)
-parser.add_argument(
-    "--trgfalling", action="store_true", help="trigger falling edge"
-)
-parser.add_argument(
-    "-d", "--trgdeactivate", action="store_true", help="deactivate triggering"
-)
-parser.add_argument(
-    "-z", "--samplesize", type=int, default=256, help="number of samples per read"
-)
+parser.add_argument("-c", "--channels", type=int, choices={1, 2}, default=1, help="number of channels")
+parser.add_argument("-l", "--trglevel", type=float, default=5000, help="level of trigger")
+parser.add_argument("--trgfalling", action="store_true", help="trigger falling edge")
+parser.add_argument("-d", "--trgdeactivate", action="store_true", help="deactivate triggering")
+parser.add_argument("-z", "--samplesize", type=int, default=256, help="number of samples per read")
 parser.add_argument("-r", "--range", type=float, default=2**14, help="display range")
 #
-parser.add_argument(
-    "-i", "--interval", type=float, default=30.0, help="time bin for rate display"
-)
+parser.add_argument("-i", "--interval", type=float, default=30.0, help="time bin for rate display")
 #
 args = parser.parse_args()
 # - parameters to control the scrpt
@@ -152,7 +131,7 @@ if filename != "":
     timestamp = time.strftime("%y%m%d-%H%M", time.localtime())
     fn = filename + "_" + timestamp + ".csv"
     csvfile = open(fn, "w")
-    csvfile.write("event_times[s]\n")
+    csvfile.write("event_numer, event_time[s]\n")
 
 
 # background process to show event in real-time as "flash"
@@ -209,8 +188,8 @@ except KeyboardInterrupt:
 finally:
     print("             closing Soundcard stream")
     active = False
+    if csvfile is not None:
+        csvfile.close()
     flasherProc.terminate()
     time.sleep(1.0)
     scO.close()
-    if csvfile is not None:
-        csvfile.close()
