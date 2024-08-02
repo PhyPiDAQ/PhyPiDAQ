@@ -831,3 +831,6 @@ z. B. dem Steckernetzteil des Raspberry Pi.
     Zufallsereignisse entsprechend einem Poisson-Prozes und Anzeige als Blitz
 - `examples/oscilloscope/soundcardOsci.py`
     Lesen und Anzeigen von Wellenformdaten von einer Soundkarte (Anwendunbeispiel für Klasse SouncCardOsci)
+- `examples/scOsciGammaDetector.py`
+    Lesen und Anzeigen von getriggerten Wellenformdaten von einer Soundkarte mit angeschlossenem
+    Teilchendetektor (CERN DIY particle detector)

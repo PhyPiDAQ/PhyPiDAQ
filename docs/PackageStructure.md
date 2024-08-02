@@ -255,3 +255,6 @@ A list of all programs, classes, configuration files and examples is listed in t
     generate random events according to a Poisson process and display as a flash 
 - `examples/oscilloscope/soundcardOsci.py`
     read and display waveform data from soundcad (appliction example for class SouncCardOsci)
+- `examples/scOsciGammaDetector.py`
+    reading and display of triggered waveforms from soundcard with a connected particle detector
+    (CERN DIY particle detector)
