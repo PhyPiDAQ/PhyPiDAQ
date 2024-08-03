@@ -10,6 +10,7 @@ read data from soundcard and
 This is an application example for the class phypidaq.SoundCardOsci.
 """
 
+import sys
 import argparse
 import time
 import numpy as np
@@ -18,6 +19,16 @@ import multiprocessing as mp
 from phypidaq.soundcardOsci import SoundCardOsci, scOsciDisplay
 from phypidaq.helpers import DAQwait
 from phypidaq.DisplayPoissonEvent import DisplayPoissonEvent
+
+
+def keyboard_input(cmd_queue):
+    """Read keyboard input and send to Qeueu, runing as background-thread to avoid blocking"""
+
+    while active:
+        cmd = input()
+        cmd_queue.put(cmd)
+        if cmd == "E":
+            break
 
 
 def showFlash(mpQ, interval):
@@ -73,11 +84,21 @@ def runDAQ():
 
 
 # parse command line arguments
-parser = argparse.ArgumentParser(description="Read waveforms from soundcard and display and optionally store data")
-parser.add_argument("-q", "--quiet", action="store_true", help="no status output to terminal")
-parser.add_argument("-o", "--oscilloscope", action="store_true", help="oscilloscope display")
-parser.add_argument("-n", "--noeventdisplay", action="store_true", help="deactivate event display")
-parser.add_argument("-f", "--file", type=str, default="", help="base filename to store results")
+parser = argparse.ArgumentParser(
+    description="Read waveforms from soundcard and display and optionally store data"
+)
+parser.add_argument(
+    "-q", "--quiet", action="store_true", help="no status output to terminal"
+)
+parser.add_argument(
+    "-o", "--oscilloscope", action="store_true", help="oscilloscope display"
+)
+parser.add_argument(
+    "-n", "--noeventdisplay", action="store_true", help="deactivate event display"
+)
+parser.add_argument(
+    "-f", "--file", type=str, default="", help="base filename to store results"
+)
 parser.add_argument("-t", "--time", type=int, default=3600, help="run time in seconds")
 #
 parser.add_argument(
@@ -88,14 +109,24 @@ parser.add_argument(
     default=96000,
     help="sampling rate",
 )
-parser.add_argument("-c", "--channels", type=int, choices={1, 2}, default=1, help="number of channels")
-parser.add_argument("-l", "--trglevel", type=float, default=5000, help="level of trigger")
+parser.add_argument(
+    "-c", "--channels", type=int, choices={1, 2}, default=1, help="number of channels"
+)
+parser.add_argument(
+    "-l", "--trglevel", type=float, default=5000, help="level of trigger"
+)
 parser.add_argument("--trgfalling", action="store_true", help="trigger falling edge")
-parser.add_argument("-d", "--trgdeactivate", action="store_true", help="deactivate triggering")
-parser.add_argument("-z", "--samplesize", type=int, default=256, help="number of samples per read")
+parser.add_argument(
+    "-d", "--trgdeactivate", action="store_true", help="deactivate triggering"
+)
+parser.add_argument(
+    "-z", "--samplesize", type=int, default=256, help="number of samples per read"
+)
 parser.add_argument("-r", "--range", type=float, default=2**14, help="display range")
 #
-parser.add_argument("-i", "--interval", type=float, default=30.0, help="time bin for rate display")
+parser.add_argument(
+    "-i", "--interval", type=float, default=30.0, help="time bin for rate display"
+)
 #
 args = parser.parse_args()
 # - parameters to control the scrpt
@@ -153,6 +184,14 @@ else:
     oscDisplay = None
 osciThread = threading.Thread(target=runDAQ, args=(), daemon=True)
 
+
+# set up keyboard control
+active = True
+cmdQ = mp.Queue()  # Queue for command input from keyboard
+kbdthread = threading.Thread(
+    name="kbdInput", target=keyboard_input, args=(cmdQ,)
+).start()
+
 # start data acquisition loop
 wait_time = 1.0
 wait = DAQwait(wait_time)
@@ -160,14 +199,17 @@ n0 = 0
 t_start = time.time()
 t0 = t_start
 runtime = 0.0
-print("\n --> reading from Soundcard ...          <cntrlC to exit>")
-active = True
+print("\n --> start reading from Soundcard ... ")
 osciThread.start()
 if not flasherProc.is_alive():
     print("!!! failed to start event display")
 try:
     # daq loop
     while runtime < run_seconds:
+        if not cmdQ.empty():
+            cmd = cmdQ.get()
+            if cmd == "E":
+                break  # end cleanly
         wait()
         # calculate trigger rate and update status display line
         count = scO.event_count
@@ -177,19 +219,21 @@ try:
         n0 = count
         t0 = now
         print(
-            f"active: {runtime:.1f}  triggers: {count}  rate: {rate:.1f} Hz",
+            f"active: {runtime:.1f}  triggers: {count}  rate: {rate:.1f} Hz     -> type 'E' to end",
             10 * " ",
             end="\r",
         )
     # -- end while
-    print("\n" + " *** time over - ending ...")
+    print("\n               ... stop reading data")
 except KeyboardInterrupt:
     print("\n" + " !!! keyboard interrupt - ending ...")
 finally:
+    input(30 * " " + "Finished !  Type <ret> to exit -> ")
     print("             closing Soundcard stream")
     active = False
     if csvfile is not None:
         csvfile.close()
     flasherProc.terminate()
-    time.sleep(1.0)
+    time.sleep(0.3)
     scO.close()
+    sys.exit(0)
