@@ -84,21 +84,11 @@ def runDAQ():
 
 
 # parse command line arguments
-parser = argparse.ArgumentParser(
-    description="Read waveforms from soundcard and display and optionally store data"
-)
-parser.add_argument(
-    "-q", "--quiet", action="store_true", help="no status output to terminal"
-)
-parser.add_argument(
-    "-o", "--oscilloscope", action="store_true", help="oscilloscope display"
-)
-parser.add_argument(
-    "-n", "--noeventdisplay", action="store_true", help="deactivate event display"
-)
-parser.add_argument(
-    "-f", "--file", type=str, default="", help="base filename to store results"
-)
+parser = argparse.ArgumentParser(description="Read waveforms from soundcard and display and optionally store data")
+parser.add_argument("-q", "--quiet", action="store_true", help="no status output to terminal")
+parser.add_argument("-o", "--oscilloscope", action="store_true", help="oscilloscope display")
+parser.add_argument("-n", "--noeventdisplay", action="store_true", help="deactivate event display")
+parser.add_argument("-f", "--file", type=str, default="", help="base filename to store results")
 parser.add_argument("-t", "--time", type=int, default=3600, help="run time in seconds")
 #
 parser.add_argument(
@@ -109,24 +99,14 @@ parser.add_argument(
     default=96000,
     help="sampling rate",
 )
-parser.add_argument(
-    "-c", "--channels", type=int, choices={1, 2}, default=1, help="number of channels"
-)
-parser.add_argument(
-    "-l", "--trglevel", type=float, default=5000, help="level of trigger"
-)
+parser.add_argument("-c", "--channels", type=int, choices={1, 2}, default=1, help="number of channels")
+parser.add_argument("-l", "--trglevel", type=float, default=5000, help="level of trigger")
 parser.add_argument("--trgfalling", action="store_true", help="trigger falling edge")
-parser.add_argument(
-    "-d", "--trgdeactivate", action="store_true", help="deactivate triggering"
-)
-parser.add_argument(
-    "-z", "--samplesize", type=int, default=256, help="number of samples per read"
-)
+parser.add_argument("-d", "--trgdeactivate", action="store_true", help="deactivate triggering")
+parser.add_argument("-z", "--samplesize", type=int, default=256, help="number of samples per read")
 parser.add_argument("-r", "--range", type=float, default=2**14, help="display range")
 #
-parser.add_argument(
-    "-i", "--interval", type=float, default=30.0, help="time bin for rate display"
-)
+parser.add_argument("-i", "--interval", type=float, default=30.0, help="time bin for rate display")
 #
 args = parser.parse_args()
 # - parameters to control the scrpt
@@ -188,9 +168,7 @@ osciThread = threading.Thread(target=runDAQ, args=(), daemon=True)
 # set up keyboard control
 active = True
 cmdQ = mp.Queue()  # Queue for command input from keyboard
-kbdthread = threading.Thread(
-    name="kbdInput", target=keyboard_input, args=(cmdQ,)
-).start()
+kbdthread = threading.Thread(name="kbdInput", target=keyboard_input, args=(cmdQ,)).start()
 
 # start data acquisition loop
 wait_time = 1.0

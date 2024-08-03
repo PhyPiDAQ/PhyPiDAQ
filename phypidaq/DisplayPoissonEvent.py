@@ -209,13 +209,18 @@ class DisplayPoissonEvent:
         self.counts[0] = 0
         max_y = 3
         while self.mpl_active:
-            _d = self.mpQ.get()
-            if isinstance(_d, tuple):
-                t = _d[0]
-                flashpulse = _d[1]
+            # wait for data, avoid blocking
+            if self.mpQ.empty():
+                self.fig.canvas.start_event_loop(0.005)
+                continue
             else:
-                t = _d
-
+                _d = self.mpQ.get()
+                if isinstance(_d, tuple):
+                    t = _d[0]
+                    flashpulse = _d[1]
+                else:
+                    t = _d
+            
             if t >= 0:
                 # show colored object ("flash")
                 t_last = t
