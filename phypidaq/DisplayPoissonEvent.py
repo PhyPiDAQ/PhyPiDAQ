@@ -189,7 +189,7 @@ class DisplayPoissonEvent:
         plt.show()
         # draw initial graph
         self.fig.canvas.start_event_loop(0.5 * self.tflash)
-        
+
     def on_mpl_window_closed(self, ax):
         # detect when matplotlib window is closed
         self.mpl_active = False
