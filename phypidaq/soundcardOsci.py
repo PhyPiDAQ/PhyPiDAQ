@@ -121,6 +121,7 @@ class scOsciDisplay:
         self.ax.grid(linestyle="dotted", color="blue")
         self.ax.set_ylabel("aplitude (counts)")
         self.ax.set_xlabel("time (ms)")
+        self.ax.axhline(self.trgThreshold, xmin=0, xmax=1, linestyle="dashed", color="red")
         tplt = (np.linspace(0, self.NSamples, self.NSamples) + 0.5) / self.sampling_rate
         self.iStep = int(self.NSamples / 333) + 1
         (self.pline,) = self.ax.plot(tplt[:: self.iStep], np.zeros(self.NSamples)[:: self.iStep], animated=True)
