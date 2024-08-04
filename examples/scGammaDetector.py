@@ -162,13 +162,12 @@ if osc_display:
     oscDisplay = scOsciDisplay(confdict=confd)
 else:
     oscDisplay = None
-osciThread = threading.Thread(target=runDAQ, args=(), daemon=True)
-
 
 # set up keyboard control
 active = True
 cmdQ = mp.Queue()  # Queue for command input from keyboard
-kbdthread = threading.Thread(name="kbdInput", target=keyboard_input, args=(cmdQ,)).start()
+kbdthread = threading.Thread(name="kbdInput", target=keyboard_input, args=(cmdQ,))
+kbdthread.start()
 
 # start data acquisition loop
 wait_time = 1.0
@@ -178,6 +177,7 @@ t_start = time.time()
 t0 = t_start
 runtime = 0.0
 print("\n --> start reading from Soundcard ... ")
+osciThread = threading.Thread(target=runDAQ, args=(), daemon=True)
 osciThread.start()
 if not flasherProc.is_alive():
     print("!!! failed to start event display")

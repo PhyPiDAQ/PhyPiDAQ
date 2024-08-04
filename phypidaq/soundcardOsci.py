@@ -147,6 +147,7 @@ class scOsciDisplay:
         if self.NChannels == 2:
             self.ax.draw_artist(self.pline2)
         self.ax.draw_artist(self.trgline)
+        self.fig.canvas.start_event_loop(0.005)
 
     def __call__(self, data, trg_idx=None):
         # update line data and redraw
@@ -160,7 +161,8 @@ class scOsciDisplay:
             self.trgline.set_xdata(trg_idx / self.sampling_rate)
             self.ax.draw_artist(self.trgline)
         self.fig.canvas.blit(self.fig.bbox)
-        self.fig.canvas.flush_events()
+
+    #        self.fig.canvas.start_event_loop(0.005) # does not help keepin menu active
 
     def on_mpl_window_closed(self, ax):
         # detect when matplotlib window is closed

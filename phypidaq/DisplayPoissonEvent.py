@@ -220,7 +220,7 @@ class DisplayPoissonEvent:
                     flashpulse = _d[1]
                 else:
                     t = _d
-            
+
             if t >= 0:
                 # show colored object ("flash")
                 t_last = t
