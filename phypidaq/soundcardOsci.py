@@ -113,6 +113,8 @@ class scOsciDisplay:
         self.trgThreshold = 100 if "trgThreshold" not in confdict else confdict["trgThreshold"]
         # create a figure
         self.fig = plt.figure("Audio", figsize=(8.0, 6.0))
+        self.fig.canvas.mpl_connect("close_event", self.on_mpl_window_closed)
+        self.active = True
         self.fig.suptitle("sound card data")
         self.ax = self.fig.add_subplot(111)
         self.fig.subplots_adjust(left=0.15, bottom=0.12, right=0.98, top=0.90, wspace=None, hspace=0.1)  #
@@ -158,6 +160,10 @@ class scOsciDisplay:
             self.ax.draw_artist(self.trgline)
         self.fig.canvas.blit(self.fig.bbox)
         self.fig.canvas.flush_events()
+
+    def on_mpl_window_closed(self, ax):
+        # detect when matplotlib window is closed
+        self.active = False
 
 
 if __name__ == "__main__":  # ------------------------------
