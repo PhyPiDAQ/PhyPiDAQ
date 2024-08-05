@@ -82,6 +82,9 @@ def runDAQ():
         except Exception:
             return
 
+if sys.platform.startswith("win"):
+    # On Windows calling this function is necessary.
+    mp.freeze_support()
 
 # parse command line arguments
 parser = argparse.ArgumentParser(description="Read waveforms from soundcard and display and optionally store data")
