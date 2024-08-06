@@ -252,7 +252,7 @@ class DisplayPoissonEvent:
                     self.counts[hbin] = 0
                 self.counts[hbin] += 1
             else:
-                print("\n*==* Poissson Flasher exiting ...")
+                print("\n*==* DisplayPoissonEvent exiting ...")
                 print(
                     8 * " "
                     + "active %.1f s" % t_last
@@ -261,7 +261,7 @@ class DisplayPoissonEvent:
                     + 5 * " "
                     + "average rate %.3f Hz" % rate
                 )
-
+                break
 
 def showFlash(mpQ, rate, mean):
     """Background process to show Poisson event as a flashing circle

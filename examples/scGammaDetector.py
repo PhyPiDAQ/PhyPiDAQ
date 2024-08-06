@@ -59,8 +59,8 @@ def runDAQ():
         try:
             # get data
             _d = scO()
-            if _d is None:  #
-                return
+            if _d is None:  # end of daq
+                break
             count, trg_idx, data = _d
             now = time.time()
             # save to file
@@ -231,17 +231,14 @@ if __name__ == "__main__":
         print("\n" + " !!! keyboard interrupt - ending ...")
     finally:
         input(30 * " " + "Finished !  Type <ret> to exit -> ")
-        print("             closing Soundcard stream")
         active = False
+        scO.close() # stop reading soundcard
         if csvfile is not None:
             csvfile.close()
         time.sleep(0.3)
         if showevents and flasherProc.is_alive():
-            #    print("terminating event display")
+            print("terminating event display")
             flasherProc.terminate()
         if showosci and osciProc.is_alive():
-            #    print("terminating wave display")
             osciProc.terminate()
-        time.sleep(0.3)
-        scO.close()
         sys.exit("normal end")
