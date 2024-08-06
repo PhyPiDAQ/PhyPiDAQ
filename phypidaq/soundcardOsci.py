@@ -159,7 +159,8 @@ class scOsciDisplay:
             self.pline2.set_ydata(data[1][:: self.iStep])
             self.ax.draw_artist(self.pline2)
         if trg_idx is not None:
-            self.trgline.set_xdata(trg_idx / self.sampling_rate)
+            trg_t = trg_idx / self.sampling_rate
+            self.trgline.set_xdata((trg_t, trg_t))
             self.ax.draw_artist(self.trgline)
         self.fig.canvas.blit(self.fig.bbox)
 
