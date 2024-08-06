@@ -32,12 +32,21 @@ def keyboard_input(cmd_queue):
 
 
 def showFlash(mpQ, interval):
-    """Background process to show Poisson event as a flashing circle
+    """Background process to show Poisson event as a flashing circle and waveform
 
     relies on class DisplayPoissionEvent
     """
     flasher = DisplayPoissonEvent(mpQ, interval=interval)
     flasher()
+
+
+def showOsci(mpQ, confdict):
+    """Background process to show oscillogram
+
+    relies on class DisplayPoissionEvent
+    """
+    scosci = scOsciDisplay(mpQ, confdict)
+    scosci()
 
 
 def runDAQ():
@@ -60,9 +69,9 @@ def runDAQ():
                 if count % 5:
                     csvfile.flush()
             # show oscillogram of raw wave form
-            if oscDisplay is not None:
+            if showosci:
                 if (now - t_lastupd) > osc_wait_time:
-                    oscDisplay(data, trg_idx)  # show subset of data
+                    osciQ.put((trg_idx, data))
                     t_lastupd = now
             # show events
             if showevents:
@@ -81,6 +90,11 @@ def runDAQ():
                     flasherQ.put(now - t_start)
         except Exception:
             return
+        # signal end to background processes by sening None
+    if showevents:
+        flasherQ.put(-1)
+    if showosci:
+        osciQ.put(None)
 
 
 if __name__ == "__main__":
@@ -116,7 +130,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     # - parameters to control the scrpt
     quiet = args.quiet
-    osc_display = args.oscilloscope
+    showosci = args.oscilloscope
     showevents = not args.noeventdisplay
     filename = args.file
     run_seconds = args.time
@@ -149,24 +163,29 @@ if __name__ == "__main__":
         csvfile = open(fn, "w")
         csvfile.write("event_numer, event_time[s]\n")
 
+    # initialze sound card interface
+    scO = SoundCardOsci(confdict=confd)
+    scO.init()
     # background process to show event in real-time as "flash"
+    flaherQ = None
     if showevents:
         flasherQ = mp.Queue()
         flasherProc = mp.Process(
-            name="Gamma Event",
+            name="Event",
             target=showFlash,
             args=(flasherQ, interval),
         )
         flasherProc.start()
-
-    # initialze sound card interface
-    scO = SoundCardOsci(confdict=confd)
-    scO.init()
-    # process to read oscilloscope and display wave forms
-    if osc_display:
-        oscDisplay = scOsciDisplay(confdict=confd)
-    else:
-        oscDisplay = None
+    # process to display wave forms
+    osciQ = None
+    if showosci:
+        osciQ = mp.Queue()
+        osciProc = mp.Process(
+            name="Waveform",
+            target=showOsci,
+            args=(osciQ, confd),
+        )
+        osciProc.start()
 
     # set up keyboard control
     active = True
@@ -216,8 +235,13 @@ if __name__ == "__main__":
         active = False
         if csvfile is not None:
             csvfile.close()
+        time.sleep(0.3)
         if showevents and flasherProc.is_alive():
+            #    print("terminating event display")
             flasherProc.terminate()
+        if showosci and osciProc.is_alive():
+            #    print("terminating wave display")
+            osciProc.terminate()
         time.sleep(0.3)
         scO.close()
         sys.exit("normal end")

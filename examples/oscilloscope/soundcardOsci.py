@@ -23,7 +23,7 @@ def runOsci():
                 return
             count, trg_idx, data = _d
             if (time.time() - t_lastupd) > wait_time:
-                Display(data, trg_idx)  # show subset of data
+                Display.updateDisplay(data, trg_idx)  # show subset of data
                 t_lastupd = time.time()
         except Exception:
             return

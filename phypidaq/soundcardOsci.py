@@ -99,8 +99,9 @@ class scOsciDisplay:
     fast blitting is used to only redraw the waveform line(s)
     """
 
-    def __init__(self, confdict=None):
+    def __init__(self, mpQ=None, confdict=None):
         self.confdict = {} if confdict is None else confdict
+        self.mpQ = mpQ
         self.channels = [1] if "channels" not in self.confdict else self.confdict["channels"]
         self.NSamples = 1024 if "number_of_samples" not in self.confdict else self.confdict["number_of_samples"]
         self.NChannels = len(self.channels)
@@ -114,7 +115,6 @@ class scOsciDisplay:
         # create a figure
         self.fig = plt.figure("Audio", figsize=(8.0, 6.0))
         self.fig.canvas.mpl_connect("close_event", self.on_mpl_window_closed)
-        self.active = True
         self.fig.suptitle("sound card data")
         self.ax = self.fig.add_subplot(111)
         self.fig.subplots_adjust(left=0.15, bottom=0.12, right=0.98, top=0.90, wspace=None, hspace=0.1)  #
@@ -147,9 +147,10 @@ class scOsciDisplay:
         if self.NChannels == 2:
             self.ax.draw_artist(self.pline2)
         self.ax.draw_artist(self.trgline)
+        self.mpl_active = True
         self.fig.canvas.start_event_loop(0.005)
 
-    def __call__(self, data, trg_idx=None):
+    def updateDisplay(self, data, trg_idx=None):
         # update line data and redraw
         self.fig.canvas.restore_region(self.bg)
         self.pline.set_ydata(data[0][:: self.iStep])
@@ -162,11 +163,25 @@ class scOsciDisplay:
             self.ax.draw_artist(self.trgline)
         self.fig.canvas.blit(self.fig.bbox)
 
-    #        self.fig.canvas.start_event_loop(0.005) # does not help keepin menu active
+    #    self.fig.canvas.start_event_loop(0.005)
+
+    def __call__(self):
+        while self.mpl_active:
+            # wait for data, avoid blocking
+            if self.mpQ.empty():
+                self.fig.canvas.start_event_loop(0.005)
+                continue
+            else:
+                _d = self.mpQ.get()
+                if _d is None:
+                    break
+                else:
+                    trg_idx, wdata = _d
+                self.updateDisplay(wdata, trg_idx)
 
     def on_mpl_window_closed(self, ax):
         # detect when matplotlib window is closed
-        self.active = False
+        self.mpl_active = False
 
 
 if __name__ == "__main__":  # ------------------------------
