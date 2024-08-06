@@ -220,10 +220,10 @@ if __name__ == "__main__":  # ------------------------------
         runtime = 0.0
         t_lastupd = 0.0
         while runtime < run_seconds:
-            count, data = scO()  # get data
+            count, trg_idx, data = scO()  # get data
             now = time.time()  # time stamp
             runtime = now - t_start
-            Display(data)  # show data
+            Display.updateDisplay(data, trg_idx)  # show data
             # update status display line
             if runtime - t_lastupd > 1:
                 rate = (count - n0) / (now - t0)
