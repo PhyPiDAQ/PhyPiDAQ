@@ -263,7 +263,7 @@ class DisplayPoissonEvent:
                 )
                 break
 
-            
+
 def showFlash(mpQ, rate, mean):
     """Background process to show Poisson event as a flashing circle
 
