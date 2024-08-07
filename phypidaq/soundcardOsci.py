@@ -3,7 +3,22 @@
 import pyaudio
 import time
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
+
+
+# helper to control geometry
+def move_figure(f, x, y):
+    """Move figure's upper left corner to pixel (x, y)"""
+    backend = matplotlib.get_backend()
+    if backend == 'TkAgg':
+        f.canvas.manager.window.wm_geometry("+%d+%d" % (x, y))
+    elif backend == 'WXAgg':
+        f.canvas.manager.window.SetPosition((x, y))
+    else:
+        # This works for QT and GTK
+        # You can also use window.setGeometry
+        f.canvas.manager.window.move(x, y)
 
 
 class SoundCardOsci:
@@ -114,6 +129,7 @@ class scOsciDisplay:
         self.trgThreshold = 100 if "trgThreshold" not in confdict else confdict["trgThreshold"]
         # create a figure
         self.fig = plt.figure("Audio", figsize=(8.0, 6.0))
+        move_figure(self.fig, 10, 10)  # place at top left corner
         self.fig.canvas.mpl_connect("close_event", self.on_mpl_window_closed)
         self.fig.suptitle("sound card data")
         self.ax = self.fig.add_subplot(111)
