@@ -232,7 +232,7 @@ if __name__ == "__main__":
     finally:
         input(30 * " " + "Finished !  Type <ret> to exit -> ")
         active = False
-        scO.close() # stop reading soundcard
+        scO.close()  # stop reading soundcard
         if csvfile is not None:
             csvfile.close()
         time.sleep(0.3)
