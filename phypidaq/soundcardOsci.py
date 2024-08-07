@@ -122,6 +122,15 @@ class scOsciDisplay:
         self.ax.set_ylabel("aplitude (counts)")
         self.ax.set_xlabel("time (ms)")
         self.ax.axhline(self.trgThreshold, xmin=0, xmax=1, linestyle="dashed", color="red")
+        if self.trgActive:
+            trg_txt = (
+                "Trigger active"
+                + 10 * " "
+                + f"ch:{self.trgChan}   level: {self.trgThreshold}  {'falling' if self.trgFalling else 'rising'}"
+            )
+        else:
+            trg_txt = "Trigger inactive"
+        self.txt = self.ax.text(0.2, 0.97, trg_txt, transform=self.ax.transAxes, color="azure")
         tplt = (np.linspace(0, self.NSamples, self.NSamples) + 0.5) / self.sampling_rate
         self.iStep = int(self.NSamples / 333) + 1
         (self.pline,) = self.ax.plot(tplt[:: self.iStep], np.zeros(self.NSamples)[:: self.iStep], animated=True)
