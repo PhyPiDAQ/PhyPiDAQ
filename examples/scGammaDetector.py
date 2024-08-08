@@ -62,10 +62,30 @@ def runDAQ():
             if _d is None:  # end of daq
                 break
             count, trg_idx, data = _d
-            now = time.time()
+            #
+            # find data around signal 
+            if trg_idx is not None:
+                i0 = max(trg_idx - 25, 0)
+                i1 = min(trg_idx + 75, len(data[0]))
+                d = i1 - i0
+                if d < 100:
+                    if i0 == 0:
+                        i1 += 100 - d
+                    else:
+                        i0 -= 100 - d
+                signal_data = data[0][i0:i1]
+            else:
+                signal_data = None
+            #
+            # calculate pulse height
+            if signal_data is not None:
+                pulse_height = max(signal_data) - min(signal_data)
+            else:
+                pulse_height = -1
+
             # save to file
             if csvfile is not None:
-                print(f"{count}, {now-t_start}", file=csvfile)
+                print(f"{count}, {now-t_start}, {pulse_height}", file=csvfile)
                 if count % 5:
                     csvfile.flush()
             # show oscillogram of raw wave form
@@ -85,7 +105,7 @@ def runDAQ():
                             i1 += 100 - d
                         else:
                             i0 -= 100 - d
-                    flasherQ.put((now - t_start, data[0][i0:i1] / maxADC))
+                    flasherQ.put((now - t_start, signal_data / maxADC))
                 else:
                     flasherQ.put(now - t_start)
         except Exception:
@@ -161,7 +181,7 @@ if __name__ == "__main__":
         timestamp = time.strftime("%y%m%d-%H%M", time.localtime())
         fn = filename + "_" + timestamp + ".csv"
         csvfile = open(fn, "w")
-        csvfile.write("event_numer, event_time[s]\n")
+        csvfile.write("event_numer, event_time[s], pulse_height[adc]\n")
 
     # initialze sound card interface
     scO = SoundCardOsci(confdict=confd)
