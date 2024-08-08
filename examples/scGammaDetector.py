@@ -20,6 +20,14 @@ from phypidaq.soundcardOsci import SoundCardOsci, scOsciDisplay
 from phypidaq.helpers import DAQwait
 from phypidaq.DisplayPoissonEvent import DisplayPoissonEvent
 
+# for contrilGUI
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+from matplotlib.widgets import Button
+
+mpl.use("Qt5Agg")
+plt.style.use("dark_background")  # dark canvas background
+
 
 def keyboard_input(cmd_queue):
     """Read keyboard input and send to Qeueu, runing as background-thread to avoid blocking"""
@@ -29,6 +37,100 @@ def keyboard_input(cmd_queue):
         cmd_queue.put(cmd)
         if cmd == "E":
             break
+
+
+class controlGUI:
+    """graphical user interface to control apps via multirocessing Queue
+
+    Args:
+
+      - cmdQ: a multiprocesing Queue to accept commands
+      - appName: name of app to be controlled
+      - statQ: mp Queue to show status data
+      - confdict: a configuration dictionary for commands (not yer implemented)
+    """
+
+    def __init__(self, cmdQ, appName="TestApp", statQ=None, confdict=None):
+        self.cmdQ = cmdQ
+        self.statQ = statQ
+        self.cdict = {} if confdict is None else confdict
+
+        self.mpl_active = True
+        self.interval = 100  # update for timer
+
+        # create a figure
+        self.f = plt.figure("control Gui", figsize=(6, 1.5))
+        self.f.canvas.mpl_connect("close_event", self.on_mpl_window_closed)
+
+        self.f.subplots_adjust(left=0.1, bottom=0.1, right=0.95, top=0.95, wspace=None, hspace=0.15)
+        gs = self.f.add_gridspec(nrows=5, ncols=1)
+        # 1st subplot for text
+        self.ax0 = self.f.add_subplot(gs[:-2, :])
+        # no axes or labels
+        self.ax0.xaxis.set_tick_params(labelbottom=False)
+        self.ax0.yaxis.set_tick_params(labelleft=False)
+        self.ax0.set_xticks([])
+        self.ax0.set_yticks([])
+        self.ax0.text(0.1, 0.5, f"control {appName}", color="goldenrod", size=15)
+        self.status_txt = self.ax0.text(0.05, 0.075, "active:          ")
+
+    # call-back functions
+    def on_mpl_window_closed(self, ax):
+        # active when application window is closed
+        self.mpl_active = False
+        self.cmdQ.put("E")
+        time.sleep(0.3)
+        sys.exit(0)
+
+    def cb_end(self, event):
+        # active when application window is closed
+        self.mpl_active = False
+        self.cmdQ.put("E")
+        time.sleep(0.3)
+        sys.exit(0)
+
+    def cb_b1(self, event):
+        print("button 1", event)
+
+    def cb_b2(self, event):
+        print("button 2", event)
+
+    def update(self, ax):
+        """called by timern"""
+        if not self.statQ.empty():
+            self.status_txt.set_text(self.statQ.get())
+        ax.figure.canvas.draw()
+
+    def run(self):
+        """run the GUI"""
+        # define widgets
+        b1_text = "but_1"
+        b2_text = "but_2"
+        # create commad buttons
+        # - end button
+        abend = self.f.add_axes([0.9, 0.05, 0.08, 0.16])
+        bend = Button(abend, "End", color="darkred", hovercolor="0.5")
+        bend.on_clicked(self.cb_end)
+        # - more buttons
+        ab1 = self.f.add_axes([0.1, 0.05, 0.08, 0.16])
+        b1 = Button(ab1, b1_text, color="0.25", hovercolor="0.5")
+        b1.on_clicked(self.cb_b1)
+        ab2 = self.f.add_axes([0.2, 0.05, 0.08, 0.16])
+        b2 = Button(ab2, b2_text, color="0.25", hovercolor="0.5")
+        b2.on_clicked(self.cb_b2)
+
+        timer = self.f.canvas.new_timer(interval=self.interval)
+        timer.add_callback(self.update, self.ax0)
+        self.t_start = time.time()
+        timer.start()
+
+        print("sarting event loop - click 'end' to stop")
+        plt.show()
+
+
+def run_controlGUI(*args, **kwargs):
+    gui = controlGUI(*args, **kwargs)
+    gui.run()
 
 
 def showFlash(mpQ, interval):
@@ -63,7 +165,7 @@ def runDAQ():
                 break
             count, trg_idx, data = _d
             #
-            # find data around signal 
+            # find data around signal
             if trg_idx is not None:
                 i0 = max(trg_idx - 25, 0)
                 i1 = min(trg_idx + 75, len(data[0]))
@@ -73,7 +175,7 @@ def runDAQ():
                         i1 += 100 - d
                     else:
                         i0 -= 100 - d
-                signal_data = data[0][i0:i1]
+                signal_data = np.float32(data[0][i0:i1])
             else:
                 signal_data = None
             #
@@ -109,8 +211,9 @@ def runDAQ():
                 else:
                     flasherQ.put(now - t_start)
         except Exception:
-            return
-        # signal end to background processes by sening None
+            # ignore occasional errors
+            pass
+    # signal end to background processes by sening None
     if showevents:
         flasherQ.put(-1)
     if showosci:
@@ -121,6 +224,9 @@ if __name__ == "__main__":
     if sys.platform.startswith("win"):
         # On Windows calling this function is necessary.
         mp.freeze_support()
+
+    kbd_control = True
+    gui_control = True
 
     # parse command line arguments
     parser = argparse.ArgumentParser(description="Read waveforms from soundcard and display and optionally store data")
@@ -207,11 +313,18 @@ if __name__ == "__main__":
         )
         osciProc.start()
 
-    # set up keyboard control
+    # set-up command queue
     active = True
     cmdQ = mp.Queue()  # Queue for command input from keyboard
-    kbdthread = threading.Thread(name="kbdInput", target=keyboard_input, args=(cmdQ,))
-    kbdthread.start()
+
+    # set up control, eihther keyboard, GUI or both
+    if kbd_control:
+        kbdthread = threading.Thread(name="kbdInput", target=keyboard_input, args=(cmdQ,))
+        kbdthread.start()
+    if gui_control:
+        statQ = mp.Queue()
+        guiProc = mp.Process(name="ControlGUI", target=run_controlGUI, args=(cmdQ, "Gamma Detector DAQ", statQ, None))
+        guiProc.start()
 
     # start data acquisition loop
     wait_time = 1.0
@@ -240,18 +353,18 @@ if __name__ == "__main__":
             rate = (count - n0) / (now - t0)
             n0 = count
             t0 = now
-            print(
-                f"active: {runtime:.1f}  triggers: {count}  rate: {rate:.1f} Hz     -> type 'E' to end",
-                10 * " ",
-                end="\r",
-            )
+            status_txt = f"active: {runtime:.1f}  triggers: {count}  rate: {rate:.1f} Hz"
+            if kbd_control:
+                print(status_txt + "   -> type 'E' to end", 10 * " ", end="\r")  #
+            if gui_control:
+                statQ.put(status_txt)
         # -- end while
         print("\n               ... stop reading data")
     except KeyboardInterrupt:
         print("\n" + " !!! keyboard interrupt - ending ...")
     finally:
-        input(30 * " " + "Finished !  Type <ret> to exit -> ")
         active = False
+        #        input(30 * " " + "Finished !  Type <ret> to exit -> ")
         scO.close()  # stop reading soundcard
         if csvfile is not None:
             csvfile.close()
@@ -261,4 +374,6 @@ if __name__ == "__main__":
             flasherProc.terminate()
         if showosci and osciProc.is_alive():
             osciProc.terminate()
-        sys.exit("normal end")
+        if gui_control and guiProc.is_alive():
+            guiProc.terminate()
+        sys.exit("normal end, type <ret>")
