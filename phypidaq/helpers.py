@@ -1,24 +1,22 @@
-# -*- coding: utf-8 -*-
-from __future__ import print_function, division, unicode_literals
-from __future__ import absolute_import
-
+"""helper functions"""
 import os
 import errno
 import time
 from scipy import interpolate
+# for controlGUI
 
 
 def generateCalibrationFunction(calibd):
     """
-     interpolate calibration table t= true, r = raw values ;
-     if only one number for trueVals given, then this is
-     interpreted as a simple calibration factor
+    interpolate calibration table t= true, r = raw values ;
+    if only one number for trueVals given, then this is
+    interpreted as a simple calibration factor
 
-     Args:
-       calibd:   calibration data
-           either a single number as calibration factor: fc
-           or a list or two arrays: [ [true values], [raw values] ]
-     Returns: interpolation function
+    Args:
+      calibd:   calibration data
+          either a single number as calibration factor: fc
+          or a list or two arrays: [ [true values], [raw values] ]
+    Returns: interpolation function
     """
     try:
         iter(calibd)
@@ -27,11 +25,11 @@ def generateCalibrationFunction(calibd):
         t = calibd[0]
     except TypeError:
         # input is only one number
-        r = [0., 1.]
-        t = [0., calibd]
+        r = [0.0, 1.0]
+        t = [0.0, calibd]
         # check input
     if len(t) != len(r):
-        print('!!! generateCalibrationFunction: lengths of input arrays not equal - exiting')
+        print("!!! generateCalibrationFunction: lengths of input arrays not equal - exiting")
         exit(1)
     # make sure raw values are sorted - and simultaneously sort true values
     r, t = zip(*sorted(zip(r, t)))
@@ -41,31 +39,31 @@ def generateCalibrationFunction(calibd):
 
 def stop_processes(process_list):
     """
-      Close all running processes at end of run
+    Close all running processes at end of run
     """
     for p in process_list:  # stop all sub-processes
         if p.is_alive():
-            print('    terminating ' + p.name)
+            print("    terminating " + p.name)
             if p.is_alive():
                 p.terminate()
-            time.sleep(1.)
+            time.sleep(1.0)
 
 
 def keyboard_wait(prompt=None):
-    """ wait for keyboard input """
+    """wait for keyboard input"""
     #  wait for input
     if prompt is None:
-        return input(50 * ' ' + 'type <ret> to exit -> ')
+        return input(50 * " " + "type <ret> to exit -> ")
     else:
         return input(prompt)
 
 
 class DAQwait(object):
-    """ class implementing sleep corrected with system time """
+    """class implementing sleep corrected with system time"""
 
     def __init__(self, dt):
         """Args:
-             dt: wait time in seconds
+        dt: wait time in seconds
         """
         self.dt = dt
         self.lag = False  # indicate occurrence of time lag
@@ -73,14 +71,14 @@ class DAQwait(object):
 
     def __call__(self, T0=None):
         """guarantee correct timing
-           Args:
-             TO:   start time of action to be timed
-                     if not given, take end-time of last wait
+        Args:
+          TO:   start time of action to be timed
+                  if not given, take end-time of last wait
         """
         if T0 is not None:
             self.T0 = T0
         dtcor = self.dt - time.time() + self.T0
-        if dtcor > 0.:
+        if dtcor > 0.0:
             time.sleep(dtcor)
             self.lag = False
         else:
@@ -89,14 +87,14 @@ class DAQwait(object):
 
 
 class RingBuffer(object):
-    """ring buffer to store N objects """
+    """ring buffer to store N objects"""
 
     # implemented as a simple list, where old entries
     #  are overwritten if length of list is exceeded
 
     def __init__(self, N):
         """
-          N: size of buffer
+        N: size of buffer
         """
         self.N = N
         self.B = [None] * N  # initialize a list
@@ -105,7 +103,7 @@ class RingBuffer(object):
 
     def store(self, d):
         """
-          d: data object
+        d: data object
         """
 
         # increment index, eventually overwrite oldest data
@@ -117,7 +115,7 @@ class RingBuffer(object):
         self.B[self.k] = d
 
     def read(self):
-        """ return all data """
+        """return all data"""
 
         if self.full:
             return self.B[self.k:] + self.B[: self.k]
@@ -126,11 +124,11 @@ class RingBuffer(object):
 
 
 class FifoManager(object):
-    """ open a fifo (linux pipe) to transfer data to external process """
+    """open a fifo (linux pipe) to transfer data to external process"""
 
     def __init__(self, fname):
         """open fifo
-          fname: name of fifo
+        fname: name of fifo
         """
 
         try:
@@ -141,10 +139,10 @@ class FifoManager(object):
                 print(e)
                 raise
 
-        self.fifo = open(fname, 'w', 1)
+        self.fifo = open(fname, "w", 1)
 
     def __call__(self, d):
-        print(d, end='', file=self.fifo)
+        print(d, end="", file=self.fifo)
 
     def close(self):
         self.fifo.close()

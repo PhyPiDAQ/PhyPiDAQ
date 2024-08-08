@@ -208,6 +208,8 @@ class DisplayPoissonEvent:
         lastbin = 0
         self.counts[0] = 0
         max_y = 3
+        t_last = 0.
+        rate = 0.
         while self.mpl_active:
             # wait for data, avoid blocking
             if self.mpQ.empty():
