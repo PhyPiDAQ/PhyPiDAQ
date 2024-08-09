@@ -28,20 +28,22 @@ class controlGUI:
       - cmdQ: a multiprocesing Queue to accept commands
       - appName: name of app to be controlled
       - statQ: mp Queue to show status data
-      - confdict: a configuration dictionary for commands (not yer implemented)
+      - confdict: a configuration dictionary for buttons, format {name: [position 0-7, command]}
     """
 
     def __init__(self, cmdQ, appName="TestApp", statQ=None, confdict=None):
         self.cmdQ = cmdQ
         self.statQ = statQ
-        self.cdict = {} if confdict is None else confdict
+        self.button_dict = {'x', [7, ' ']} if confdict is None else confdict
+        self.button_names = list(self.button_dict.keys())
+        self.button_values = list(self.button_dict.values())
 
         self.mpl_active = True
         self.interval = 100  # update for timer
 
         # create a figure
         self.f = plt.figure("control Gui", figsize=(6, 1.5))
-        move_figure(self.f,1200, 0)
+        move_figure(self.f, 1200, 0)
         self.f.canvas.mpl_connect("close_event", self.on_mpl_window_closed)
 
         self.f.subplots_adjust(left=0.1, bottom=0.1, right=0.95, top=0.95, wspace=None, hspace=0.15)
@@ -64,6 +66,14 @@ class controlGUI:
         time.sleep(0.3)
         sys.exit(0)
 
+    def on_button_clicked(self, event):
+        # find numer of the clicked button
+        b_idx = self.baxes.index(event.inaxes)
+        # extract sommand
+        cmd = self.button_values[b_idx][1]
+        # send to controlled process
+        self.cmdQ.put(cmd)
+
     def cb_end(self, event):
         # active when application window is closed
         self.mpl_active = False
@@ -71,14 +81,8 @@ class controlGUI:
         time.sleep(0.3)
         sys.exit(0)
 
-    def cb_b1(self, event):
-        print("button 1", event)
-
-    def cb_b2(self, event):
-        print("button 2", event)
-
     def update(self, ax):
-        """called by timern"""
+        """called by timer"""
         if not self.statQ.empty():
             self.status_txt.set_text(self.statQ.get())
         ax.figure.canvas.draw()
@@ -86,19 +90,12 @@ class controlGUI:
     def run(self):
         """run the GUI"""
         # create commad buttons
-        # - end button
-        abend = self.f.add_axes([0.9, 0.05, 0.08, 0.16])
-        bend = Button(abend, "End", color="darkred", hovercolor="0.5")
-        bend.on_clicked(self.cb_end)
-        # - more buttons
-        # b1_text = "but_1"
-        # b2_text = "but_2"
-        # ab1 = self.f.add_axes([0.1, 0.05, 0.08, 0.16])
-        # b1 = Button(ab1, b1_text, color="0.25", hovercolor="0.5")
-        # b1.on_clicked(self.cb_b1)
-        # ab2 = self.f.add_axes([0.2, 0.05, 0.08, 0.16])
-        # b2 = Button(ab2, b2_text, color="0.25", hovercolor="0.5")
-        # b2.on_clicked(self.cb_b2)
+        self.baxes = []
+        self.buttons = []
+        for i, key in enumerate(self.button_names):
+            self.baxes.append(self.f.add_axes([self.button_values[i][0]*0.12+0.05, 0.05, 0.08, 0.16]))
+            self.buttons.append(Button(self.baxes[-1], key, color="0.25", hovercolor="0.5"))
+            self.buttons[-1].on_clicked(self.on_button_clicked)
 
         # timer waking up 10 times/s
         timer = self.f.canvas.new_timer(interval=self.interval)
