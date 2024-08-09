@@ -90,7 +90,7 @@ def runDAQ():
                 if count % 5:
                     csvfile.flush()
             # show oscillogram of raw wave form
-            if showosci:
+            if showosci and osciProc.is_alive():
                 if (now - t_lastupd) > osc_wait_time:
                     osciQ.put((trg_idx, data))
                     t_lastupd = now
@@ -222,12 +222,10 @@ if __name__ == "__main__":
         kbdthread.start()
     if gui_control:
         # define dict for up to 8 buttons, key=name, values = [position, command]
-        button_dict = {'End': [7, 'E']}
+        button_dict = {"End": [7, "E"]}
         statQ = mp.Queue()
         guiProc = mp.Process(
-            name="ControlGUI",
-            target=run_controlGUI,
-            args=(cmdQ, "Gamma Detector DAQ", statQ, button_dict)
+            name="ControlGUI", target=run_controlGUI, args=(cmdQ, "Gamma Detector DAQ", statQ, button_dict)
         )
         guiProc.start()
 
@@ -250,7 +248,16 @@ if __name__ == "__main__":
                 cmd = cmdQ.get()
                 if cmd == "E":
                     break  # end cleanly
+            # check for termination of subprocess windows:
+            if gui_control and not guiProc.is_alive():
+                print("!!! GUI control window closed - ending")
+                break
+            if showevents and not flasherProc.is_alive():
+                print("!!! Event display closed - ending")
+                break
+            #
             wait()
+            #
             # calculate trigger rate and update status display line
             count = scO.event_count
             now = time.time()  # time stamp
