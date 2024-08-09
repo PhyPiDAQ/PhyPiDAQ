@@ -91,7 +91,7 @@ def runDAQ():
                     csvfile.flush()
             # show oscillogram of raw wave form
             if showosci and osciProc.is_alive():
-                if (now - t_lastupd) > osc_wait_time:
+                if (now - t_lastupd) > osc_wait_time and osciQ.empty():
                     osciQ.put((trg_idx, data))
                     t_lastupd = now
             # show events
