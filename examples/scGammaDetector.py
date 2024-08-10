@@ -287,6 +287,7 @@ if __name__ == "__main__":
             print("terminating event display")
             flasherProc.terminate()
         if showosci and osciProc.is_alive():
+            print("terminating oscilloscope display")
             osciProc.terminate()
         if gui_control and guiProc.is_alive():
             guiProc.terminate()
