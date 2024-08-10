@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## recent additions
 
+## [1.4.0b1] - 2024-08-11
+
+- examples/scGammaDetektor.py for CERN DIY particle detector
+- examples/oscilloscope as a simple application example
+- soundcardOscilloscope for data recording from a soundcard
 - PL1000Config for PicoLog Series 1000 USB data loggers
 - DisplayPoissonEvent
 - Gamma Spectrometer RadiaCode 102
