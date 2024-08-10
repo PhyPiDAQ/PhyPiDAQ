@@ -114,7 +114,7 @@ if NChannels > 1:
         ylims[0][0] = min(ymn0, ymn1)
         ylims[1][0] = min(ymn0, ymn1)
     else:
-        ylim[1][0] = ymx1
+        ylims[1][0] = ymx1
     if abs(ymx1 - ymx0) < 0.1 * yr2:
         ylims[0][1] = max(ymx0, ymx1)
         ylims[1][1] = max(ymx0, ymx1)
