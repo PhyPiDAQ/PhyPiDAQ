@@ -62,10 +62,7 @@ class SoundCardOsci:
         """read data stream and return data if trigger condition is met"""
 
         # read data from sound card
-        _d = np.frombuffer(
-            self.stream.read(self.NSamples, exception_on_overflow=False), 
-            dtype=np.int16
-            )
+        _d = np.frombuffer(self.stream.read(self.NSamples, exception_on_overflow=False), dtype=np.int16)
         data = [_d] if self.NChannels == 1 else [_d[0::2], _d[1::2]]
         # return data if in free-running mode
         if self.active and not self.trgActive:
