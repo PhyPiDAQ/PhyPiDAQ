@@ -62,6 +62,8 @@ def runDAQ():
             _d = scO()
             if _d is None:  # end of daq
                 break
+            now = time.time()
+            t_evt = now - t_start
             count, trg_idx, data = _d
             #
             # find data around signal
@@ -86,7 +88,7 @@ def runDAQ():
 
             # save to file
             if csvfile is not None:
-                print(f"{count}, {now-t_start}, {pulse_height}", file=csvfile)
+                print(f"{count}, {t_evt}, {pulse_height}", file=csvfile)
                 if count % 5:
                     csvfile.flush()
             # show oscillogram of raw wave form
@@ -106,9 +108,9 @@ def runDAQ():
                             i1 += 100 - d
                         else:
                             i0 -= 100 - d
-                    flasherQ.put((now - t_start, signal_data / maxADC))
+                    flasherQ.put((t_evt, signal_data / maxADC))
                 else:
-                    flasherQ.put(now - t_start)
+                    flasherQ.put(t_evt)
         except Exception:
             # ignore occasional errors
             pass
@@ -260,11 +262,11 @@ if __name__ == "__main__":
             #
             # calculate trigger rate and update status display line
             count = scO.event_count
-            now = time.time()  # time stamp
-            runtime = now - t_start
-            rate = (count - n0) / (now - t0)
+            t_now = time.time()  # time stamp
+            runtime = t_now - t_start
+            rate = (count - n0) / (t_now - t0)
             n0 = count
-            t0 = now
+            t0 = t_now
             status_txt = f"active: {runtime:.1f} s  triggers: {count}  rate: {rate:.1f} Hz"
             if kbd_control:
                 print(status_txt + "   -> type 'E' to end", 10 * " ", end="\r")  #
