@@ -115,7 +115,9 @@ class scOsciDisplay:
         self.trgChan = 1 if "trgChan" not in confdict else confdict["trgChan"]
         self.trgFalling = 0 if "trgFalling" not in confdict else confdict["trgFalling"]
         self.trgThreshold = 100 if "trgThreshold" not in confdict else confdict["trgThreshold"]
-        # create a figure
+        # create a figure in interactive mode
+        plt.ion()
+        # 
         self.fig = plt.figure("Audio", figsize=(8.0, 6.0))
         move_figure(self.fig, 10, 10)  # place at top left corner
         self.fig.canvas.mpl_connect("close_event", self.on_mpl_window_closed)
@@ -152,16 +154,19 @@ class scOsciDisplay:
             mx = 0.5 * (1 + self.trgThreshold / self.max)
         self.trgline = self.ax.axvline(0.0, ymin=mn, ymax=mx, color="red", linestyle="dashed", animated=True)
         self.ax.set_ylim(-self.max, self.max)
-        plt.ion()
-        plt.show()
-        plt.pause(0.1)
+        # show static part of graphics
+#        plt.show()
+        self.fig.canvas.start_event_loop(0.005) 
+        #
+        # draw initial versions of animated objects
         self.bg = self.fig.canvas.copy_from_bbox(self.fig.bbox)
         self.ax.draw_artist(self.pline)
         if self.NChannels == 2:
             self.ax.draw_artist(self.pline2)
         self.ax.draw_artist(self.trgline)
+        self.fig.canvas.start_event_loop(0.005) # and show all elements
+        # 
         self.mpl_active = True
-        self.fig.canvas.start_event_loop(0.005)
 
     def updateDisplay(self, data, trg_idx=None):
         # update line data and redraw
@@ -176,8 +181,7 @@ class scOsciDisplay:
             self.trgline.set_xdata((trg_t, trg_t))
             self.ax.draw_artist(self.trgline)
         self.fig.canvas.blit(self.fig.bbox)
-
-    #    self.fig.canvas.start_event_loop(0.005)
+        self.fig.canvas.start_event_loop(0.005)
 
     def __call__(self):
         while self.mpl_active:
