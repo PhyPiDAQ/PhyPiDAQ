@@ -61,16 +61,20 @@ class SoundCardOsci:
     def __call__(self):
         """read data stream and return data if trigger condition is met"""
 
+        if not self.active:
+            # return None if called but not active (can be used to shut-down clients)
+            return None
+
         # read data from sound card
         _d = np.frombuffer(self.stream.read(self.NSamples, exception_on_overflow=False), dtype=np.int16)
         data = [_d] if self.NChannels == 1 else [_d[0::2], _d[1::2]]
         # return data if in free-running mode
-        if self.active and not self.trgActive:
+        if not self.trgActive:
             self.event_count += 1
             return (self.event_count, None, data)
         # else check trigger condition
         _triggered = False
-        while self.active and not _triggered:
+        while not _triggered:
             if self.trgFalling:
                 idx = np.argwhere(data[self.trgChan - 1] < self.trgThreshold)
             else:
@@ -79,10 +83,8 @@ class SoundCardOsci:
                 self.event_count += 1
                 _triggered = True
                 return (self.event_count, idx[0][0], data)
-            _d = np.frombuffer(self.stream.read(self.NSamples), dtype=np.int16)
+            _d = np.frombuffer(self.stream.read(self.NSamples, exception_on_overflow=False), dtype=np.int16)
             data = [_d] if self.NChannels == 1 else [_d[0::2], _d[1::2]]
-        # return None if called but not active (can be used  by clients)
-        return None
 
     def close(self):
         self.active = False
