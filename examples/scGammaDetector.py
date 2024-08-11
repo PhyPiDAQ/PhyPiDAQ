@@ -68,8 +68,8 @@ def runDAQ():
             #
             # find data around signal
             if trg_idx is not None:
-                i0 = max(trg_idx - 25, 0)
-                i1 = min(trg_idx + 75, len(data[0]))
+                i0 = max(trg_idx - 50, 0)
+                i1 = min(trg_idx + 50, len(data[0]))
                 d = i1 - i0
                 if d < 100:
                     if i0 == 0:
