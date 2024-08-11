@@ -55,7 +55,7 @@ class controlGUI:
         self.ax0.yaxis.set_tick_params(labelleft=False)
         self.ax0.set_xticks([])
         self.ax0.set_yticks([])
-        self.ax0.text(0.05, 0.8, f"Process control:", size=10)
+        self.ax0.text(0.05, 0.8, "Process control:", size=10)
         self.ax0.text(0.15, 0.5, f"{appName}", color="goldenrod", size=15)
         self.status_txt = self.ax0.text(0.05, 0.075, "active:          ")
 
