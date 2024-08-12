@@ -85,6 +85,8 @@ class DisplayPoissonEvent:
         self.bg_color = "black"
 
         # initialize an (interactive) figure
+        plt.ion()
+        #
         if rate is not None:
             self.fig = plt.figure("PoissonFlash 𝜏=%.3g" % (self.tau), figsize=(6.0, 8.0))
         else:
@@ -185,8 +187,10 @@ class DisplayPoissonEvent:
             color="ivory",
             mec="orange",
         )
-        plt.ion()
-        plt.show()
+        # plt.ion() moved to top
+        # plt.show()
+        self.fig.canvas.start_event_loop(0.010)
+
         # draw initial graph
         self.fig.canvas.start_event_loop(0.5 * self.tflash)
 
@@ -197,7 +201,7 @@ class DisplayPoissonEvent:
     def __call__(self):
         """Flash object
 
-        Data via input queu mpQ: time and, optionally, waveform data
+        Data via input queue mpQ: time and, optionally, waveform data
 
           flashpulse:  wave form data with 100 samples normalised to one
 
@@ -208,8 +212,8 @@ class DisplayPoissonEvent:
         lastbin = 0
         self.counts[0] = 0
         max_y = 3
-        t_last = 0.
-        rate = 0.
+        t_last = 0.0
+        rate = 0.0
         while self.mpl_active:
             # wait for data, avoid blocking
             if self.mpQ.empty():
@@ -229,7 +233,6 @@ class DisplayPoissonEvent:
                 self.flashline.set_ydata(100 * [None])
                 self.flashobj.set_facecolor(self.flash_color)
                 self.fig.canvas.start_event_loop(0.5 * self.tflash)
-                # replaces plt.pause() without stealing focus
                 # collect statistics
                 N += 1
                 rate = N / t if N > 2 else 0.0
@@ -253,6 +256,9 @@ class DisplayPoissonEvent:
                 if self.counts[hbin] < 0:
                     self.counts[hbin] = 0
                 self.counts[hbin] += 1
+                self.fig.canvas.draw_idle()
+                self.fig.canvas.flush_events()
+
             else:
                 print("\n*==* DisplayPoissonEvent exiting ...")
                 print(

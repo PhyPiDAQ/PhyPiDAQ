@@ -62,29 +62,39 @@ def runDAQ():
             _d = scO()
             if _d is None:  # end of daq
                 break
+            # got valid data
             now = time.time()
             t_evt = now - t_start
             count, trg_idx, data = _d
             #
-            # find data around signal
+            # find signal around trigger point
+            slen = 100  # length of sample around signal
             if trg_idx is not None:
-                i0 = max(trg_idx - 50, 0)
-                i1 = min(trg_idx + 50, len(data[0]))
-                d = i1 - i0
-                if d < 100:
+                it = slen // 2  # trigger point
+                i0 = max(trg_idx - it, 0)
+                i1 = min(trg_idx + (slen - it), len(data[0]))
+                _l = i1 - i0
+                if _l < slen:
                     if i0 == 0:
-                        i1 += 100 - d
+                        i1 += slen - _l
+                        it += slen - _l
                     else:
-                        i0 -= 100 - d
+                        i0 -= slen - _l
+                        it -= slen - _l
                 signal_data = np.float32(data[0][i0:i1])
+                pulse_height = max(signal_data[it:]) - min(signal_data[it:])
             else:
                 signal_data = None
-            #
-            # calculate pulse height
-            if signal_data is not None:
-                pulse_height = max(signal_data) - min(signal_data)
-            else:
                 pulse_height = -1
+            #
+            # show events
+            if showevents:
+                if signal_data is not None:
+                    if flasherQ.empty():
+                        flasherQ.put((t_evt, signal_data / maxADC))
+                else:
+                    if flasherQ.empty():
+                        flasherQ.put(t_evt)
 
             # save to file
             if csvfile is not None:
@@ -94,23 +104,8 @@ def runDAQ():
             # show oscillogram of raw wave form
             if showosci and osciProc.is_alive():
                 if (now - t_lastupd) > osc_wait_time and osciQ.empty():
-                    osciQ.put((trg_idx, data))
                     t_lastupd = now
-            # show events
-            if showevents:
-                # extract data of size 100 around trigger
-                if trg_idx is not None:
-                    i0 = max(trg_idx - 25, 0)
-                    i1 = min(trg_idx + 75, len(data[0]))
-                    d = i1 - i0
-                    if d < 100:
-                        if i0 == 0:
-                            i1 += 100 - d
-                        else:
-                            i0 -= 100 - d
-                    flasherQ.put((t_evt, signal_data / maxADC))
-                else:
-                    flasherQ.put(t_evt)
+                    osciQ.put((trg_idx, data))
         except Exception:
             # ignore occasional errors
             pass
@@ -196,7 +191,7 @@ if __name__ == "__main__":
     # background process to show event in real-time as "flash"
     flaherQ = None
     if showevents:
-        flasherQ = mp.Queue()
+        flasherQ = mp.SimpleQueue()
         flasherProc = mp.Process(
             name="Event",
             target=showFlash,
@@ -206,7 +201,7 @@ if __name__ == "__main__":
     # process to display wave forms
     osciQ = None
     if showosci:
-        osciQ = mp.Queue()
+        osciQ = mp.SimpleQueue()
         osciProc = mp.Process(
             name="Waveform",
             target=showOsci,
@@ -216,7 +211,7 @@ if __name__ == "__main__":
 
     # set-up command queue
     active = True
-    cmdQ = mp.Queue()  # Queue for command input from keyboard
+    cmdQ = mp.SimpleQueue()  # Queue for command input from keyboard
 
     # set up control, eihther keyboard, GUI or both
     if kbd_control:
@@ -277,12 +272,13 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("\n" + " !!! keyboard interrupt - ending ...")
     finally:
+        if runtime >= run_seconds:
+            input(30 * " " + "Runtime ended - type <ret> to close graphics windows -> ")
         active = False
-        #        input(30 * " " + "Finished !  Type <ret> to exit -> ")
         scO.close()  # stop reading soundcard
         if csvfile is not None:
             csvfile.close()
-        time.sleep(0.3)
+        time.sleep(0.9)
         if showevents and flasherProc.is_alive():
             print("terminating event display")
             flasherProc.terminate()
