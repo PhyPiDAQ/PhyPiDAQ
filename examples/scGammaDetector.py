@@ -105,7 +105,7 @@ def runDAQ():
             if showosci and osciProc.is_alive():
                 if (now - t_lastupd) > osc_wait_time and osciQ.empty():
                     t_lastupd = now
-                    osciQ.put((trg_idx, data))
+                    osciQ.put(_d)
         except Exception:
             # ignore occasional errors
             pass

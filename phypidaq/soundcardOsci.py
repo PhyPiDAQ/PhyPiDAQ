@@ -164,11 +164,12 @@ class scOsciDisplay:
         if self.NChannels == 2:
             self.ax.draw_artist(self.pline2)
         self.ax.draw_artist(self.trgline)
+        self.fig.canvas.draw_idle()   # show initial graph
         self.fig.canvas.start_event_loop(0.005)  # and show all elements
         #
         self.mpl_active = True
 
-    def updateDisplay(self, data, trg_idx=None):
+    def updateDisplay(self, count, trg_idx, data):
         # update line data and redraw
         self.fig.canvas.restore_region(self.bg)
         self.pline.set_ydata(data[0][:: self.iStep])
@@ -194,8 +195,7 @@ class scOsciDisplay:
                 if _d is None:
                     break
                 else:
-                    trg_idx, wdata = _d
-                self.updateDisplay(wdata, trg_idx)
+                    self.updateDisplay(*_d)
 
     def on_mpl_window_closed(self, ax):
         # detect when matplotlib window is closed
@@ -203,13 +203,13 @@ class scOsciDisplay:
 
 
 if __name__ == "__main__":  # ------------------------------
-    # application example for SoundCardOsci
+    # application example for SoundCardOsci - "run_scOsci"
 
     # set parameters
     sampling_rate = 48000  # 44100, 48000, 96000 or 192000
     sample_size = 2048
-    channels = 2  # 1 or 2
-    display_range = 2**12  # maximum is 2**15 for 16bit sound card
+    channels = 1  # 1 or 2
+    display_range = 2**13  # maximum is 2**15 for 16bit sound card
     run_seconds = 60  # run-time in seconds
 
     # create a configuration dictionary
@@ -240,7 +240,7 @@ if __name__ == "__main__":  # ------------------------------
             count, trg_idx, data = scO()  # get data
             now = time.time()  # time stamp
             runtime = now - t_start
-            Display.updateDisplay(data, trg_idx)  # show data
+            Display.updateDisplay(count, trg_idx, data)  # show data
             # update status display line
             if runtime - t_lastupd > 1:
                 rate = (count - n0) / (now - t0)
