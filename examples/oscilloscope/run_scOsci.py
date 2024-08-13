@@ -8,7 +8,6 @@ application example for class SoundCardOsci
 """
 
 import time
-import threading
 from phypidaq.soundcardOsci import SoundCardOsci, scOsciDisplay
 from phypidaq.helpers import DAQwait
 
@@ -19,7 +18,7 @@ sample_size = 2048
 channels = 1  # 1 or 2
 display_range = 2**13  # maximum is 2**15 for 16bit sound card
 run_seconds = 60  # run-time in seconds
-upd_interval = 1. # update interval for status line
+upd_interval = 1.  # update interval for status line
 
 # create a configuration dictionary
 confd = {
