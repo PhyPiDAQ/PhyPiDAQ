@@ -9,8 +9,6 @@ application example for class SoundCardOsci
 
 import time
 from phypidaq.soundcardOsci import SoundCardOsci, scOsciDisplay
-from phypidaq.helpers import DAQwait
-
 
 # set parameters
 sampling_rate = 48000  # 44100, 48000, 96000 or 192000
