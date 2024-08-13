@@ -136,7 +136,7 @@ class scOsciDisplay:
             )
         else:
             trg_txt = "Trigger inactive"
-        self.txt = self.ax.text(0.2, 0.97, trg_txt, transform=self.ax.transAxes, color="azure")
+        self.txt = self.ax.text(0.2, 0.97, trg_txt, transform=self.ax.transAxes, color="turquoise")
         tplt = (np.linspace(0, self.NSamples, self.NSamples) + 0.5) / self.sampling_rate
         self.iStep = int(self.NSamples / 333) + 1
         (self.pline,) = self.ax.plot(tplt[:: self.iStep], np.zeros(self.NSamples)[:: self.iStep], animated=True)
