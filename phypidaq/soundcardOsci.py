@@ -164,7 +164,7 @@ class scOsciDisplay:
         if self.NChannels == 2:
             self.ax.draw_artist(self.pline2)
         self.ax.draw_artist(self.trgline)
-        self.fig.canvas.draw_idle()   # show initial graph
+        self.fig.canvas.draw_idle()  # show initial graph
         self.fig.canvas.start_event_loop(0.005)  # and show all elements
         #
         self.mpl_active = True
