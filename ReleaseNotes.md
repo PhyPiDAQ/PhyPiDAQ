@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [1.4.0b1] - 2024-08-11
 
 - examples/scGammaDetektor.py for CERN DIY particle detector
-- examples/oscilloscope as a simple application example
+- examples/oscilloscope/run_scOsci.py  as a simple application example
 - soundcardOscilloscope for data recording from a soundcard
 - PL1000Config for PicoLog Series 1000 USB data loggers
 - DisplayPoissonEvent
