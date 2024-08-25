@@ -2,7 +2,7 @@
 
 As stated in the package summary, *PhyPiDAQ project* aims at  providing high-school and garduate students easy and transparent access to state-of-the-art measurement technology and data acquisition tools. Therefore, the components
 of the *PhyPiDAQ* package are not primarily meant as a stand-alone program, but
-rather serve as a base or framewort to encourage own developments.
+rather serve as a base or framework to encourage own developments.
 Owing to this pedagogical goal, the structure of the code is deliberately kept very minimalistic and simple. Sensors are supported by wrapper classes with a unique and simple interface; using these classes to configure and read out a sensor follows a very straight-forward scheme, illustrated here for a sensor named *SENSOR*:
 
 ```
@@ -131,6 +131,6 @@ configurations, provides an editor function to modify and store them, and then s
 *run_phypy.py*. These programs are described in detail in the *EducatorsGuide*; details about
 the configuration files are given in the *Software Guide*. 
 
-Practical hints and guidelines on how to contribute are given in the document CONTROBUTORS.md. 
+Practical hints and guidelines on how to contribute are given in the document CONTRIBUTING.md. 
 
 A list of all programs, classes, configuration files and examples can be found in the document *PackageStructure.md*.
