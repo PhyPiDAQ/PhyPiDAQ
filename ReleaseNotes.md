@@ -2,11 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
-## recent additions
+## [1.4.1] - 2024-08-25
+
+### Fixed
+
+- Correct spelling in the developer guide
+- Revert release notes for version 1.3.0 to contain all subsections 
 
 ## [1.4.0] - 2024-08-25
 
 ## [1.4.0b1] - 2024-08-11
+
+### Added
 
 - examples/scGammaDetektor.py for CERN DIY particle detector
 - examples/oscilloscope/run_scOsci.py  as a simple application example
@@ -18,6 +25,8 @@ All notable changes to this project will be documented in this file.
 - DevelopersGuide.md
 
 ## [1.3.0] - 2023-05-22
+
+### Added
 
 - Documentation about `flake8` usage
 - `util` submodule, starting with path logic
