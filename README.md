@@ -79,21 +79,20 @@ The following requirements need to be met to work
      ./installlibs.sh
    ```
 
-4. Run the demo by starting the `run_phypi.py`. It will start the application and replay some recorded data in a window,
-   as specified in the `PhyPiDemo.daq`.
+4. Run the demo by starting the script `run_phypi.py`. This will start the application and replay some recorded data in a window, as specified in the configuration file `PhyPiDemo.daq`: 
 
    ```shell
      ./run_phypi.py
    ```
 
-For further information on the installation process, on sensors and hardware needs or on educational examples
-see the detailed documentation in the repositories under the link
-[http://github.com/PhyPiDAQ](http://github.com/PhyPiDAQ).
+For further information on the installation process, on sensors and hardware needs or
+on educational examples see the detailed documentation in the repositories under the link [http://github.com/PhyPiDAQ](http://github.com/PhyPiDAQ).
+
 
 ## Supported sensors
 
-This is a brief summary of all sensors currently supported. Next to the sensors there is a list
-of quantities measured by each sensor.
+This is a brief summary of all sensors currently supported. Next to the sensors there
+is a list of quantities measured by each sensor.
 
 ### List of actively supported sensors
 
@@ -134,5 +133,5 @@ For information on how to contribute to this project, please refer to the
 
 ## License
 
-This project is licensed under the `MIT BSD 2-Clause License`. For more information refer to the
-[LICENSE](LICENSE) file.
+This project is licensed under the `MIT BSD 2-Clause License`. For more information
+refer to the [LICENSE](LICENSE) file.

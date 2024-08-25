@@ -16,6 +16,7 @@ sudo apt install python3-scipy --yes
 sudo apt install python3-matplotlib --yes
 sudo apt install python3-pyqt5 --yes
 sudo apt install libatlas-base-dev --yes # needed to build numpy
+sudo apt install libglib2.0-dev --yes # needed for bluepy
 
 # install this package (phypidaq) 
 sudo pip3 install .
