@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## recent additions
 
+## [1.4.0] - 2024-08-25
+
 ## [1.4.0b1] - 2024-08-11
 
 - examples/scGammaDetektor.py for CERN DIY particle detector
