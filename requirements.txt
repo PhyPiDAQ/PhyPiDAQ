@@ -21,7 +21,6 @@ Adafruit-PureIO==1.1.9
 pyftdi>=0.53.2
 pyserial==3.5
 pyusb<2.0
-radiacode>=0.3.2
 sysv-ipc==1.1.0
 websockets==10.4
 w1thermsensor==2.0.0
@@ -29,3 +28,5 @@ PyYAML
 numpy
 rpi-ws281x==4.3.0
 RPi.GPIO==0.7.0
+radiacode>=0.3.2
+pyaudio
