@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """very simple and minimalistic example to read data from a sensor
-   and send output to stdout
+and send output to stdout
 """
 
 from random import randint
@@ -16,17 +16,17 @@ ERROR = -9999.0
 
 class Config:
     def __init__(self):
-        print('__init__')
+        print("__init__")
 
     def init(self):
-        print('init')
+        print("init")
 
     def acquireData(self, dat):
-        print('acquire')
+        print("acquire")
         dat[0] = 42.0
 
     def closeDevice(self):
-        print('close')
+        print("close")
 
 
 class Random(Config):
@@ -51,14 +51,14 @@ def main():
     data = array([0.0])
 
     try:
-        print('starting readout,  type <ctrl-C> to stop')
+        print("starting readout,  type <ctrl-C> to stop")
         while True:
             device.acquireData(data)
             delta_time = time() - initial_time
-            print(f'{delta_time:.2f}, {data[0]:.3f}')
+            print(f"{delta_time:.2f}, {data[0]:.3f}")
             sleep(dt)
     except KeyboardInterrupt:
-        print(f'{delta_time + 1:.2f}, {ERROR:.3f}')
+        print(f"{delta_time + 1:.2f}, {ERROR:.3f}")
     finally:
         if device is not None:
             device.closeDevice()

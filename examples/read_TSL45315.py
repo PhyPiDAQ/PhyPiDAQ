@@ -11,7 +11,7 @@ device = TSL45315Config(config_dict=config_dict)
 device.init()
 
 # Reserve space for data
-data = np.array([0.])
+data = np.array([0.0])
 
 print("Starting measuring!")
 

@@ -1,7 +1,8 @@
 #!/usr/bin/python
 """PoissonLED
-   LED flashing according to a random Poisson Process
+LED flashing according to a random Poisson Process
 """
+
 from __future__ import print_function, division, unicode_literals
 from __future__ import absolute_import
 
@@ -25,22 +26,28 @@ def flash_led(pin, deltatime):
 pLED = 26
 gpio.setup(pLED, gpio.OUT)
 
-tau = 1.  # 1 second default
+tau = 1.0  # 1 second default
 if len(sys.argv) > 1:
     tau = float(sys.argv[1])
 tflash = 0.0075
 
-print('flashing GPIO pin %i randomly with tau= %.3gs' % (pLED, tau))
+print("flashing GPIO pin %i randomly with tau= %.3gs" % (pLED, tau))
 try:
-    dtcum = 0.
+    dtcum = 0.0
     T0 = time.time()
     while True:
-        flashThread = threading.Thread(target=flash_led, args=(pLED, tflash,))
+        flashThread = threading.Thread(
+            target=flash_led,
+            args=(
+                pLED,
+                tflash,
+            ),
+        )
         flashThread.start()
         # generate exponentially distributed waiting time
-        dt = -tau * math.log(random.uniform(0., 1.))
+        dt = -tau * math.log(random.uniform(0.0, 1.0))
         dtcor = dt - time.time() + T0 + dtcum
-        if dtcor > 0.:
+        if dtcor > 0.0:
             time.sleep(dtcor)
         dtcum += dt
 

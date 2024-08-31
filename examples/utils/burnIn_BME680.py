@@ -8,7 +8,7 @@ import numpy as np
 from phypidaq.BME680Config import *
 
 # Create a config dictionary, to print all four channels
-config_dict = {'NChannels': 5}
+config_dict = {"NChannels": 5}
 
 # Create an instance of the device
 device = BME680Config(config_dict=config_dict)
@@ -17,7 +17,7 @@ device = BME680Config(config_dict=config_dict)
 device.init()
 
 # Reserve space for data (five channels here)
-data = np.array([0., 0., 0., 0., 0.])
+data = np.array([0.0, 0.0, 0.0, 0.0, 0.0])
 
 # Print message
 print("Starting burn-in-process for MOX to adjust.")
@@ -35,9 +35,9 @@ for i in range(duration):
     filled_len = int(round(bar_len * i / float(duration)))
 
     percents = 100.0 * i / float(duration)
-    bar = '#' * filled_len + ' ' * (bar_len - filled_len)
+    bar = "#" * filled_len + " " * (bar_len - filled_len)
 
-    sys.stdout.write('[%s] %.3g%%\r' % (bar, percents))
+    sys.stdout.write("[%s] %.3g%%\r" % (bar, percents))
     sys.stdout.flush()
     # Sleep a second
     time.sleep(1)

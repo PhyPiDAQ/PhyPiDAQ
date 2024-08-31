@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-""" script RePlot.py
-    usage: RePlot.py [filename] [[channel numbers]]
+"""script RePlot.py
+usage: RePlot.py [filename] [[channel numbers]]
 
-    Read data exported by run_phypi.py and show plot
+Read data exported by run_phypi.py and show plot
 """
 
 from __future__ import print_function, division, unicode_literals
@@ -17,7 +17,7 @@ if len(sys.argv) >= 2:
     fnam = sys.argv[1]
 else:
     fnam = "PhyPiData.csv"
-print('*==* ', sys.argv[0], ' Lese Daten aus Datei', fnam)
+print("*==* ", sys.argv[0], " Lese Daten aus Datei", fnam)
 
 Channels = []
 if len(sys.argv) >= 3:
@@ -33,21 +33,19 @@ f.close()
 h0 = txtdata[0][2:]  # remove leading '#'
 h1 = txtdata[1][2:]
 h2 = txtdata[2][2:]
-dT = float(h1.split(' ')[-1])
-tags = h2.split(',')
+dT = float(h1.split(" ")[-1])
+tags = h2.split(",")
 # read data part
-data = np.loadtxt(txtdata, dtype=np.float32,
-                  delimiter=',',
-                  unpack=True)
+data = np.loadtxt(txtdata, dtype=np.float32, delimiter=",", unpack=True)
 Ndat = len(data[0])  # number of data points in file
 
-print('Data set header:')
+print("Data set header:")
 print(h0)
 print(h1)
 print(h2)
-print('Data set info:')
-print('  columns: ', len(tags), '  data points: ', Ndat)
-print('\ngenerating graph ...')
+print("Data set info:")
+print("  columns: ", len(tags), "  data points: ", Ndat)
+print("\ngenerating graph ...")
 
 # check if only selected channels wanted
 if len(Channels) == 0:
@@ -57,43 +55,42 @@ else:
     NChannels = len(Channels)
 
 # create a figure
-fig = plt.figure("PhyPiData", figsize=(6., 3.))
-fig.subplots_adjust(left=0.15, bottom=0.15, right=0.85, top=0.95,
-                    wspace=None, hspace=.25)
-axes = [fig.add_subplot(1, 1, 1, facecolor='ivory')]
+fig = plt.figure("PhyPiData", figsize=(6.0, 3.0))
+fig.subplots_adjust(left=0.15, bottom=0.15, right=0.85, top=0.95, wspace=None, hspace=0.25)
+axes = [fig.add_subplot(1, 1, 1, facecolor="ivory")]
 if NChannels > 1:
     axes.append(axes[0].twinx())
 Naxes = len(axes)
-ChanColors = ['darkblue', 'sienna'] + ['C' + str(i) for i in range(NChannels - 2)]
+ChanColors = ["darkblue", "sienna"] + ["C" + str(i) for i in range(NChannels - 2)]
 
 if dT < 60:
-    tUnit = 's'
-    tUnitFactor = 1.
+    tUnit = "s"
+    tUnitFactor = 1.0
 elif dT < 3600:
-    tUnit = 'min'
-    tUnitFactor = 1. / 60.
+    tUnit = "min"
+    tUnitFactor = 1.0 / 60.0
 else:
-    tUnit = 'h'
-    tUnitFactor = 1. / 3600.
+    tUnit = "h"
+    tUnitFactor = 1.0 / 3600.0
 Ti = dT * np.linspace(-Ndat + 1, 0, Ndat) * tUnitFactor
 
 
 # find suitable plot ranges
 def getlims(mn0, mx0):
     # general algorithm to find y-range for plotting
-    if mn0 < 0.:
+    if mn0 < 0.0:
         mn = 1.05 * mn0
     else:
         mn = 0.95 * mn0
-    if mx0 < 0.:
+    if mx0 < 0.0:
         mx = 0.95 * mx0
     else:
         mx = 1.05 * mx0
     r = mx - mn
     if abs(mn) < 0.05 * r:
-        mn = 0.
+        mn = 0.0
     if abs(mx) < 0.05 * r:
-        mx = 0.
+        mx = 0.0
     return [mn, mx]
 
 
@@ -126,8 +123,8 @@ for i in range(Naxes):
     axes[i].set_xlim(Ti[0], Ti[-1])
     axes[i].set_ylim(ylims[i][0], ylims[i][1])
     axes[i].set_ylabel(tags[i], color=ChanColors[i])
-    axes[i].grid(True, linestyle='--', alpha=0.3)
-axes[0].set_xlabel('History (' + tUnit + ')')
+    axes[i].grid(True, linestyle="--", alpha=0.3)
+axes[0].set_xlabel("History (" + tUnit + ")")
 
 # plot data
 for i in range(NChannels):

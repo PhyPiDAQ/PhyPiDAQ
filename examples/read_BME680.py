@@ -8,7 +8,7 @@ import numpy as np
 from phypidaq.BME680Config import *
 
 # Create a config dictionary, to print all four channels
-config_dict = {'NChannels': 5}
+config_dict = {"NChannels": 5}
 
 # create an instance of the device
 device = BME680Config(config_dict=config_dict)
@@ -17,12 +17,12 @@ device = BME680Config(config_dict=config_dict)
 device.init()
 
 # reserve space for data (four channels here)
-data = np.array([0., 0., 0., 0., 0.])
+data = np.array([0.0, 0.0, 0.0, 0.0, 0.0])
 
-print(' starting readout,     type <ctrl-C> to stop')
+print(" starting readout,     type <ctrl-C> to stop")
 
 # read-out interval in s
-dt = 2.
+dt = 2.0
 # start time
 T0 = time.time()
 
@@ -30,5 +30,5 @@ T0 = time.time()
 while True:
     device.acquireData(data)
     dT = time.time() - T0
-    print('%.2g, %.4g°C %.6ghPa %.4gm %.2g%% %.2gOhm' % (dT, data[0], data[1], data[2], data[3], data[4]))
+    print("%.2g, %.4g°C %.6ghPa %.4gm %.2g%% %.2gOhm" % (dT, data[0], data[1], data[2], data[3], data[4]))
     time.sleep(dt)

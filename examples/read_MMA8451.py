@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 
 """read data from digital sensor: BMB 180 temperature and pressure
-     this script illustrates the general usage of package phypidaq
-     prints data read from a digital sensor
-       (BMP180 Temperature and Pressure Sensor)
+this script illustrates the general usage of package phypidaq
+prints data read from a digital sensor
+  (BMP180 Temperature and Pressure Sensor)
 """
+
 import time
 import numpy as np
 
@@ -19,9 +20,9 @@ device = MMA8451Config()
 device.init()
 
 # reserve space for data (two channels here)
-dat = np.array([0., 0., 0.])
+dat = np.array([0.0, 0.0, 0.0])
 
-print(' starting readout,     type <ctrl-C> to stop')
+print(" starting readout,     type <ctrl-C> to stop")
 
 # read-out interval in s
 dt = 0.5
@@ -33,5 +34,5 @@ while True:
     device.acquireData(dat)
     dT = time.time() - T0
 
-    print('%6.1f, x: %+7.3fm/s²  y: %+7.3fm/s²  z: %+7.3fm/s²' % (dT, dat[0], dat[1], dat[2]))
+    print("%6.1f, x: %+7.3fm/s²  y: %+7.3fm/s²  z: %+7.3fm/s²" % (dT, dat[0], dat[1], dat[2]))
     time.sleep(dt)

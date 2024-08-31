@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 
 """read_18B20.py
-     this script illustrates the general usage of package phypidaq
-     prints data read from a digital sensor  (DS18B20 Temperature Sensor)
+this script illustrates the general usage of package phypidaq
+prints data read from a digital sensor  (DS18B20 Temperature Sensor)
 """
+
 import time
 import numpy as np
 
@@ -18,12 +19,12 @@ device = DS18B20Config()
 device.init()
 
 # reserve space for data (here only one channel)
-dat = np.array([0.])
+dat = np.array([0.0])
 
-print(' starting readout,     type <ctrl-C> to stop')
+print(" starting readout,     type <ctrl-C> to stop")
 
 # read-out interval in s
-dt = 2.
+dt = 2.0
 # start time
 T0 = time.time()
 
@@ -31,5 +32,5 @@ T0 = time.time()
 while True:
     device.acquireData(dat)
     dT = time.time() - T0
-    print('%.2g, %.4g' % (dT, dat))
+    print("%.2g, %.4g" % (dT, dat))
     time.sleep(dt)

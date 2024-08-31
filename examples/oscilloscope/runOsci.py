@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 """Data visualisation
-     this script reads data from PicoScope
-     and displays them in oscilloscope mode
+this script reads data from PicoScope
+and displays them in oscilloscope mode
 
-     Usage: ./runOsci.py <Oscilloscope_config>.yaml
+Usage: ./runOsci.py <Oscilloscope_config>.yaml
 """
 
 from __future__ import print_function, division, unicode_literals
@@ -25,46 +25,46 @@ from picodaqa.mpOsci import mpOsci
 
 # helper functions
 
+
 def keyboard_input(cmd_queue):
-    """ read keyboard input, run as background-thread to avoid blocking """
+    """read keyboard input, run as background-thread to avoid blocking"""
 
     while ACTIVE:
-        kbdtxt = input(20 * ' ' + 'type -> P(ause), R(esume), or (E)nd+ <ret> ')
+        kbdtxt = input(20 * " " + "type -> P(ause), R(esume), or (E)nd+ <ret> ")
         cmd_queue.put(kbdtxt)
         kbdtxt = ""
 
 
 def stop_processes(process_list):
     """
-      Close all running processes at end of run
+    Close all running processes at end of run
     """
     for p in process_list:  # stop all sub-processes
         if p.is_alive():
-            print('    terminating ' + p.name)
+            print("    terminating " + p.name)
             if p.is_alive():
                 p.terminate()
-            time.sleep(1.)
+            time.sleep(1.0)
 
 
 if __name__ == "__main__":  # - - - - - - - - - - - - - - - - - - - - - -
-
-    print('\n*==* script ' + sys.argv[0] + ' running \n')
+    print("\n*==* script " + sys.argv[0] + " running \n")
 
     # check for / read command line arguments
     # read DAQ configuration file
     if len(sys.argv) >= 2:
         PSconfFile = sys.argv[1]
     else:
-        PSconfFile = 'PSOsci.yaml'
-    print('    PS configuration from file ' + PSconfFile)
+        PSconfFile = "PSOsci.yaml"
+    print("    PS configuration from file " + PSconfFile)
 
     # read scope configuration file
-    print('    Device configuration from file ' + PSconfFile)
+    print("    Device configuration from file " + PSconfFile)
     try:
         with open(PSconfFile) as f:
             PSconfDict = yaml.load(f, Loader=yaml.Loader)
     except (OSError, yaml.YAMLError):
-        print('     failed to read scope configuration file ' + PSconfFile)
+        print("     failed to read scope configuration file " + PSconfFile)
         exit(1)
 
     # configure and initialize PicoScope
@@ -78,27 +78,27 @@ if __name__ == "__main__":  # - - - - - - - - - - - - - - - - - - - - - -
 
     thrds = []
     procs = []
-    deltaT = 10.  # max. update interval in ms
+    deltaT = 10.0  # max. update interval in ms
     cmdQ = mp.Queue(1)  # Queue for command input
     datQ = mp.Queue(1)  # Queue for data transfer to sub-process
     XY = True  # display Channel A vs. B if True
-    name = 'Oscilloscope'
+    name = "Oscilloscope"
     procs.append(mp.Process(name=name, target=mpOsci, args=(datQ, PSconf.OscConfDict, deltaT, name)))
     #                    Queue      config        interval name
 
-    thrds.append(threading.Thread(name='kbdInput', target=keyboard_input, args=(cmdQ,)))
+    thrds.append(threading.Thread(name="kbdInput", target=keyboard_input, args=(cmdQ,)))
     #                           Queue
 
     # start subprocess(es)
     for prc in procs:
         prc.deamon = True
         prc.start()
-        print(' -> starting process ', prc.name, ' PID=', prc.pid)
+        print(" -> starting process ", prc.name, " PID=", prc.pid)
 
     ACTIVE = True  # thread(s) active
     # start threads
     for thread in thrds:
-        print(' -> starting thread ', thread.name)
+        print(" -> starting thread ", thread.name)
         thread.deamon = True
         thread.start()
 
@@ -118,22 +118,22 @@ if __name__ == "__main__":  # - - - - - - - - - - - - - - - - - - - - - -
             # check for keyboard input
             if not cmdQ.empty():
                 cmd = cmdQ.get()
-                if cmd == 'E':
-                    print('\n' + sys.argv[0] + ': End command received - closing down')
+                if cmd == "E":
+                    print("\n" + sys.argv[0] + ": End command received - closing down")
                     ACTIVE = False
                     break
-                elif cmd == 'P':
+                elif cmd == "P":
                     DAQ_ACTIVE = False
-                elif cmd == 'R':
+                elif cmd == "R":
                     DAQ_ACTIVE = True
 
     except KeyboardInterrupt:
         DAQ_ACTIVE = False
         ACTIVE = False
-        print('\n' + sys.argv[0] + ': keyboard interrupt - closing down ...')
+        print("\n" + sys.argv[0] + ": keyboard interrupt - closing down ...")
 
     finally:
         PSconf.closeDevice()  # close down hardware device
-        time.sleep(1.)
+        time.sleep(1.0)
         stop_processes(procs)  # stop all sub-processes in list
-        print('*==* ' + sys.argv[0] + ': normal end')
+        print("*==* " + sys.argv[0] + ": normal end")

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""Read data in CSV format from websocket
-"""
+"""Read data in CSV format from websocket"""
 
 import sys
 import asyncio
@@ -16,8 +15,7 @@ print("*==* ", sys.argv[0], " Lese Daten von url ", uri)
 
 
 async def read_ws():
-    """asynchronous read from websocket
-    """
+    """asynchronous read from websocket"""
     async with websockets.connect(uri, ping_interval=None) as websocket:
         # test connection
         await websocket.send("req_connect")
@@ -29,11 +27,11 @@ async def read_ws():
         await websocket.send("getData")
         while True:
             inp = await websocket.recv()
-            if inp == '\n':  # empty record, end
+            if inp == "\n":  # empty record, end
                 print("empty input - closing")
                 sys.exit(0)
             else:
-                print('read: %s ' % inp, end='')
+                print("read: %s " % inp, end="")
 
 
 # run web client

@@ -3,8 +3,8 @@
 
 """show_RC102Spectrum.py
 
-     Command-line example to read and display data from
-     RadiaCode 102 Spectrometer with PhyPiDAQ
+Command-line example to read and display data from
+RadiaCode 102 Spectrometer with PhyPiDAQ
 """
 
 import argparse
@@ -16,9 +16,7 @@ from phypidaq.DisplayManager import DisplayManager
 
 # parse command line arguments
 parser = argparse.ArgumentParser(description="read and display spectrum from RadioCode 102")
-parser.add_argument(
-    "--bluetooth-mac", type=str, required=False, help="bluetooth MAC address of radiascan device"
-)
+parser.add_argument("--bluetooth-mac", type=str, required=False, help="bluetooth MAC address of radiascan device")
 parser.add_argument(
     "-n", "--noreset", action="store_const", const=True, default=False, help="do not reset spectrum stored in device"
 )

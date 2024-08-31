@@ -16,10 +16,10 @@ device.init()
 # reserve space for data (one channels here)
 data = np.array([0.0])
 
-print('Starting readout. Type <Ctrl-C> to stop')
+print("Starting readout. Type <Ctrl-C> to stop")
 
 # read-out interval in s
-dt = 1.
+dt = 1.0
 # start time
 T0 = time.time()
 
@@ -27,5 +27,5 @@ T0 = time.time()
 while True:
     device.acquireData(data)
     dT = time.time() - T0
-    print('%.2g, %.4g°C' % (dT, data[0]))
+    print("%.2g, %.4g°C" % (dT, data[0]))
     time.sleep(dt)
