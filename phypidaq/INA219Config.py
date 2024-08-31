@@ -55,7 +55,7 @@ class INA219Config(object):
         if 'maxVolt' in confdict:
             self.maxVolt = confdict['maxVolt']
         else:
-            self.maxVolt = 32.
+            self.maxVolt = 32.0
 
         if 'gainResolution' in confdict:
             self.gainResolution = confdict['gainResolution']
@@ -78,14 +78,11 @@ class INA219Config(object):
         else:
             self.shuntAdcResolution = 0
 
-        self.ChanLims = [[0., self.maxAmp],
-                         [0., self.maxVolt],
-                         [0., self.maxAmp * self.maxVolt]]
+        self.ChanLims = [[0.0, self.maxAmp], [0.0, self.maxVolt], [0.0, self.maxAmp * self.maxVolt]]
         self.ChanNams = ['I', 'U', 'P']
         self.ChanUnits = ['A', 'V', 'W']
 
     def init(self):
-
         if self.maxAmp > 3.2:
             print('!!! ' + cname + ": Current range must be < 3.2A")
             sys.exit(1)
@@ -96,9 +93,9 @@ class INA219Config(object):
         else:
             self.sensor = INA219(i2c_bus)
 
-        if self.maxVolt <= 16.:
+        if self.maxVolt <= 16.0:
             self.sensor.bus_voltage_range = BusVoltageRange.RANGE_16V
-        elif self.maxVolt <= 32.:
+        elif self.maxVolt <= 32.0:
             self.sensor.bus_voltage_range = BusVoltageRange.RANGE_32V
         else:
             print('!!! ' + cname + ": Voltage must be < 32.V")
@@ -110,8 +107,7 @@ class INA219Config(object):
         self.sensor.gain = self.gainSwitch.get(self.gainResolution)
 
     def acquireData(self, buf):
-
-        buf[0] = self.sensor.current / 1000.  # in Amps
+        buf[0] = self.sensor.current / 1000.0  # in Amps
         if self.NChannels > 1:
             buf[1] = self.sensor.bus_voltage
         if self.NChannels > 2:

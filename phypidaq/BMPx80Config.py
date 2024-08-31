@@ -20,6 +20,7 @@ REG_ID = 0xD0
 
 # code of driver classes included below
 
+
 class BMPx80Config(object):
     """digital thermometer DS18B20Config configuration and interface"""
 
@@ -34,7 +35,7 @@ class BMPx80Config(object):
             self.NChannels = confdict["NChannels"]
         else:
             self.NChannels = 2
-        self.ChanLims = [[-40., 85.], [300., 1100.], [0., 100.]]
+        self.ChanLims = [[-40.0, 85.0], [300.0, 1100.0], [0.0, 100.0]]
         self.ChanNams = ['T', 'P', 'H']
         self.ChanUnits = ['°C', 'hPa', '%']
 
@@ -76,7 +77,6 @@ class BMPx80Config(object):
             sys.exit(1)
 
     def acquireData(self, buf):
-
         if self.chipID == BME280_CHIPID:
             buf[0], p, h = self.sensor.readAll()  # temp., press., hum.
             if self.NChannels > 1:
@@ -86,7 +86,7 @@ class BMPx80Config(object):
         else:
             buf[0] = self.sensor.read_temperature()  # in degC
             if self.NChannels > 1:
-                buf[1] = self.sensor.read_pressure() / 100.  # in hPa
+                buf[1] = self.sensor.read_pressure() / 100.0  # in hPa
 
     def closeDevice(self):
         # nothing to do here
@@ -147,12 +147,15 @@ class BMP085(object):
     def __init__(self, mode=BMP085_STANDARD, address=BMP_I2CADDR, i2c=None, busnum=1, i2c_interface=None):
         # Check that mode is valid.
         if mode not in [BMP085_ULTRALOWPOWER, BMP085_STANDARD, BMP085_HIGHRES, BMP085_ULTRAHIGHRES]:
-            raise ValueError(f'Unexpected mode value {mode}.  Set mode to one of ' +
-                             'BMP085_ULTRALOWPOWER, BMP085_STANDARD, BMP085_HIGHRES, or BMP085_ULTRAHIGHRES')
+            raise ValueError(
+                f'Unexpected mode value {mode}.  Set mode to one of '
+                + 'BMP085_ULTRALOWPOWER, BMP085_STANDARD, BMP085_HIGHRES, or BMP085_ULTRAHIGHRES'
+            )
         self._mode = mode
         # Create I2C device.
         if i2c is None:
             import Adafruit_GPIO.I2C as I2C
+
             i2c = I2C
 
         self._device = i2c.get_i2c_device(address, busnum=busnum, i2c_interface=i2c_interface)
@@ -303,14 +306,13 @@ BMP280_TEMPDATA = 0xFA
 
 class BMP280(object):
     def __init__(self, address=BMP_I2CADDR, i2c=None, busnum=1, i2c_interface=None):
-
         # Adadfruit I2C interface
         if i2c is None:
             import Adafruit_GPIO.I2C as I2C
+
             i2c = I2C
 
-        self._device = i2c.get_i2c_device(address,
-                                          busnum=busnum, i2c_interface=i2c_interface)
+        self._device = i2c.get_i2c_device(address, busnum=busnum, i2c_interface=i2c_interface)
 
         if self._device.readU8(REG_ID) != BMP280_CHIPID:
             raise Exception('Unsupported chip')
@@ -358,7 +360,7 @@ class BMP280(object):
         return raw
 
     def _compensate_temp(self, raw_temp):
-        """ Compensate temperature """
+        """Compensate temperature"""
         t1 = (((raw_temp >> 3) - (self.cal_t1 << 1)) * (self.cal_t2)) >> 11
         t2 = (((((raw_temp >> 4) - (self.cal_t1)) * ((raw_temp >> 4) - (self.cal_t1))) >> 12) * (self.cal_t3)) >> 14
         return t1 + t2
@@ -459,8 +461,7 @@ OVERSAMPLE_HUM = 2
 
 
 class BME280(object):
-    """Class to represent the Bosch BMP280 temperature and pressure sensor
-    """
+    """Class to represent the Bosch BMP280 temperature and pressure sensor"""
 
     def __init__(self, address=BMP_I2CADDR, i2c=None):
         self.DEVICE = address
@@ -474,7 +475,6 @@ class BME280(object):
         self.init()
 
     def init(self):
-
         self.bus.write_byte_data(self.DEVICE, REG_CONTROL_HUM, OVERSAMPLE_HUM)
 
         control = OVERSAMPLE_TEMP << 5 | OVERSAMPLE_PRES << 2 | MODE
@@ -513,12 +513,12 @@ class BME280(object):
         self.dig_H6 = getChar(cal3, 6)
 
         # Wait in ms (Datasheet Appendix B: Measurement time and current calculation)
-        wait_time = 1.25 + (2.3 * OVERSAMPLE_TEMP) + ((2.3 * OVERSAMPLE_PRES) + 0.575) + (
-                    (2.3 * OVERSAMPLE_HUM) + 0.575)
+        wait_time = (
+            1.25 + (2.3 * OVERSAMPLE_TEMP) + ((2.3 * OVERSAMPLE_PRES) + 0.575) + ((2.3 * OVERSAMPLE_HUM) + 0.575)
+        )
         time.sleep(wait_time / 1000)  # Wait the required time
 
     def readAll(self):
-
         # Read temperature/pressure/humidity
         data = self.bus.read_i2c_block_data(self.DEVICE, REG_DATA, 8)
         pres_raw = (data[0] << 12) | (data[1] << 4) | (data[2] >> 4)
@@ -526,7 +526,7 @@ class BME280(object):
         hum_raw = (data[6] << 8) | data[7]
 
         # Refine temperature
-        var1 = ((((temp_raw >> 3) - (self.dig_T1 << 1))) * (self.dig_T2)) >> 11
+        var1 = (((temp_raw >> 3) - (self.dig_T1 << 1)) * (self.dig_T2)) >> 11
         var2 = (((((temp_raw >> 4) - (self.dig_T1)) * ((temp_raw >> 4) - (self.dig_T1))) >> 12) * (self.dig_T3)) >> 14
         t_fine = var1 + var2
         t = float(((t_fine * 5) + 128) >> 8)
@@ -549,12 +549,12 @@ class BME280(object):
 
         # Refine humidity
         h = t_fine - 76800.0
-        h = (hum_raw - (self.dig_H4 * 64.0 + self.dig_H5 / 16384.0 * h))
+        h = hum_raw - (self.dig_H4 * 64.0 + self.dig_H5 / 16384.0 * h)
         h = h * (self.dig_H2 / 65536.0 * (1.0 + self.dig_H6 / 67108864.0 * h * (1.0 + self.dig_H3 / 67108864.0 * h)))
         h = h * (1.0 - self.dig_H1 * h / 524288.0)
         if h > 100:
             h = 100
         elif h < 0:
-            h = 0.
+            h = 0.0
 
         return t / 100.0, p / 100, h

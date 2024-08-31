@@ -14,7 +14,6 @@ class PulseGPIO(object):
     def pulseGPIOpin(self):
         # sub-process to pulse GPIO pin
         while True:
-
             ton = self.Q.get()  # wait for entry in Queue
             # ton > 0: pin on for ton sec
             # ton = 0: pin on
@@ -31,7 +30,7 @@ class PulseGPIO(object):
 
     def __init__(self, pin=None):
         """Args: pin: GPIO pin number
-                 cmdQ: multiprocessing queue"""
+        cmdQ: multiprocessing queue"""
         gpio.setmode(gpio.BCM)
         if pin is None:
             print("pulseGPIO config error: no GPIO Pin specified - exiting")
@@ -47,8 +46,7 @@ class PulseGPIO(object):
 
         # start pulser as background process
         self.subprocs = []
-        self.subprocs.append(Process(name='pulseGPIOpin',
-                                     target=self.pulseGPIOpin))
+        self.subprocs.append(Process(name='pulseGPIOpin', target=self.pulseGPIOpin))
         for p in self.subprocs:
             p.daemon = True
             p.start()

@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from __future__ import print_function, division, unicode_literals
 from __future__ import absolute_import
@@ -144,15 +144,9 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
         self.lE_WorkDir.setText(self.work_directory_name)
 
         # set iterable over Device Configs Tabs (max. of 3)
-        self.tab_DeviceConfigs = [self.tab_DeviceConfig0,
-                                  self.tab_DeviceConfig1,
-                                  self.tab_DeviceConfig2]
-        self.pB_DeviceSelects = [self.pB_DeviceSelect0,
-                                 self.pB_DeviceSelect1,
-                                 self.pB_DeviceSelect2]
-        self.pTE_DeviceConfigs = [self.pTE_DeviceConfig0,
-                                  self.pTE_DeviceConfig1,
-                                  self.pTE_DeviceConfig2]
+        self.tab_DeviceConfigs = [self.tab_DeviceConfig0, self.tab_DeviceConfig1, self.tab_DeviceConfig2]
+        self.pB_DeviceSelects = [self.pB_DeviceSelect0, self.pB_DeviceSelect1, self.pB_DeviceSelect2]
+        self.pTE_DeviceConfigs = [self.pTE_DeviceConfig0, self.pTE_DeviceConfig1, self.pTE_DeviceConfig2]
 
         # define actions
         self.pB_abort.clicked.connect(QtCore.QCoreApplication.instance().quit)
@@ -270,13 +264,14 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
         _translate = QtCore.QCoreApplication.translate
         for i in range(1, self.NDeviceConfigs):
             self.tab_DeviceConfigs[i].setEnabled(True)
-            self.tabConfig.setTabText(self.tabConfig.indexOf(self.tab_DeviceConfigs[i]),
-                                      _translate("PhyPiWindow", "Device Config " + str(i + 1)))
+            self.tabConfig.setTabText(
+                self.tabConfig.indexOf(self.tab_DeviceConfigs[i]),
+                _translate("PhyPiWindow", "Device Config " + str(i + 1)),
+            )
 
         for i in range(self.NDeviceConfigs, len(self.tab_DeviceConfigs)):
             self.tab_DeviceConfigs[i].setEnabled(False)
-            self.tabConfig.setTabText(self.tabConfig.indexOf(self.tab_DeviceConfigs[i]),
-                                      _translate("PhyPiWindow", ""))
+            self.tabConfig.setTabText(self.tabConfig.indexOf(self.tab_DeviceConfigs[i]), _translate("PhyPiWindow", ""))
 
             # (re-)read device config if file name in phypi Config changed
         for i, DevFnam in enumerate(DevFiles):
@@ -361,8 +356,7 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
             try:
                 _ = yaml.load(DevConfs[i], Loader=yaml.Loader)
             except yaml.YAMLError as e:
-                self.show_messagebox_warning('Warning',
-                                             'Device Config %i is not valid yaml format \n' % i + str(e))
+                self.show_messagebox_warning('Warning', 'Device Config %i is not valid yaml format \n' % i + str(e))
                 return 1
 
         # name of DAQ configuration file in config_directory
@@ -383,13 +377,17 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
         for DevFile in DevFiles:
             fullDevFile = config_directory + os.sep + DevFile
             if os.path.isfile(fullDevFile):
-                if self.show_messagebox_question('Question',
-                                                 'File ' + fullDevFile + ' exists - overwrite ?') == QMessageBox.Cancel:
+                if (
+                    self.show_messagebox_question('Question', 'File ' + fullDevFile + ' exists - overwrite ?')
+                    == QMessageBox.Cancel
+                ):
                     return 1
         #  ... DAQ file
         if os.path.isfile(fullDAQfile):
-            if self.show_messagebox_question('Question',
-                                             'File ' + fullDAQfile + ' exists - overwrite ?') == QMessageBox.Cancel:
+            if (
+                self.show_messagebox_question('Question', 'File ' + fullDAQfile + ' exists - overwrite ?')
+                == QMessageBox.Cancel
+            ):
                 return 1
 
         # if ok, write all files
@@ -426,8 +424,7 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
         # propose name for DAQ configuration file from RunTag
         _file = self.config_directory + os.sep + str(self.lE_RunTag.text()).replace(' ', '') + '.daq'
         # select file and directory
-        path2File = QtWidgets.QFileDialog.getSaveFileName(None,
-                                                          'save configuration as', _file, 'daq(*.daq)')
+        path2File = QtWidgets.QFileDialog.getSaveFileName(None, 'save configuration as', _file, 'daq(*.daq)')
         fullDAQfile = str(path2File[0]).strip()
         if fullDAQfile != '':
             # remember new config directory
@@ -446,7 +443,7 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
             return 0
 
     def saveEnvironment(self):
-        """ Save PhyPi configuration to file ~/CONFIG_ENVIRONMENT_FILE """
+        """Save PhyPi configuration to file ~/CONFIG_ENVIRONMENT_FILE"""
         # ... and find name of work directory
         config_name = get_user_home() + os.sep + CONFIG_ENVIRONMENT_FILE
         fcfg = open(config_name, 'w')
@@ -460,7 +457,7 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
         # generate a dedicated subdirectory
         datetime = time.strftime('%y%m%d-%H%M', time.localtime())
         RunTag = ''.join(str(self.lE_RunTag.text()).split())
-        self.runDir = (RunTag + '_' + datetime)  # timestamp
+        self.runDir = RunTag + '_' + datetime  # timestamp
         self.path_to_WD = self.work_directory_name + os.sep + self.runDir
         if not os.path.exists(self.path_to_WD):
             try:
@@ -494,6 +491,7 @@ class PhyPiUiInterface(Ui_PhyPiWindow):
 
 
 # - end Class Ui_PhyPiWindow
+
 
 def run_phypi_ui():
     script = sys.argv[0]
@@ -562,8 +560,7 @@ def run_phypi_ui():
 
     # call custom implementation
     ui = PhyPiUiInterface()
-    ui.init(main_window, daq_config_file,
-            config_directory=conf_directory, work_directory_name=work_directory)
+    ui.init(main_window, daq_config_file, config_directory=conf_directory, work_directory_name=work_directory)
 
     # start pyqt event loop
     main_window.show()

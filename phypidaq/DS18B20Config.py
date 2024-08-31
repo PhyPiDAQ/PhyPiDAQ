@@ -22,16 +22,16 @@ class DS18B20Config(object):
         if "Unit" in confdict:
             if confdict["Unit"] == "DEGREES_F":
                 self.unit = Unit.DEGREES_F
-                self.ChanLims = [[14., 230.]]
+                self.ChanLims = [[14.0, 230.0]]
             elif confdict["Unit"] == "KELVIN":
                 self.unit = Unit.KELVIN
                 self.ChanLims = [[263.15, 383.15]]
             else:
                 self.unit = Unit.DEGREES_C
-                self.ChanLims = [[-10., 110.]]
+                self.ChanLims = [[-10.0, 110.0]]
         else:
             self.unit = Unit.DEGREES_C
-            self.ChanLims = [[-10., 110.]]
+            self.ChanLims = [[-10.0, 110.0]]
 
         self.DS18B20 = None
 

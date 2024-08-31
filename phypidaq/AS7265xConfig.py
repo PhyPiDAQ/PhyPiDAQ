@@ -15,7 +15,7 @@ AS_MAXVAL = 15000  # ~14 bit
 
 
 class AS7265xConfig(object):
-    """ AS7265x configuration and interface"""
+    """AS7265x configuration and interface"""
 
     def __init__(self, confdict=None):
         if confdict is None:
@@ -71,9 +71,27 @@ class AS7265xConfig(object):
         self.maxVal = AS_MAXVAL  # ~14 bit
 
         # provide configuration parameters
-        self.ChanNams = ['410', '435', '460', '485', '510', '535', '560', '585', '610', '645', '680', '705', '730',
-                         '760', '810', '860', '900', '940']  # nm
-        self.ChanLims = [[0., 1.]] * self.NChannels
+        self.ChanNams = [
+            '410',
+            '435',
+            '460',
+            '485',
+            '510',
+            '535',
+            '560',
+            '585',
+            '610',
+            '645',
+            '680',
+            '705',
+            '730',
+            '760',
+            '810',
+            '860',
+            '900',
+            '940',
+        ]  # nm
+        self.ChanLims = [[0.0, 1.0]] * self.NChannels
 
     ##############################################################################
     def init(self):
@@ -104,13 +122,48 @@ class AS7265xConfig(object):
             sys.exit(1)
 
     def acquireData(self, buf):
-
         if self.CalibrateData == 1:
-            buf[0], buf[1], buf[2], buf[3], buf[4], buf[5], buf[6], buf[7], buf[8], buf[9], buf[10], \
-                buf[11], buf[12], buf[13], buf[14], buf[15], buf[16], buf[17] = self.AS7265x.readCAL()
+            (
+                buf[0],
+                buf[1],
+                buf[2],
+                buf[3],
+                buf[4],
+                buf[5],
+                buf[6],
+                buf[7],
+                buf[8],
+                buf[9],
+                buf[10],
+                buf[11],
+                buf[12],
+                buf[13],
+                buf[14],
+                buf[15],
+                buf[16],
+                buf[17],
+            ) = self.AS7265x.readCAL()
         else:
-            buf[0], buf[1], buf[2], buf[3], buf[4], buf[5], buf[6], buf[7], buf[8], buf[9], buf[10], \
-                buf[11], buf[12], buf[13], buf[14], buf[15], buf[16], buf[17] = self.AS7265x.readRAW()
+            (
+                buf[0],
+                buf[1],
+                buf[2],
+                buf[3],
+                buf[4],
+                buf[5],
+                buf[6],
+                buf[7],
+                buf[8],
+                buf[9],
+                buf[10],
+                buf[11],
+                buf[12],
+                buf[13],
+                buf[14],
+                buf[15],
+                buf[16],
+                buf[17],
+            ) = self.AS7265x.readRAW()
 
         if self.TrimTo1 == 1:
             arrmax = np.amax(buf)
@@ -157,7 +210,6 @@ class AS7265x(object):
     # Legal input values: n/a
     # Returns: data (int)
     def readReg(self, addr):
-
         # Do a dummy read to ensure FIFO queue is empty
         status = self.i2c.read_byte_data(self.I2C_ADDR, self.STATUS_REG)
         if (status & self.RX_VALID) != 0:  # There is data to be read
@@ -165,7 +217,6 @@ class AS7265x(object):
             incoming = self.i2c.read_byte_data(self.I2C_ADDR, self.READ_REG)  # noqa: F841
 
         while 1:
-
             # Poll Slave Status register
             status = self.i2c.read_byte_data(self.I2C_ADDR, self.STATUS_REG)
 
@@ -193,9 +244,7 @@ class AS7265x(object):
     # Legal input values: n/a
     # Returns: none
     def writeReg(self, addr, data):
-
         while 1:
-
             status = self.i2c.read_byte_data(self.I2C_ADDR, self.STATUS_REG)  # Poll Slave Status register
 
             if (status & self.TX_VALID) == 0:  # Wait for OK to transmit
@@ -223,7 +272,6 @@ class AS7265x(object):
     # Legal input values: n/a
     # Returns: Float
     def IEEE754toFloat(self, valArray):
-
         c0 = valArray[0]
         c1 = valArray[1]
         c2 = valArray[2]
@@ -234,13 +282,13 @@ class AS7265x(object):
         sign = ((1 << 31) & (fullChannel)) >> 31
         sign = (-1) ** sign
 
-        exponent = (fullChannel >> 23) & (0xff)
-        frac = fullChannel & 0x7fffff  # filter out all but bottom 22 bits (fraction)
+        exponent = (fullChannel >> 23) & (0xFF)
+        frac = fullChannel & 0x7FFFFF  # filter out all but bottom 22 bits (fraction)
 
         accum = 1
 
         for bit in range(22, -1, -1):
-            if (frac & (1 << bit)):
+            if frac & (1 << bit):
                 bitfrac = 1 / float(2 ** (23 - bit))
                 accum = accum + bitfrac
 
@@ -255,7 +303,6 @@ class AS7265x(object):
     # Note: There is a BUG in the AS firmware: you CAN'T to read/modify/write. Doesn't work. Just overwrite whole
     # register.
     def setDEVSEL(self, device):
-
         DEVSELbits = {"AS72651": 0b00, "AS72652": 0b01, "AS72653": 0b10}
 
         try:
@@ -264,7 +311,7 @@ class AS7265x(object):
             print("DEVSEL bad device name")
             return False
 
-        self.writeReg(0x4f, mode)
+        self.writeReg(0x4F, mode)
 
         return True
 
@@ -274,9 +321,26 @@ class AS7265x(object):
     # Legal input values: n/a
     # Returns: [Int] or [Float]. List of 18 data points
     def reorderData(self, unsortedData):
-
-        mappings = [(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8), (13, 9), (14, 11), (9, 10),
-                    (10, 12), (15, 13), (16, 14), (17, 15), (18, 16), (11, 17), (12, 18)]
+        mappings = [
+            (1, 1),
+            (2, 2),
+            (3, 3),
+            (4, 4),
+            (5, 5),
+            (6, 6),
+            (7, 7),
+            (8, 8),
+            (13, 9),
+            (14, 11),
+            (9, 10),
+            (10, 12),
+            (15, 13),
+            (16, 14),
+            (17, 15),
+            (18, 16),
+            (11, 17),
+            (12, 18),
+        ]
         sortedData = [0] * 18
 
         for pairs in mappings:
@@ -292,7 +356,6 @@ class AS7265x(object):
     # Legal input values: none
     # Returns: none
     def initDev(self):
-
         self.writeReg(0x04, 1)
         time.sleep(2)
         # Experience was the on-board firmware needs a 2s delay after factory reset to get ready. If you poll it
@@ -341,15 +404,14 @@ class AS7265x(object):
     # Legal input values: True, False
     # Returns: Bool. True if OK.
     def setBlueLED(self, state):
-
         self.setDEVSEL("AS72651")  # Blue LED attached to this device so need to select it first
 
         currentState = self.readReg(0x07)
 
-        if (state):
-            newState = (currentState | 0b1)
+        if state:
+            newState = currentState | 0b1
         else:
-            newState = (currentState & 0b11111110)
+            newState = currentState & 0b11111110
 
         self.writeReg(0x07, newState)
         return True
@@ -358,7 +420,6 @@ class AS7265x(object):
     # Input variables: device (String), state (Bool)
     # Legal input values: device {"AS72651","AS72652","AS72653"}, state{True, False}
     def shutterLED(self, device, state):
-
         DEVSELbits = {"AS72651": 0b00, "AS72652": 0b01, "AS72653": 0b10}
 
         try:
@@ -372,9 +433,9 @@ class AS7265x(object):
         currentState = self.readReg(0x07)
 
         if state:
-            newState = (currentState | 0b1000)
+            newState = currentState | 0b1000
         else:
-            newState = (currentState & 0b11110111)
+            newState = currentState & 0b11110111
 
         self.writeReg(0x07, newState)
 
@@ -385,7 +446,6 @@ class AS7265x(object):
     # Legal input values: 0, 1, 2, 3 where b00=12.5mA; b01=25mA; b10=50mA; b11=100mA
     # Returns: Bool. True if OK.
     def setLEDDriveCurrent(self, current):
-
         devices = ["AS72651", "AS72652", "AS72653"]
 
         if current not in [0, 1]:  # [0, 1, 2, 3]:
@@ -395,7 +455,7 @@ class AS7265x(object):
         for device in devices:
             self.setDEVSEL(device)
             configReg = self.readReg(0x07)
-            configReg = (configReg & 0b11001111)
+            configReg = configReg & 0b11001111
             configReg = configReg | (current << 4)
             self.writeReg(0x07, configReg)
 
@@ -406,7 +466,6 @@ class AS7265x(object):
     # Legal input values: 0 to 255
     # Returns: Bool. True if OK.
     def setIntegrationTime(self, time):
-
         devices = ["AS72651", "AS72652", "AS72653"]
 
         if time not in range(0, 255):
@@ -428,7 +487,6 @@ class AS7265x(object):
     # Legal input values:  0, 1, 2, 3 where b00=1x; b01=3.7x; b10=16x; b11=64x
     # Returns: Bool. True if OK.
     def setGain(self, gain):
-
         devices = ["AS72651", "AS72652", "AS72653"]
 
         if gain not in [0, 1, 2, 3]:
@@ -438,7 +496,7 @@ class AS7265x(object):
         for device in devices:
             self.setDEVSEL(device)
             configReg = self.readReg(0x04)
-            configReg = (configReg & 0b11001111)
+            configReg = configReg & 0b11001111
             configReg = configReg | (gain << 4)
             self.writeReg(0x04, configReg)
 
@@ -453,8 +511,7 @@ class AS7265x(object):
     # Legal input values:  none
     # Returns: [Int] list of 18 Int values
     def readRAW(self):
-
-        RAWRegisters = [(0x08, 0x09), (0x0a, 0x0b), (0x0c, 0x0d), (0x0e, 0x0f), (0x10, 0x11), (0x12, 0x13)]
+        RAWRegisters = [(0x08, 0x09), (0x0A, 0x0B), (0x0C, 0x0D), (0x0E, 0x0F), (0x10, 0x11), (0x12, 0x13)]
         RAWValues = []
         devices = ["AS72651", "AS72652", "AS72653"]
 
@@ -477,9 +534,14 @@ class AS7265x(object):
     # Legal input values:  none
     # Returns: [Int] list of 18 Int values
     def readCAL(self):
-
-        CALRegisters = [(0x14, 0x15, 0x16, 0x17), (0x18, 0x19, 0x1a, 0x1b), (0x1c, 0x1d, 0x1e, 0x1f),
-                        (0x20, 0x21, 0x22, 0x23), (0x24, 0x25, 0x26, 0x27), (0x28, 0x29, 0x2a, 0x2b)]
+        CALRegisters = [
+            (0x14, 0x15, 0x16, 0x17),
+            (0x18, 0x19, 0x1A, 0x1B),
+            (0x1C, 0x1D, 0x1E, 0x1F),
+            (0x20, 0x21, 0x22, 0x23),
+            (0x24, 0x25, 0x26, 0x27),
+            (0x28, 0x29, 0x2A, 0x2B),
+        ]
         CALValues = []
         devices = ["AS72651", "AS72652", "AS72653"]
 

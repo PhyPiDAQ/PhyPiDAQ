@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """script read_Pipe.py
 usage: read_Pipe [name of pipe]

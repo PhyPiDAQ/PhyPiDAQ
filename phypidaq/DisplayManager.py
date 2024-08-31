@@ -7,7 +7,6 @@ from phypidaq.Display import Display
 
 
 class DisplayManager:
-
     def __init__(self, interval=0.1, config_dict=None, cmd_queue=None, data_queue=None):
         self.processes = []
         self.cmd_queue = cmd_queue
@@ -21,7 +20,6 @@ class DisplayManager:
             self.config_dict = {}
 
     def init(self):
-
         # Create queue if not set
         if self.data_queue is None:
             # Queue for data transfer to sub-process

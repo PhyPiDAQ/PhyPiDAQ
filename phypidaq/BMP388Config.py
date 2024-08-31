@@ -4,9 +4,7 @@ from adafruit_bmp3xx import BMP3XX_I2C
 
 
 class BMP388Config(object):
-
     def __init__(self, config_dict=None):
-
         if config_dict is None:
             config_dict = {}
         if 'I2CADDR' in config_dict:
@@ -27,15 +25,15 @@ class BMP388Config(object):
                 print("BMP388: sea level pressure set to %.3fA " % self.SeaLevelPressure)
 
         if self.NChannels == 1:
-            self.ChanLims = [[-40., 85.]]
+            self.ChanLims = [[-40.0, 85.0]]
             self.ChanNams = ['T']
             self.ChanUnits = ['°C']
         elif self.NChannels == 2:
-            self.ChanLims = [[-40., 85.], [300., 1100.]]
+            self.ChanLims = [[-40.0, 85.0], [300.0, 1100.0]]
             self.ChanNams = ['T', 'P']
             self.ChanUnits = ['°C', 'hPa']
         elif self.NChannels == 3:
-            self.ChanLims = [[-40., 85.], [300., 1100.], [0., 1000.]]
+            self.ChanLims = [[-40.0, 85.0], [300.0, 1100.0], [0.0, 1000.0]]
             self.ChanNams = ['T', 'P', 'h']
             self.ChanUnits = ['°C', 'hPa', 'm']
 

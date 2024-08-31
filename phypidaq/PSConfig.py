@@ -40,8 +40,7 @@ class PSConfig(object):
         CRanges = self.PSconfDict['CRanges']
         COffsets = self.PSconfDict['ChanOffsets']
         for i in range(self.NChannels):
-            self.ChanLims.append((-CRanges[i] - COffsets[i],
-                                  CRanges[i] - COffsets[i]))
+            self.ChanLims.append((-CRanges[i] - COffsets[i], CRanges[i] - COffsets[i]))
         # RMS or mean of samples ?
         self.AvModes = self.NChannels * [0]
         if 'ChanAverages' in self.confdict:

@@ -84,13 +84,13 @@ class ADS1115Config(object):
         # possible values reference voltage
         self.ADCVRef = [6.114, 4.096, 2.048, 1.024, 0.512, 0.256]
         # determine the corresponding index
-        self.VRef = [0., 0., 0., 0.]
+        self.VRef = [0.0, 0.0, 0.0, 0.0]
         self.posGain = [2 / 3, 1, 2, 4, 8, 16]
         for i in range(self.NChannels):
             self.VRef[i] = self.ADCVRef[self.posGain.index(self.gain)]
 
         # provide configuration parameters
-        self.ChanLims = [0., 0.] * self.NChannels
+        self.ChanLims = [0.0, 0.0] * self.NChannels
         self.ChanNams = [str(c) for c in self.ADCChannels]
         for i, c in enumerate(self.ADCChannels):
             if self.DifModeChan[i]:
@@ -100,7 +100,7 @@ class ADS1115Config(object):
                 else:
                     self.ChanNams[i] = str(c - 1) + '-3'
             else:
-                self.ChanLims[i] = [0., self.VRef[i]]
+                self.ChanLims[i] = [0.0, self.VRef[i]]
 
     def init(self):
         # Hardware configuration:

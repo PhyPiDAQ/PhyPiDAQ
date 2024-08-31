@@ -47,8 +47,7 @@ class MCP3x08Config(object):
         SPI_PORT = 0
         SPI_DEVICE = 0
         try:
-            self.MCP = MCP3x08(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE),
-                               bits=self.NBits)
+            self.MCP = MCP3x08(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE), bits=self.NBits)
         except Exception as e:
             print("MCP3x08Config: Error initialising device - exit")
             print(str(e))
@@ -67,7 +66,7 @@ class MCP3x08Config(object):
             else:
                 d = str(c)
             self.ChanNams.append(d)
-            self.ChanLims.append([- isdifferential * self.VRef, self.VRef])
+            self.ChanLims.append([-isdifferential * self.VRef, self.VRef])
 
     def acquireData(self, buf):
         # read data from ADC
@@ -116,8 +115,8 @@ class MCP3x08Config(object):
 
 class MCP3x08(object):
     """Class to represent an MCP3008/3208 analog to digital converter.
-       MCP3008: 10 bit resolution (default)
-       MCP3208: 12 bit resolution
+    MCP3008: 10 bit resolution (default)
+    MCP3208: 12 bit resolution
     """
 
     def __init__(self, clk=None, cs=None, miso=None, mosi=None, spi=None, gpio=None, bits=10):
@@ -136,7 +135,8 @@ class MCP3x08(object):
             self._spi = SPI.BitBang(gpio, clk, mosi, miso, cs)
         else:
             raise ValueError(
-                'Must specify either spi for for hardware SPI or clk, cs, miso, and mosi for software SPI!')
+                'Must specify either spi for for hardware SPI or clk, cs, miso, and mosi for software SPI!'
+            )
         self._spi.set_clock_hz(1000000)
         self._spi.set_mode(0)
         self._spi.set_bit_order(SPI.MSBFIRST)

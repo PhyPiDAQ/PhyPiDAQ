@@ -247,7 +247,7 @@ class DisplayPoissonEvent:
                 hbin = int(t / self.interval) % self.Npoints
                 if hbin != lastbin:
                     k = lastbin % self.Npoints
-                    self.hline.set_ydata(np.concatenate((self.counts[k + 1:], self.counts[: k + 1])))
+                    self.hline.set_ydata(np.concatenate((self.counts[k + 1 :], self.counts[: k + 1])))
                     if self.counts[lastbin] > max_y:
                         max_y = self.counts[lastbin]
                         self.axrate.set_ylim(0.0, max_y + 0.1)

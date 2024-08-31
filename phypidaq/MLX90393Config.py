@@ -7,6 +7,7 @@ import sys
 # use Adafruit circuit-python
 import busio
 import board
+
 # adafruit driver class
 import adafruit_mlx90393
 
@@ -25,8 +26,8 @@ class MLX90393Config(object):
         if 'Gain' in confdict:
             self.gain = confdict['Gain']
         else:
-            self.gain = 1.
-        if self.gain == 1.:
+            self.gain = 1.0
+        if self.gain == 1.0:
             gc = 0x7
         elif self.gain == 1.33:
             gc = 0x6
@@ -36,20 +37,20 @@ class MLX90393Config(object):
             gc = 0x4
         elif self.gain == 2.5:
             gc = 0x3
-        elif self.gain == 3.:
+        elif self.gain == 3.0:
             gc = 0x2
-        elif self.gain == 4.:
+        elif self.gain == 4.0:
             gc = 0x1
-        elif self.gain == 5.:
+        elif self.gain == 5.0:
             gc = 0x0
         else:
             # invalid gain, set to 1.
-            self.gain = 1.
+            self.gain = 1.0
             gc = 7
             print("MLX90393: invalid range - set to 1.0")
 
         self.mlx90393_gc = gc
-        lm = 50. / self.gain
+        lm = 50.0 / self.gain
         self.ChanLims = [[-lm, lm], [-lm, lm], [-lm, lm]]
 
     def init(self):
@@ -63,9 +64,9 @@ class MLX90393Config(object):
 
     def acquireData(self, buf):  # in units of mT
         buf[0], buf[1], buf[2] = self.sensor.magnetic
-        buf[0] /= 1000.
-        buf[1] /= 1000.
-        buf[2] /= 1000.
+        buf[0] /= 1000.0
+        buf[1] /= 1000.0
+        buf[2] /= 1000.0
 
     def closeDevice(self):
         # nothing to do here

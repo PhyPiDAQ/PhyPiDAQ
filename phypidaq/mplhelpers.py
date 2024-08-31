@@ -94,7 +94,7 @@ class controlGUI:
         self.baxes = []
         self.buttons = []
         for i, key in enumerate(self.button_names):
-            self.baxes.append(self.f.add_axes([self.button_values[i][0]*0.12+0.05, 0.05, 0.08, 0.16]))
+            self.baxes.append(self.f.add_axes([self.button_values[i][0] * 0.12 + 0.05, 0.05, 0.08, 0.16]))
             self.buttons.append(Button(self.baxes[-1], key, color="0.25", hovercolor="0.5"))
             self.buttons[-1].on_clicked(self.on_button_clicked)
 

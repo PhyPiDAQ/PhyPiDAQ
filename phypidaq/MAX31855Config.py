@@ -5,7 +5,7 @@ import adafruit_max31855
 
 
 class MAX31855Config(object):
-    """ MAX31855 configuration and interface"""
+    """MAX31855 configuration and interface"""
 
     def __init__(self, confdict=None):
         if confdict is None:
@@ -18,17 +18,17 @@ class MAX31855Config(object):
         if "Unit" in confdict:
             if confdict["Unit"] == "DEGREES_F":
                 self.unit = confdict["Unit"]
-                self.ChanLims = [[14., 482.]]
+                self.ChanLims = [[14.0, 482.0]]
             elif confdict["Unit"] == "KELVIN":
                 self.unit = confdict["Unit"]
                 self.ChanLims = [[263.15, 523.15]]
             else:
                 self.unit = "DEGREES_C"
-                self.ChanLims = [[-10., 250.]]
+                self.ChanLims = [[-10.0, 250.0]]
         else:
             # Default to Celsius
             self.unit = "DEGREES_C"
-            self.ChanLims = [[-10., 250.]]
+            self.ChanLims = [[-10.0, 250.0]]
 
         # provide configuration parameters
         self.ChanNams = ['MAX31855']
@@ -39,7 +39,6 @@ class MAX31855Config(object):
         self.sensor = None
 
     def init(self):
-
         # Init SPI and digital board IO
         self.spi = board.SPI()
         self.cs = digitalio.DigitalInOut(board.D5)

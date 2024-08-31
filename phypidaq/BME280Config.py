@@ -4,9 +4,7 @@ from adafruit_bme280.basic import Adafruit_BME280_I2C
 
 
 class BME280Config(object):
-
     def __init__(self, config_dict=None):
-
         if config_dict is None:
             config_dict = {}
         if 'I2CADDR' in config_dict:
@@ -24,7 +22,7 @@ class BME280Config(object):
                 self.SeaLevelPressure = 1013.25
                 print("BMP280: sea level pressure set to %.3fA " % self.SeaLevelPressure)
 
-        self.ChanLims = [[-40., 85.], [300., 1100.], [0., 1000.], [0., 100.]]
+        self.ChanLims = [[-40.0, 85.0], [300.0, 1100.0], [0.0, 1000.0], [0.0, 100.0]]
         self.ChanNams = ['T', 'P', 'h', 'H']
         self.ChanUnits = ['°C', 'hPa', 'm', '%']
 

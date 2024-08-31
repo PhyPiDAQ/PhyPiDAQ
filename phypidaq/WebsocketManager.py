@@ -26,8 +26,7 @@ class WebsocketManager(object):
             self.data_queue = mp.Queue(1)
 
         # Create a new process
-        self.processes.append(mp.Process(name="WebsocketServer",
-                                         target=self.spawn_websocket))
+        self.processes.append(mp.Process(name="WebsocketServer", target=self.spawn_websocket))
 
         for prc in self.processes:
             # Start all processes, that haven't started yet

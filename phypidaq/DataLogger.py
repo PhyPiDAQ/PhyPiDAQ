@@ -6,14 +6,13 @@ import matplotlib.pyplot as plt
 
 
 class DataLogger(object):
-    """ history of input data
+    """history of input data
 
-      forked from picoDAQ.DataLogger
+    forked from picoDAQ.DataLogger
     """
 
     def __init__(self, ConfDict):
-        """Args:  ConfDict: configuration dictionary
-        """
+        """Args:  ConfDict: configuration dictionary"""
         # collect relevant configuration parameters
 
         # get relevant settings from PhyPiConfDict
@@ -33,26 +32,26 @@ class DataLogger(object):
         self.ChanNams = [''] * self.NChan
         if 'ChanNams' in ConfDict:
             v = ConfDict['ChanNams']
-            self.ChanNams[0:min(len(v), Nc)] = v[0:min(len(v), Nc)]
+            self.ChanNams[0 : min(len(v), Nc)] = v[0 : min(len(v), Nc)]
 
         ColorList = ['C' + str(i) for i in range(Nc)]
         if 'ChanColors' in ConfDict:
             self.ChanColors = ConfDict['ChanColors']
             if len(self.ChanColors) < self.NChan:
-                self.ChanColors += ColorList[0: self.NChan - len(self.ChanColors)]
+                self.ChanColors += ColorList[0 : self.NChan - len(self.ChanColors)]
         else:
-            self.ChanColors = ['darkblue', 'sienna'] + ColorList[0: Nc - 2]
+            self.ChanColors = ['darkblue', 'sienna'] + ColorList[0 : Nc - 2]
 
         # Channel Labels are not shown, only support two axis labels
         self.ChanLabels = [''] * self.NChan
         if 'ChanLabels' in ConfDict:
             v = ConfDict['ChanLabels']
-            self.ChanLabels[0:min(len(v), Nc)] = v[0:min(len(v), Nc)]
+            self.ChanLabels[0 : min(len(v), Nc)] = v[0 : min(len(v), Nc)]
 
         self.ChanUnits = [''] * Nc
         if 'ChanUnits' in ConfDict:
             v = ConfDict['ChanUnits']
-            self.ChanUnits[0:min(len(v), Nc)] = v[0:min(len(v), Nc)]
+            self.ChanUnits[0 : min(len(v), Nc)] = v[0 : min(len(v), Nc)]
 
         if 'XYmode' in ConfDict:
             self.XYmode = ConfDict['XYmode']
@@ -76,8 +75,7 @@ class DataLogger(object):
             self.Cidx1 = self.Cidx0
         cu0 = '(' + self.ChanUnits[self.Cidx0] + ')' if self.ChanUnits[self.Cidx0] else ''
         cu1 = '(' + self.ChanUnits[self.Cidx1] + ')' if self.ChanUnits[self.Cidx1] else ''
-        self.AxisLabels = [self.ChanLabels[self.Cidx0] + cu0,
-                           self.ChanLabels[self.Cidx1] + cu1]
+        self.AxisLabels = [self.ChanLabels[self.Cidx0] + cu0, self.ChanLabels[self.Cidx1] + cu1]
 
         # define xy plots
         if 'xyPlots' in ConfDict:
@@ -94,13 +92,11 @@ class DataLogger(object):
 
         # create matplotlib figure object
         if self.XYmode:
-            self.fig = plt.figure("DataLogger", figsize=(6.3, 6.))
-            self.fig.subplots_adjust(left=0.2, bottom=0.15, right=0.95, top=0.95,
-                                     wspace=None, hspace=.25)
+            self.fig = plt.figure("DataLogger", figsize=(6.3, 6.0))
+            self.fig.subplots_adjust(left=0.2, bottom=0.15, right=0.95, top=0.95, wspace=None, hspace=0.25)
         else:
-            self.fig = plt.figure("DataLogger", figsize=(6., 3.))
-            self.fig.subplots_adjust(left=0.15, bottom=0.15, right=0.85, top=0.95,
-                                     wspace=None, hspace=.25)
+            self.fig = plt.figure("DataLogger", figsize=(6.0, 3.0))
+            self.fig.subplots_adjust(left=0.15, bottom=0.15, right=0.85, top=0.95, wspace=None, hspace=0.25)
 
     # -- end def __init__()
 
@@ -118,11 +114,10 @@ class DataLogger(object):
                 Cidx = self.Chan2Axes.index(i)
                 axes[i].set_xlim(self.Ti[0], self.Ti[-1])
                 axes[i].set_ylim(*self.ChanLim[Cidx])
-                axes[i].set_ylabel(self.ChanNams[Cidx] + ' ' + self.AxisLabels[i],
-                                   color=self.ChanColors[Cidx])
+                axes[i].set_ylabel(self.ChanNams[Cidx] + ' ' + self.AxisLabels[i], color=self.ChanColors[Cidx])
                 axes[i].grid(True, color=self.ChanColors[Cidx], linestyle='--', alpha=0.3)
             axes[0].set_xlabel('History (' + self.tUnit + ')')
-            axes[0].axvline(0., color='yellow', alpha=0.5, lw=5)  # highlight t=0
+            axes[0].axvline(0.0, color='yellow', alpha=0.5, lw=5)  # highlight t=0
 
         else:
             # XY plot
@@ -134,10 +129,12 @@ class DataLogger(object):
             axXY.set_ylim(*self.ChanLim[cy])
             cux = ' (' + self.ChanUnits[cx] + ')'
             cuy = ' (' + self.ChanUnits[cy] + ')'
-            axXY.set_xlabel(self.ChanNams[cx] + ' ' + self.ChanLabels[cx] + cux,
-                            size='x-large', color=self.ChanColors[cx])
-            axXY.set_ylabel(self.ChanNams[cy] + ' ' + self.ChanLabels[cy] + cuy,
-                            size='x-large', color=self.ChanColors[cy])
+            axXY.set_xlabel(
+                self.ChanNams[cx] + ' ' + self.ChanLabels[cx] + cux, size='x-large', color=self.ChanColors[cx]
+            )
+            axXY.set_ylabel(
+                self.ChanNams[cy] + ' ' + self.ChanLabels[cy] + cuy, size='x-large', color=self.ChanColors[cy]
+            )
             axXY.set_title('XY-View', size='xx-large')
             axXY.grid(True, color='grey', linestyle='--', alpha=0.3)
 
@@ -150,13 +147,13 @@ class DataLogger(object):
         # determine points on time-axis
         if self.dT < 60:
             self.tUnit = 's'
-            self.tUnitFactor = 1.
+            self.tUnitFactor = 1.0
         elif self.dT < 3600:
             self.tUnit = 'min'
-            self.tUnitFactor = 1. / 60.
+            self.tUnitFactor = 1.0 / 60.0
         else:
             self.tUnit = 'h'
-            self.tUnitFactor = 1. / 3600.
+            self.tUnitFactor = 1.0 / 3600.0
         self.Ti = self.dT * np.linspace(-NPoints + 1, 0, NPoints) * self.tUnitFactor
 
     def init(self, NPoints=None):
@@ -175,7 +172,7 @@ class DataLogger(object):
                     colr = None
                 else:
                     colr = self.ChanColors[i]
-                g, = self.axes[iax].plot([], [], color=colr)
+                (g,) = self.axes[iax].plot([], [], color=colr)
                 self.graphs += (g,)
         else:
             # plot XY-graph(s)
@@ -183,7 +180,7 @@ class DataLogger(object):
                 cx = self.xyPlots[i][0]
                 cy = self.xyPlots[i][1]
                 if cx < self.NChan and cy < self.NChan:
-                    g, = self.axes[-1].plot([], [], color=self.ChanColors[cy])
+                    (g,) = self.axes[-1].plot([], [], color=self.ChanColors[cy])
                     self.graphs += (g,)
         return self.graphs
 
@@ -197,8 +194,7 @@ class DataLogger(object):
             k = (n - 1) % self.Npoints
             for i in range(self.NChan):
                 self.Vhist[i, k] = dat[i]
-                self.h[i] = np.concatenate((self.Vhist[i, k + 1:],
-                                            self.Vhist[i, :k + 1]), axis=0)
+                self.h[i] = np.concatenate((self.Vhist[i, k + 1 :], self.Vhist[i, : k + 1]), axis=0)
             if not self.XYmode:
                 # update history graph(s)
                 for i in range(self.NChan):
@@ -210,8 +206,7 @@ class DataLogger(object):
                     cx = self.xyPlots[i][0]
                     cy = self.xyPlots[i][1]
                     i1 = max(0, self.Npoints - n)
-                    self.graphs[i].set_data(self.h[cx, i1:],
-                                            self.h[cy, i1:])
+                    self.graphs[i].set_data(self.h[cx, i1:], self.h[cy, i1:])
         return self.graphs
 
     # - -end def DataLogger.__call__
@@ -229,6 +224,8 @@ class DataLogger(object):
                 cy = self.xyPlots[i][1]
                 self.graphs[i].set_data(dat[cx], dat[cy])
         return self.graphs
+
     # - -end def DataLogger.plotall()
+
 
 # -end class DataLogger

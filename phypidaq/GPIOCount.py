@@ -68,7 +68,7 @@ class GPIOCount(object):
         for i, c in enumerate(self.GPIOpins):
             self.ChanNams.append(str(c))
             # some guessing here - upper range to be overwritten in calling function
-            self.ChanLims.append([0., 100.])
+            self.ChanLims.append([0.0, 100.0])
 
     def acquireData(self, buf):
         # return number of counts since last called

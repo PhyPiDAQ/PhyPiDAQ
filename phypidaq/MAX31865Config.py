@@ -42,7 +42,7 @@ class MAX31865Config(object):
         if 'R0' in conf_dict:
             self.R0 = conf_dict['R0']
         else:
-            self.R0 = 100.
+            self.R0 = 100.0
 
         # -- ChipSelect pin
         if 'ChipSelect' in conf_dict:
@@ -60,18 +60,19 @@ class MAX31865Config(object):
     def init(self):
         spi = board.SPI()
         cs = digitalio.DigitalInOut(self.CS)
-        self.sensor = adafruit_max31865.MAX31865(spi, cs, wires=self.NWires, rtd_nominal=self.R0,
-                                                 ref_resistor=self.Rref)
-        if self.sensor.resistance == 0.:
+        self.sensor = adafruit_max31865.MAX31865(
+            spi, cs, wires=self.NWires, rtd_nominal=self.R0, ref_resistor=self.Rref
+        )
+        if self.sensor.resistance == 0.0:
             print("MAX31865: unphysical resistance read, assuming SPI communication error")
             sys.exit(1)
 
         # Provide configuration parameters
         if self.NChannels == 1:
-            self.ChanLims = [[-10., 110.]]
+            self.ChanLims = [[-10.0, 110.0]]
             self.ChanNams = ['T']
         else:
-            self.ChanLims = [[-10., 110.], [0.9*self.R0, 1.1*self.R0]]
+            self.ChanLims = [[-10.0, 110.0], [0.9 * self.R0, 1.1 * self.R0]]
             self.ChanNams = ['T', 'R']
 
     def acquireData(self, buf):
@@ -87,6 +88,7 @@ class MAX31865Config(object):
 
     if __name__ == "__main__":
         import MAX31865Config
+
         sig = [0]
         max = MAX31865Config.MAX31865Config()
         max.init()

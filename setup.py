@@ -4,6 +4,7 @@ Setup script for the phypidaq module.
 This setup includes the test runner for the module and the setup class for
 package information
 """
+
 import sys
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
@@ -13,6 +14,7 @@ pkg_name = "phypidaq"
 # import _version_info from package
 sys.path[0] = pkg_name
 import _version_info
+
 _version = _version_info._get_version_string()
 
 
@@ -22,6 +24,7 @@ class PyTest(TestCommand):
 
     For more info visit: https://pytest.org/latest/goodpractices.html
     """
+
     user_options = [('pytest-args=', 'a', "Arguments to pass to py.test")]
 
     def initialize_options(self):
@@ -30,6 +33,7 @@ class PyTest(TestCommand):
 
     def run_tests(self):
         import pytest
+
         errcode = pytest.main(self.pytest_args)
         sys.exit(errcode)
 
@@ -39,7 +43,7 @@ setup(
     version=_version,
     author='Guenter Quast',
     author_email='Guenter.Quast@online.de',
-    packages=[pkg_name, pkg_name+'.sensors', pkg_name+'.utils'],
+    packages=[pkg_name, pkg_name + '.sensors', pkg_name + '.utils'],
     inlcude_package_data=True,
     package_data={pkg_name: ['PhyPiDemoData.csv', 'images/*', 'doc/*']},
     scripts=['phypi.py', 'run_phypi.py'],
@@ -57,8 +61,5 @@ setup(
     license='MIT BSD 2-Clause',
     description='Data AcQuisition and analysis for Physics education with Raspberry Pi',
     long_description=open('README.md').read(),
-    setup_requires=[
-        "NumPy >= 1.13.3",
-        "SciPy >= 0.18.1",
-        "matplotlib >= 2.0.0"]
+    setup_requires=["NumPy >= 1.13.3", "SciPy >= 0.18.1", "matplotlib >= 2.0.0"],
 )

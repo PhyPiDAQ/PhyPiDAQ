@@ -88,7 +88,7 @@ class HX711Config(object):
         if dataByte[0] & 0b10000000:
             # shifting bytes in right order and transforming two's complement (inverting each bit and adding 1)
             # to an negative int32 in python
-            lastValue = - np.int32((~dataByte[0] << 16) | (~dataByte[1] << 8) | ~dataByte[2]) + 1
+            lastValue = -np.int32((~dataByte[0] << 16) | (~dataByte[1] << 8) | ~dataByte[2]) + 1
         else:
             # shifting bytes in right order and transforming to an int32
             lastValue = np.int32((dataByte[0] << 16) | (dataByte[1] << 8) | dataByte[2])

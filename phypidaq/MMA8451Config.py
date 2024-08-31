@@ -38,7 +38,7 @@ class MMA8451Config(object):
             r = 2
             print("MMA8451: invalid range - set to 2G")
 
-        self.ChanLims = [[-r * 10., r * 10.], [-r * 10., r * 10.], [-r * 10., r * 10.]]
+        self.ChanLims = [[-r * 10.0, r * 10.0], [-r * 10.0, r * 10.0], [-r * 10.0, r * 10.0]]
 
     def init(self):
         try:
@@ -88,14 +88,14 @@ RANGE_DIVIDER = {
 }
 
 # Some static values
-deviceName = 0x1a
+deviceName = 0x1A
 
 # Various addresses
 i2caddr = 0x1D
 #
 # Useful Register Address
 REG_STATUS = 0x00  # Read-Only
-REG_WHOAMI = 0x0d  # Read-Only
+REG_WHOAMI = 0x0D  # Read-Only
 REG_DEVID = 0x1A  # Read-Only
 REG_OUT_X_MSB = 0x01  # Read-Only
 REG_OUT_X_LSB = 0x02  # Read-Only
@@ -104,7 +104,7 @@ REG_OUT_Y_LSB = 0x04  # Read-Only
 REG_OUT_Z_MSB = 0x05  # Read-Only
 REG_OUT_Z_LSB = 0x06  # Read-Only
 REG_F_SETUP = 0x09  # Read/Write
-REG_XYZ_DATA_CFG = 0x0e  # Read/Write
+REG_XYZ_DATA_CFG = 0x0E  # Read/Write
 REG_PL_STATUS = 0x10  # Read-Only
 REG_PL_CFG = 0x11  # Read/Write
 REG_CTRL_REG1 = 0x2A  # Read/Write
@@ -125,7 +125,7 @@ HIGH_RES_MODE = {
 ASLP_RATE_FREQ_50_HZ = 0x00
 ASLP_RATE_FREQ_12_5_HZ = 0x40
 ASLP_RATE_FREQ_6_25HZ = 0x80
-ASLP_RATE_FREQ_1_56_HZ = 0xc0
+ASLP_RATE_FREQ_1_56_HZ = 0xC0
 
 # Data rate values
 DATARATE_800_HZ = 0x00  # 800Hz
@@ -169,7 +169,7 @@ PRECISION_08_BIT = 8
 FLAG_ASLPRATE_50_HZ = 0x00  # Auto-Wake Sample frequency (Sleep Mode Rate Detection) 50 Hz
 FLAG_ASLPRATE_12_5_HZ = 0x40  # Auto-Wake Sample frequency (Sleep Mode Rate Detection) 12.5 Hz
 FLAG_ASLPRATE_6_25_HZ = 0x80  # Auto-Wake Sample frequency (Sleep Mode Rate Detection) 6.25 Hz
-FLAG_ASLPRATE_1_56_HZ = 0xc0  # Auto-Wake Sample frequency (Sleep Mode Rate Detection) 1.56 Hz
+FLAG_ASLPRATE_1_56_HZ = 0xC0  # Auto-Wake Sample frequency (Sleep Mode Rate Detection) 1.56 Hz
 # System Output Data Rates Selection
 FLAG_ODR_800_HZ = 0x00  # System Output Data Rate 800 Hz
 FLAG_ODR_400_HZ = 0x08  # System Output Data Rate 400 Hz
@@ -199,16 +199,16 @@ FLAG_STEST = 0x80  # Self Test (1: Self-Test enabled, 0: Self-Test disabled)
 FLAG_RESET = 0x40  # Reset (1: Reset enabled, 0: Reset disabled)
 # Sleep Mode Power Scheme Selection
 FLAG_SMODS_NORM = 0x00  # Sleep Mode Power Scheme Selection: Normal
-FLAG_SMODS_LNLP = 0x0a  # Sleep Mode Power Scheme Selection: Low-Noise Low Power
+FLAG_SMODS_LNLP = 0x0A  # Sleep Mode Power Scheme Selection: Low-Noise Low Power
 FLAG_SMODS_HR = 0x12  # Sleep Mode Power Scheme Selection: High Resolution
-FLAG_SMODS_LP = 0x1b  # Sleep Mode Power Scheme Selection: Low Power
+FLAG_SMODS_LP = 0x1B  # Sleep Mode Power Scheme Selection: Low Power
 # Other Flags
 FLAG_SLPE = 0x04  # Auto-Sleep (1: Auto-Sleep enabled, 0: Auto-Sleep Disabled)
 # Active Mode Power Scheme Selection (for both: Sleep and Active mode)
 FLAG_MODS_NORM = 0x00  # Active Mode Power Scheme Selection: Normal
 FLAG_MODS_LNLP = 0x09  # Active Mode Power Scheme Selection: Low-Noise Low Power
 FLAG_MODS_HR = 0x12  # Active Mode Power Scheme Selection: High Resolution
-FLAG_MODS_LP = 0x1b  # Active Mode Power Scheme Selection: Low Power
+FLAG_MODS_LP = 0x1B  # Active Mode Power Scheme Selection: Low Power
 
 # Register CTRL_REG4 (0x2d) R/W - Interrupt Enable Register
 # BIT 7: INT_EN_ASLP
@@ -291,7 +291,7 @@ FLAG_XYZ_DATA_BIT_FS_RSVD = 0x03  # Reserved
 FLAG_F_MODE_FIFO_NO = 0x00  # FIFO is disabled.
 FLAG_F_MODE_FIFO_RECNT = 0x40  # FIFO contains the most recent samples when overflowed (circular buffer)
 FLAG_F_MODE_FIFO_STOP = 0x80  # FIFO stops accepting new samples when overflowed.
-FLAG_F_MODE_FIFO_TRIGGER = 0xc0  # FIFO Trigger mode
+FLAG_F_MODE_FIFO_TRIGGER = 0xC0  # FIFO Trigger mode
 
 # Register PL_STATUS (0x010) R/O - Portrait/Landscape Status Register
 # BIT 7: NEWLP
@@ -380,12 +380,12 @@ FLAG_TRANSIENT_SCR_XTR_POL = 0x01
 # Define MMA8541 config class
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
 class MMA8451:
     raspiBus = -1  # The Raspberry Pi Bus (depends on hardware model)
     raspiInfo = ""  # Raspberry Pi Info
 
     def __init__(self, range='4G'):
-
         #
         # Setup RPI specific bus
         #
@@ -421,11 +421,13 @@ class MMA8451:
         self.writeRegister(REG_CTRL_REG2, self.readRegister(REG_CTRL_REG2) | FLAG_RESET)  # Reset
         # self.writeRegister(REG_CTRL_REG2, self.readRegister(REG_CTRL_REG2) FLAG_STEST)   # SelfTest
         self.writeRegister(REG_CTRL_REG1, self.readRegister(REG_CTRL_REG1) & ~FLAG_ACTIVE)  # Put the device in Standby
-        self.writeRegister(REG_CTRL_REG1, self.readRegister(
-            REG_CTRL_REG1) & ~FLAG_F_READ)  # No Fast-Read (14-bits), Fast-Read (8-Bits)
+        self.writeRegister(
+            REG_CTRL_REG1, self.readRegister(REG_CTRL_REG1) & ~FLAG_F_READ
+        )  # No Fast-Read (14-bits), Fast-Read (8-Bits)
         self.writeRegister(REG_CTRL_REG1, self.readRegister(REG_CTRL_REG1) | FLAG_ODR_50_HZ)  # Data Rate
-        self.writeRegister(REG_XYZ_DATA_CFG,
-                           self.readRegister(REG_XYZ_DATA_CFG) | self.flag_range)  # Range 2g, 4g or 8g
+        self.writeRegister(
+            REG_XYZ_DATA_CFG, self.readRegister(REG_XYZ_DATA_CFG) | self.flag_range
+        )  # Range 2g, 4g or 8g
         self.writeRegister(REG_CTRL_REG1, self.readRegister(REG_CTRL_REG1) | FLAG_LNOISE)  # Low Noise
         self.writeRegister(REG_CTRL_REG2, self.readRegister(REG_CTRL_REG2) & ~FLAG_SLPE)  # No Auto-Sleep
         self.writeRegister(REG_CTRL_REG2, self.readRegister(REG_CTRL_REG2) | FLAG_SMODS_HR)  # High Resolution
@@ -493,12 +495,12 @@ class MMA8451:
             z = ((self.xyzdata[4] << 8) | self.xyzdata[5]) >> 2
             precision = PRECISION_14_BIT  # Precision 14 bit data
         else:
-            x = (self.xyzdata[0] << 8)
-            y = (self.xyzdata[1] << 8)
-            z = (self.xyzdata[2] << 8)
+            x = self.xyzdata[0] << 8
+            y = self.xyzdata[1] << 8
+            z = self.xyzdata[2] << 8
             precision = PRECISION_08_BIT  # Precision 08 bit data
         max_val = 2 ** (precision - 1) - 1
-        signed_max = 2 ** precision
+        signed_max = 2**precision
         #
         x -= signed_max if x > max_val else 0
         y -= signed_max if y > max_val else 0
@@ -515,26 +517,66 @@ class MMA8451:
         print("Raspberry Info      = " + str(self.raspiInfo))
 
     def debugShowRegisters(self):
-        print("REG_STATUS       (0x00):" + str(format(self.readRegister(REG_STATUS), '#04x'))
-              + " | Binary: " + format(self.readRegister(REG_STATUS), 'b').zfill(8))
-        print("REG_WHOAMI       (0x0d):" + str(format(self.readRegister(REG_WHOAMI), '#04x'))
-              + " | Binary: " + format(self.readRegister(REG_WHOAMI), 'b').zfill(8))
-        print("REG_F_SETUP      (0x09):" + str(format(self.readRegister(REG_F_SETUP), '#04x'))
-              + " | Binary: " + format(self.readRegister(REG_F_SETUP), 'b').zfill(8))
-        print("REG_XYZ_DATA_CFG (0x0e):" + str(format(self.readRegister(REG_XYZ_DATA_CFG), '#04x'))
-              + " | Binary: " + format(self.readRegister(REG_XYZ_DATA_CFG), 'b').zfill(8))
-        print("REG_CTRL_REG1    (0x2a):" + str(format(self.readRegister(REG_CTRL_REG1), '#04x'))
-              + " | Binary: " + format(self.readRegister(REG_CTRL_REG1), 'b').zfill(8))
-        print("REG_CTRL_REG2    (0x2b):" + str(format(self.readRegister(REG_CTRL_REG2), '#04x'))
-              + " | Binary: " + format(self.readRegister(REG_CTRL_REG2), 'b').zfill(8))
-        print("REG_CTRL_REG3    (0x2c):" + str(format(self.readRegister(REG_CTRL_REG3), '#04x'))
-              + " | Binary: " + format(self.readRegister(REG_CTRL_REG3), 'b').zfill(8))
-        print("REG_CTRL_REG4    (0x2d):" + str(format(self.readRegister(REG_CTRL_REG4), '#04x'))
-              + " | Binary: " + format(self.readRegister(REG_CTRL_REG4), 'b').zfill(8))
-        print("REG_CTRL_REG5    (0x2e):" + str(format(self.readRegister(REG_CTRL_REG5), '#04x'))
-              + " | Binary: " + format(self.readRegister(REG_CTRL_REG5), 'b').zfill(8))
-        print("REG_PL_STATUS    (0x10):" + str(format(self.readRegister(REG_PL_STATUS), '#04x'))
-              + " | Binary: " + format(self.readRegister(REG_PL_STATUS), 'b').zfill(8))
+        print(
+            "REG_STATUS       (0x00):"
+            + str(format(self.readRegister(REG_STATUS), '#04x'))
+            + " | Binary: "
+            + format(self.readRegister(REG_STATUS), 'b').zfill(8)
+        )
+        print(
+            "REG_WHOAMI       (0x0d):"
+            + str(format(self.readRegister(REG_WHOAMI), '#04x'))
+            + " | Binary: "
+            + format(self.readRegister(REG_WHOAMI), 'b').zfill(8)
+        )
+        print(
+            "REG_F_SETUP      (0x09):"
+            + str(format(self.readRegister(REG_F_SETUP), '#04x'))
+            + " | Binary: "
+            + format(self.readRegister(REG_F_SETUP), 'b').zfill(8)
+        )
+        print(
+            "REG_XYZ_DATA_CFG (0x0e):"
+            + str(format(self.readRegister(REG_XYZ_DATA_CFG), '#04x'))
+            + " | Binary: "
+            + format(self.readRegister(REG_XYZ_DATA_CFG), 'b').zfill(8)
+        )
+        print(
+            "REG_CTRL_REG1    (0x2a):"
+            + str(format(self.readRegister(REG_CTRL_REG1), '#04x'))
+            + " | Binary: "
+            + format(self.readRegister(REG_CTRL_REG1), 'b').zfill(8)
+        )
+        print(
+            "REG_CTRL_REG2    (0x2b):"
+            + str(format(self.readRegister(REG_CTRL_REG2), '#04x'))
+            + " | Binary: "
+            + format(self.readRegister(REG_CTRL_REG2), 'b').zfill(8)
+        )
+        print(
+            "REG_CTRL_REG3    (0x2c):"
+            + str(format(self.readRegister(REG_CTRL_REG3), '#04x'))
+            + " | Binary: "
+            + format(self.readRegister(REG_CTRL_REG3), 'b').zfill(8)
+        )
+        print(
+            "REG_CTRL_REG4    (0x2d):"
+            + str(format(self.readRegister(REG_CTRL_REG4), '#04x'))
+            + " | Binary: "
+            + format(self.readRegister(REG_CTRL_REG4), 'b').zfill(8)
+        )
+        print(
+            "REG_CTRL_REG5    (0x2e):"
+            + str(format(self.readRegister(REG_CTRL_REG5), '#04x'))
+            + " | Binary: "
+            + format(self.readRegister(REG_CTRL_REG5), 'b').zfill(8)
+        )
+        print(
+            "REG_PL_STATUS    (0x10):"
+            + str(format(self.readRegister(REG_PL_STATUS), '#04x'))
+            + " | Binary: "
+            + format(self.readRegister(REG_PL_STATUS), 'b').zfill(8)
+        )
         print("debugRealTime    " + str(runTimeConfigObject.debugRealTime))
         print("NumInterrupts    " + str(runTimeConfigObject.NumInterrupts))
 

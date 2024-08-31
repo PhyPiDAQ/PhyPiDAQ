@@ -16,10 +16,11 @@ I2CADDR = 0x18
 
 # code of driver classes included below
 
+
 class GDK101Config(object):
     """interface for GDK101 gamma detector
-      1st channel: 1 min av
-      2nd channel: 10 min sliding average
+    1st channel: 1 min av
+    2nd channel: 10 min sliding average
     """
 
     def __init__(self, confdict=None):
@@ -33,7 +34,7 @@ class GDK101Config(object):
             self.NChannels = confdict["NChannels"]
         else:
             self.NChannels = 1
-        self.ChanLims = [[0, 200.], [0., 200.]]
+        self.ChanLims = [[0, 200.0], [0.0, 200.0]]
         self.ChanNams = ['D', 'D']
         self.ChanUnits = ['µSv', 'µSv']
 
@@ -81,8 +82,8 @@ class GDK101(object):
 
     def _readGKD101(self, cmd):
         """implement simple I²C interface of GDK101
-           - send command
-           - block-read two bytes
+        - send command
+        - block-read two bytes
         """
         self.bus.write_byte_data(self.addr, 0, cmd)
         return self.bus.read_i2c_block_data(self.addr, 0, 2)
@@ -92,19 +93,19 @@ class GDK101(object):
         return d[0]
 
     def read1(self):
-        """ read 1 min average"""
+        """read 1 min average"""
         d = self._readGKD101(CMD_readDose1)
-        return d[0] + d[1] / 100.
+        return d[0] + d[1] / 100.0
 
     def read10(self):
-        """ read 10 min sliding average"""
+        """read 10 min sliding average"""
         d = self._readGKD101(CMD_readDose10)
-        return d[0] + d[1] / 100.
+        return d[0] + d[1] / 100.0
 
     def version(self):
         """return firmware version"""
         fw = self._readGKD101(CMD_firmware)
-        return str(fw[0] + fw[1] / 10.)
+        return str(fw[0] + fw[1] / 10.0)
 
     def close(self):
         """close bus"""

@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """set_MCP4725
 set voltage on DAC MCP4725
 """

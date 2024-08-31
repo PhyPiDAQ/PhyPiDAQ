@@ -18,7 +18,7 @@ AS_MAXVAL = 15000  # ~14 bit
 
 
 class AS7262Config(object):
-    """ AS7262 configuration and interface"""
+    """AS7262 configuration and interface"""
 
     def __init__(self, confdict=None):
         if confdict is None:
@@ -37,7 +37,7 @@ class AS7262Config(object):
         if 'IntegrationTime' in confdict:
             self.IntT = confdict['IntegrationTime']
         else:
-            self.IntT = 10.
+            self.IntT = 10.0
 
         if 'I2CADDR' in confdict:
             self.I2CAddr = confdict['I2CADDR']
@@ -55,10 +55,9 @@ class AS7262Config(object):
 
         # provide configuration parameters
         self.ChanNams = ['r', 'o', 'y', 'g', 'b', 'v']
-        self.ChanLims = [[0., 1.]] * self.NChannels
+        self.ChanLims = [[0.0, 1.0]] * self.NChannels
 
     def init(self):
-
         self.as7262 = AS7262(self.busnum, self.I2CAddr)
 
         try:
@@ -181,55 +180,81 @@ class CalibratedValues:
 
 class AS7262(object):
     def __init__(self, busnum, i2caddr):
-        self._as7262 = Device(i2caddr, i2c_dev=as7262VirtualRegisterBus(busnum),
-                              bit_width=8, registers=(
-                Register('VERSION', 0x00, fields=(
-                    BitField('hw_type', 0xFF000000),
-                    BitField('hw_version', 0x00FF0000),
-                    BitField('fw_version', 0x0000FFFF, adapter=FWVersionAdapter()),
-                ), bit_width=32, read_only=True),
-                Register('CONTROL', 0x04, fields=(
-                    BitField('reset', 0b10000000),
-                    BitField('interrupt', 0b01000000),
-                    BitField('gain_x', 0b00110000, adapter=LookupAdapter({
-                        1: 0b00, 3.7: 0b01, 16: 0b10, 64: 0b11
-                    })),
-                    BitField('measurement_mode', 0b00001100),
-                    BitField('data_ready', 0b00000010),
-                )),
-                Register('INTEGRATION_TIME', 0x05, fields=(
-                    BitField('ms', 0xFF, adapter=IntegrationTimeAdapter()),
-                )),
-                Register('TEMPERATURE', 0x06, fields=(
-                    BitField('degrees_c', 0xFF),
-                )),
-                Register('LED_CONTROL', 0x07, fields=(
-                    BitField('illumination_current_limit_ma', 0b00110000, adapter=LookupAdapter({
-                        12.5: 0b00, 25: 0b01, 50: 0b10, 100: 0b11
-                    })),
-                    BitField('illumination_enable', 0b00001000),
-                    BitField('indicator_current_limit_ma', 0b00000110, adapter=LookupAdapter({
-                        1: 0b00, 2: 0b01, 4: 0b10, 8: 0b11
-                    })),
-                    BitField('indicator_enable', 0b00000001),
-                )),
-                Register('DATA', 0x08, fields=(
-                    BitField('v', 0xFFFF00000000000000000000),
-                    BitField('b', 0x0000FFFF0000000000000000),
-                    BitField('g', 0x00000000FFFF000000000000),
-                    BitField('y', 0x000000000000FFFF00000000),
-                    BitField('o', 0x0000000000000000FFFF0000),
-                    BitField('r', 0x00000000000000000000FFFF),
-                ), bit_width=96),
-                Register('CALIBRATED_DATA', 0x14, fields=(
-                    BitField('v', 0xFFFFFFFF << (32 * 5), adapter=FloatAdapter()),
-                    BitField('b', 0xFFFFFFFF << (32 * 4), adapter=FloatAdapter()),
-                    BitField('g', 0xFFFFFFFF << (32 * 3), adapter=FloatAdapter()),
-                    BitField('y', 0xFFFFFFFF << (32 * 2), adapter=FloatAdapter()),
-                    BitField('o', 0xFFFFFFFF << (32 * 1), adapter=FloatAdapter()),
-                    BitField('r', 0xFFFFFFFF << (32 * 0), adapter=FloatAdapter()),
-                ), bit_width=192),
-            ))
+        self._as7262 = Device(
+            i2caddr,
+            i2c_dev=as7262VirtualRegisterBus(busnum),
+            bit_width=8,
+            registers=(
+                Register(
+                    'VERSION',
+                    0x00,
+                    fields=(
+                        BitField('hw_type', 0xFF000000),
+                        BitField('hw_version', 0x00FF0000),
+                        BitField('fw_version', 0x0000FFFF, adapter=FWVersionAdapter()),
+                    ),
+                    bit_width=32,
+                    read_only=True,
+                ),
+                Register(
+                    'CONTROL',
+                    0x04,
+                    fields=(
+                        BitField('reset', 0b10000000),
+                        BitField('interrupt', 0b01000000),
+                        BitField('gain_x', 0b00110000, adapter=LookupAdapter({1: 0b00, 3.7: 0b01, 16: 0b10, 64: 0b11})),
+                        BitField('measurement_mode', 0b00001100),
+                        BitField('data_ready', 0b00000010),
+                    ),
+                ),
+                Register('INTEGRATION_TIME', 0x05, fields=(BitField('ms', 0xFF, adapter=IntegrationTimeAdapter()),)),
+                Register('TEMPERATURE', 0x06, fields=(BitField('degrees_c', 0xFF),)),
+                Register(
+                    'LED_CONTROL',
+                    0x07,
+                    fields=(
+                        BitField(
+                            'illumination_current_limit_ma',
+                            0b00110000,
+                            adapter=LookupAdapter({12.5: 0b00, 25: 0b01, 50: 0b10, 100: 0b11}),
+                        ),
+                        BitField('illumination_enable', 0b00001000),
+                        BitField(
+                            'indicator_current_limit_ma',
+                            0b00000110,
+                            adapter=LookupAdapter({1: 0b00, 2: 0b01, 4: 0b10, 8: 0b11}),
+                        ),
+                        BitField('indicator_enable', 0b00000001),
+                    ),
+                ),
+                Register(
+                    'DATA',
+                    0x08,
+                    fields=(
+                        BitField('v', 0xFFFF00000000000000000000),
+                        BitField('b', 0x0000FFFF0000000000000000),
+                        BitField('g', 0x00000000FFFF000000000000),
+                        BitField('y', 0x000000000000FFFF00000000),
+                        BitField('o', 0x0000000000000000FFFF0000),
+                        BitField('r', 0x00000000000000000000FFFF),
+                    ),
+                    bit_width=96,
+                ),
+                Register(
+                    'CALIBRATED_DATA',
+                    0x14,
+                    fields=(
+                        BitField('v', 0xFFFFFFFF << (32 * 5), adapter=FloatAdapter()),
+                        BitField('b', 0xFFFFFFFF << (32 * 4), adapter=FloatAdapter()),
+                        BitField('g', 0xFFFFFFFF << (32 * 3), adapter=FloatAdapter()),
+                        BitField('y', 0xFFFFFFFF << (32 * 2), adapter=FloatAdapter()),
+                        BitField('o', 0xFFFFFFFF << (32 * 1), adapter=FloatAdapter()),
+                        BitField('r', 0xFFFFFFFF << (32 * 0), adapter=FloatAdapter()),
+                    ),
+                    bit_width=192,
+                ),
+            ),
+        )
 
         # TODO : Integrate into i2cdevice so that LookupAdapter fields can always be exported to constants
         # Iterate through all register fields and export their lookup tables to constants
@@ -241,9 +266,7 @@ class AS7262(object):
                     for key in field.adapter.lookup_table:
                         value = field.adapter.lookup_table[key]
                         name = 'AS7262_{register}_{field}_{key}'.format(
-                            register=register.name,
-                            field=field.name,
-                            key=key
+                            register=register.name, field=field.name, key=key
                         ).upper()
                         locals()[name] = key
 
@@ -262,12 +285,7 @@ class AS7262(object):
         while self._as7262.CONTROL.get_data_ready() == 0 and (time.time() - t_start) <= timeout:
             pass
         with self._as7262.CALIBRATED_DATA as DATA:
-            return CalibratedValues(DATA.get_r(),
-                                    DATA.get_o(),
-                                    DATA.get_y(),
-                                    DATA.get_g(),
-                                    DATA.get_b(),
-                                    DATA.get_v())
+            return CalibratedValues(DATA.get_r(), DATA.get_o(), DATA.get_y(), DATA.get_g(), DATA.get_b(), DATA.get_v())
 
     def set_gain(self, gain):
         """Set the gain amount of the AS7262.

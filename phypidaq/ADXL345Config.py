@@ -44,7 +44,7 @@ class ADXL345Config(object):
         else:
             raise ValueError("ADXL345 initialization error! Invalid value for range")
 
-        self.ChanLims = [[-r * 10., r * 10.], [-r * 10., r * 10.], [-r * 10., r * 10.]]
+        self.ChanLims = [[-r * 10.0, r * 10.0], [-r * 10.0, r * 10.0], [-r * 10.0, r * 10.0]]
 
         # Internal hardware properties
         self.sensor = None

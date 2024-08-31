@@ -29,18 +29,18 @@ steps.
 
 ### Code linting
 
-We are using Continuous-Integration (CI) to check our `Python` code. This includes linting the code using the `flake8`
-package. To install it, simply run the following command in your terminal. You might get prompted to enter your
-password, as sudo-permissions are used.
+We are using Continuous-Integration (CI) to check our `Python` code. This includes linting the code using the `ruff`
+package. To install it, simply run the following command in your terminal: 
 
 ```shell
-sudo pip3 install -r requirements_dev.txt
+pip3 install -r requirements_dev.txt
 ```
 
-If the installation succeeded, you can use `flake8` to test your code locally by executing the following command:
+If the installation succeeded, you can use `ruff` to test your code locally by executing the following command:
 
 ```shell
-flake8 --count --show-source --statistics --max-line-length=120 --extend-ignore=F403,F405,F821 --exclude phypidaq/phypiUi.py,phypidaq/resources.py,venv
+ruff check <filename>
+ruff format --check <filename>
 ```
 
 ## Contributors

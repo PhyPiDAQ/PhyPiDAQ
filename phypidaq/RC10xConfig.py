@@ -1,20 +1,20 @@
 """Driver for RadiaCode 101/102 gamma spectrometer
 
-   relies on library *radiacode* by Maxim Andreev,
+relies on library *radiacode* by Maxim Andreev,
 
-   https://github.com/cdump/radiacode
+https://github.com/cdump/radiacode
 
-   needs pyhon dependecy and packaging tool poetry.
-   Installation of package radiacode:
+needs pyhon dependecy and packaging tool poetry.
+Installation of package radiacode:
 
-     > `pip3 install poetry`
-     > `pip3 install radiacode`
+  > `pip3 install poetry`
+  > `pip3 install radiacode`
 
-   RETURNS:
+RETURNS:
 
-     - counts if NChannels == 1
-     - counts and dose if NChannels == 2
-     - 1204 channel differential spectrum if show_spectrum
+  - counts if NChannels == 1
+  - counts and dose if NChannels == 2
+  - 1204 channel differential spectrum if show_spectrum
 
 """
 

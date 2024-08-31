@@ -11,6 +11,7 @@ import smbus2
 
 # import relevant pieces from adafruit
 
+
 class GroveADCConfig(object):
     """grove ADC configuration and interface"""
 
@@ -41,7 +42,7 @@ class GroveADCConfig(object):
         self.ChanUnits = []
         for c in self.ADCChannels:
             self.ChanNams.append('c' + str(c))
-            self.ChanLims.append([0., Vmax])
+            self.ChanLims.append([0.0, Vmax])
             self.ChanUnits.append('mV')
 
     def acquireData(self, buf):
@@ -103,6 +104,7 @@ class Bus:
         if bus is None:
             try:
                 import RPi.GPIO as GPIO
+
                 # use the bus that matches your raspi version
                 rev = GPIO.RPI_REVISION
             except ModuleNotFoundError:

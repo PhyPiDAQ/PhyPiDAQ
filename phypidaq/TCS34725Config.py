@@ -8,7 +8,7 @@ import adafruit_tcs34725
 
 
 class TCS34725Config(object):
-    """ TC34725 configuration and interface"""
+    """TC34725 configuration and interface"""
 
     def __init__(self, confdict=None):
         if confdict is None:
@@ -54,7 +54,7 @@ class TCS34725Config(object):
 
         # provide configuration parameters
         self.ChanNams = ['R', 'G', 'B', 'c']
-        self.ChanLims = [[0., 1.]] * self.NChannels
+        self.ChanLims = [[0.0, 1.0]] * self.NChannels
         self.sensor = None
 
     def init(self):
@@ -71,7 +71,6 @@ class TCS34725Config(object):
         self.sensor.gain = self.gain
 
     def acquireData(self, buf):
-
         # Read the R, G, B, C color data.
         if self.NChannels == 1:
             buf[0] = self.sensor.lux

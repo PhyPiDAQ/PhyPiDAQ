@@ -12,7 +12,7 @@ VL53L0_Max_Range = 1200.0
 
 
 class VL53LxConfig(object):
-    """ VL53L1X and VL53L0X configuration and interface """
+    """VL53L1X and VL53L0X configuration and interface"""
 
     def __init__(self, confdict=None):
         if confdict is None:
@@ -60,9 +60,9 @@ class VL53LxConfig(object):
         # provide channel parameters
         self.ChanNams = ['d']
         if self.type == 1:
-            self.ChanLims = [[0., VL53L1_Max_Range]]
+            self.ChanLims = [[0.0, VL53L1_Max_Range]]
         else:
-            self.ChanLims = [[0., VL53L0_Max_Range]]
+            self.ChanLims = [[0.0, VL53L0_Max_Range]]
 
         self.i2c = None
         self.sensor = None

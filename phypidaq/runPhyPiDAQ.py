@@ -3,10 +3,10 @@
 
 """run data acquisition
 
-     class collects data samples from various sensors, (re-)formats
-     and sends them to a display module, a file, a pipe or a websocket
+class collects data samples from various sensors, (re-)formats
+and sends them to a display module, a file, a pipe or a websocket
 
-     Usage: ./runPhyPiDAQ.py [<PhyPiConf_file>.daq] [Interval]
+Usage: ./runPhyPiDAQ.py [<PhyPiConf_file>.daq] [Interval]
 """
 
 from __future__ import print_function, division, unicode_literals
@@ -514,7 +514,7 @@ class runPhyPiDAQ(object):
                     cnt += 1
                     # read data
                     for i, DEV in enumerate(self.DEVs):
-                        DEV.acquireData(self.data[self.ChanIdx_ofDevice[i]:])
+                        DEV.acquireData(self.data[self.ChanIdx_ofDevice[i] :])
 
                     if self.ReadoutLED:
                         self.ReadoutLED.pulse(tflash)  # pulse readout LED

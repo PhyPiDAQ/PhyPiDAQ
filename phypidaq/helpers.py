@@ -1,4 +1,5 @@
 """helper functions"""
+
 import os
 import errno
 import time
@@ -118,7 +119,7 @@ class RingBuffer(object):
         """return all data"""
 
         if self.full:
-            return self.B[self.k:] + self.B[: self.k]
+            return self.B[self.k :] + self.B[: self.k]
         else:
             return self.B[: self.k]
 

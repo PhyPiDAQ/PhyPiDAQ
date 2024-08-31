@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """PoissonFlash:
 
 Generate a sequence of random events with constant expectation value

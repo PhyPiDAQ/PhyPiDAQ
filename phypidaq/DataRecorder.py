@@ -5,15 +5,14 @@ import time
 
 
 class DataRecorder(object):
-    """ store data to fle
-    """
+    """store data to fle"""
 
     def __init__(self, Fname, ConfDict):
         """Args:
 
-             Fname: file name
-             ConfDict: configuration dictionary
-             delim: field separator
+        Fname: file name
+        ConfDict: configuration dictionary
+        delim: field separator
         """
 
         if 'CSVseparator' in ConfDict:
@@ -47,23 +46,20 @@ class DataRecorder(object):
         self.f = open(fnam + '_' + datetime + '.' + fext, 'w')
 
         # write header:
-        print('# PhyPiDAQ Data recorder ', datetime,
-              file=self.f)
-        print('#   logging interval {0:.3g}'.format(self.dT),
-              file=self.f)
+        print('# PhyPiDAQ Data recorder ', datetime, file=self.f)
+        print('#   logging interval {0:.3g}'.format(self.dT), file=self.f)
         print('# ', end='', file=self.f)
-        print(self.sep.join(self.ChanTags),
-              file=self.f)
+        print(self.sep.join(self.ChanTags), file=self.f)
 
     def __call__(self, data):
         if data is not None:
-            print(self.sep.join(['{0:.4g}'.format(d) for d in data]),
-                  file=self.f)
+            print(self.sep.join(['{0:.4g}'.format(d) for d in data]), file=self.f)
 
     def close(self):
         # explicit close method
         if not self.f.closed:
             self.f.close()
+
 
 #  def __del__(self):
 #  # define a destructor in case .close() is forgotten
