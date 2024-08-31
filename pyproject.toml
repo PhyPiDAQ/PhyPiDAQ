@@ -39,5 +39,14 @@ exclude = [
     "site-packages",
     "venv",
 ]
+[tool.ruff.lint]
+select = []
+ignore = ["F403", "F405", "F821"]
+
+[tool.ruff.lint.per-file-ignores]
+# allow imports not at top
+"__init__.py" = ["E402"]
+"setup.py" = ["E402"]
+
 
 
