@@ -44,7 +44,7 @@ setup(
     author='Guenter Quast',
     author_email='Guenter.Quast@online.de',
     packages=[pkg_name, pkg_name + '.sensors', pkg_name + '.utils'],
-    inlcude_package_data=True,
+    include_package_data=True,
     package_data={pkg_name: ['PhyPiDemoData.csv', 'images/*', 'doc/*']},
     scripts=['phypi.py', 'run_phypi.py'],
     classifiers=[
