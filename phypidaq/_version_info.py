@@ -9,6 +9,7 @@
 major = 1
 minor = 4
 revision = 1
+suffix = ''  # for suffixes such as 'rc' or 'beta' or 'alpha'
 
 
 def _get_version_tuple():
@@ -22,4 +23,4 @@ def _get_version_string():
     """
     version as a string
     """
-    return "%d.%d.%d" % _get_version_tuple()
+    return "%d.%d.%d" % _get_version_tuple() + suffix

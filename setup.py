@@ -7,7 +7,13 @@ package information
 import sys
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
-import phypidaq  # from this directory
+
+
+pkg_name = "phypidaq"
+# import _version_info from package
+sys.path[0] = pkg_name
+import _version_info
+_version = _version_info._get_version_string()
 
 
 class PyTest(TestCommand):
@@ -29,13 +35,13 @@ class PyTest(TestCommand):
 
 
 setup(
-    name='phypidaq',
-    version=phypidaq.__version__,
+    name=pkg_name,
+    version=_version,
     author='Guenter Quast',
     author_email='Guenter.Quast@online.de',
-    packages=['phypidaq', 'phypidaq.sensors', 'phypidaq.utils'],
+    packages=[pkg_name, pkg_name+'.sensors', pkg_name+'.utils'],
     inlcude_package_data=True,
-    package_data={'phypidaq': ['PhyPiDemoData.csv', 'images/*', 'doc/*']},
+    package_data={pkg_name: ['PhyPiDemoData.csv', 'images/*', 'doc/*']},
     scripts=['phypi.py', 'run_phypi.py'],
     classifiers=[
         'Development Status :: 5 - stable',
