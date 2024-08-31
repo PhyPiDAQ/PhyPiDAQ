@@ -7,7 +7,6 @@ package information
 
 import sys
 from setuptools import setup
-from setuptools.command.test import test as TestCommand
 
 
 pkg_name = "phypidaq"
@@ -16,26 +15,6 @@ sys.path[0] = pkg_name
 import _version_info
 
 _version = _version_info._get_version_string()
-
-
-class PyTest(TestCommand):
-    """
-    Test runner for the phypidaq module
-
-    For more info visit: https://pytest.org/latest/goodpractices.html
-    """
-
-    user_options = [('pytest-args=', 'a', "Arguments to pass to py.test")]
-
-    def initialize_options(self):
-        TestCommand.initialize_options(self)
-        self.pytest_args = []
-
-    def run_tests(self):
-        import pytest
-
-        errcode = pytest.main(self.pytest_args)
-        sys.exit(errcode)
 
 
 setup(
