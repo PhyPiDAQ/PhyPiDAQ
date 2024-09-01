@@ -1,18 +1,10 @@
-# -*- coding: utf-8 -*-
-from __future__ import print_function, division, unicode_literals
-from __future__ import absolute_import
-
-"""
-  interface for FTLAB GDK 101 gamma radiation detector
-
-"""
+"""interface for FTLAB GDK 101 gamma radiation detector"""
 
 import sys
 from smbus2 import SMBus
 
 # default addresses
 I2CADDR = 0x18
-
 
 # code of driver classes included below
 

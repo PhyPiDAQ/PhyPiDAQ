@@ -1,17 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from __future__ import print_function, division, unicode_literals
-from __future__ import absolute_import
+"""GUI to control run_phipy.py
+
+- select and edit configuration files
+- select working directory
+- start data taking via execution of run_phypi.py
+"""
+
 from builtins import super
-
-"""
-  GUI to control run_phipy.py
-
-    - select and edit configuration files
-    - select working directory
-    - start data taking via execution of run_phypi.py
-"""
-
 import os
 import subprocess
 import sys

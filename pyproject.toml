@@ -5,52 +5,21 @@ build-backend = "setuptools.build_meta"
 # options for linting tools 
 [tool.black]
 line-length = 120
+indent-width = 4
 
 [tool.ruff]
-# Same as Black.
+# only differences from default 
 line-length = 120
-indent-width = 4
-# Exclude a variety of commonly ignored directories.
-exclude = [
-    ".bzr",
-    ".direnv",
-    ".eggs",
-    ".git",
-    ".git-rewrite",
-    ".hg",
-    ".ipynb_checkpoints",
-    ".mypy_cache",
-    ".nox",
-    ".pants.d",
-    ".pyenv",
-    ".pytest_cache",
-    ".pytype",
-    ".ruff_cache",
-    ".svn",
-    ".tox",
-    ".venv",
-    ".vscode",
-    "__pypackages__",
-    "_build",
-    "buck-out",
-    "build",
-    "dist",
-    "node_modules",
-    "site-packages",
-    "venv",
-]
 
 [tool.ruff.lint]
-select = []
+# ignore "unable to detect undefined names", "name may be undefined", "undefined name"
 ignore = ["F403", "F405", "F821"]
 
 [tool.ruff.format]
 quote-style = "preserve"
+line-ending = "lf"
 
 [tool.ruff.lint.per-file-ignores]
 # allow imports not at top
 "__init__.py" = ["E402"]
 "setup.py" = ["E402"]
-
-
-
