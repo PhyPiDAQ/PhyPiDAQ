@@ -12,7 +12,7 @@ indent-width = 4
 line-length = 120
 
 [tool.ruff.lint]
-# ignore "unable to detect undefined names", "name may be undefined", "undefined name"
+# ignore "unable to detect undefined names", "name may be undefined"
 ignore = ["F403", "F405", "F821"]
 
 [tool.ruff.format]
