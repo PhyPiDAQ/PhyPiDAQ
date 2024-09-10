@@ -56,6 +56,7 @@ def runDAQ():
     t_lastupd = t_start
     osc_wait_time = 0.1
     maxADC = np.float32(display_range)
+    ppFactor = 1.0 + overshoot_fraction
     while active:
         try:
             # get data
@@ -82,10 +83,18 @@ def runDAQ():
                         i0 -= slen - _l
                         it -= slen - _l
                 signal_data = np.float32(data[0][i0:i1])
-                pulse_height = max(signal_data[it:]) - min(signal_data[it:])
+                # peak-to-peak pulse height
+                pp_height = max(signal_data[it:]) - min(signal_data[it:])
+                # check bi-polar pulse characteristics
+                if pp_height < ppFactor * abs(trgThreshold):
+                    pass
+
             else:
                 signal_data = None
-                pulse_height = -1
+                pp_height = -1
+            #
+            # filter data
+            # detector signal is bi-polar, request peak-to-peak 1.25
             #
             # show events
             if showevents:
@@ -98,7 +107,7 @@ def runDAQ():
 
             # save to file
             if csvfile is not None:
-                print(f"{count}, {t_evt}, {pulse_height}", file=csvfile)
+                print(f"{count}, {t_evt}, {pp_height}", file=csvfile)
                 if count % 5:
                     csvfile.flush()
             # show oscillogram of raw wave form
@@ -132,6 +141,8 @@ if __name__ == "__main__":
     parser.add_argument("-f", "--file", type=str, default="", help="base filename to store results")
     parser.add_argument("-t", "--time", type=int, default=3600, help="run time in seconds")
     #
+    # sound card sampling parameters
+    parser.add_argument("-z", "--samplesize", type=int, default=1024, help="number of samples per read")
     parser.add_argument(
         "-s",
         "--samplingrate",
@@ -141,13 +152,16 @@ if __name__ == "__main__":
         help="sampling rate",
     )
     parser.add_argument("-c", "--channels", type=int, choices={1, 2}, default=1, help="number of channels")
+    # trigger settings
     parser.add_argument("-l", "--trglevel", type=float, default=5000, help="level of trigger")
     parser.add_argument("--trgfalling", action="store_true", help="trigger falling edge")
     parser.add_argument("-d", "--trgdeactivate", action="store_true", help="deactivate triggering")
-    parser.add_argument("-z", "--samplesize", type=int, default=1024, help="number of samples per read")
-    parser.add_argument("-r", "--range", type=float, default=2**14, help="display range")
     #
-    parser.add_argument("-i", "--interval", type=float, default=30.0, help="time bin for rate    display")
+    # double-pulse characteristics
+    parser.add_argument("--overshoot", type=float, default=0.25, help="minimum overshoot fraction")
+    #
+    parser.add_argument("-r", "--range", type=float, default=2**14, help="display range")
+    parser.add_argument("-i", "--interval", type=float, default=30.0, help="time bin for rate display")
     #
     args = parser.parse_args()
     # - parameters to control the scrpt
@@ -164,6 +178,7 @@ if __name__ == "__main__":
     trgThreshold = args.trglevel
     trgFalling = args.trgfalling
     trgActive = not args.trgdeactivate
+    overshoot_fraction = args.overshoot
     # - parameter for DisplayPoissonEvent
     interval = args.interval
 
@@ -176,6 +191,7 @@ if __name__ == "__main__":
         "trgActive": trgActive,
         "trgThreshold": trgThreshold,
         "trgFalling": trgFalling,
+        "overshoot_fraction": overshoot_fraction,
     }
 
     csvfile = None
@@ -183,7 +199,7 @@ if __name__ == "__main__":
         timestamp = time.strftime("%y%m%d-%H%M", time.localtime())
         fn = filename + "_" + timestamp + ".csv"
         csvfile = open(fn, "w")
-        csvfile.write("event_numer, event_time[s], pulse_height[adc]\n")
+        csvfile.write("event_numer, event_time[s], pp_height[adc]\n")
 
     # initialze sound card interface
     scO = SoundCardOsci(confdict=confd)
