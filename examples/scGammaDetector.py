@@ -84,11 +84,16 @@ def runDAQ():
                         it -= slen - _l
                 signal_data = np.float32(data[0][i0:i1])
                 # peak-to-peak pulse height
-                pp_height = max(signal_data[it:]) - min(signal_data[it:])
-                # check bi-polar pulse characteristics
-                if pp_height < ppFactor * abs(trgThreshold):
-                    pass
-
+                mx = max(signal_data[it:])
+                mn = min(signal_data[it:])
+                pp_height = mx - mn
+                # filter on bi-polar pulse characteristics
+                if trgFalling:
+                    if pp_height < ppFactor * abs(mn):
+                        continue
+                else:
+                    if pp_height < ppFactor * abs(mx):
+                        continue
             else:
                 signal_data = None
                 pp_height = -1
