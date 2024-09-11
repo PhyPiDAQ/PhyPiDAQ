@@ -79,14 +79,14 @@ def runDAQ():
                 if _l < slen:
                     if i0 == 0:
                         i1 += slen - _l
-                        it += slen - _l
+                        it -= slen - _l
                     else:
                         i0 -= slen - _l
-                        it -= slen - _l
+                        it += slen - _l
                 signal_data = np.float32(data[0][i0:i1])
                 # peak-to-peak pulse height
-                mx = max(signal_data[it:])
-                mn = min(signal_data[it:])
+                mx = signal_data[it:].max()
+                mn = signal_data[it:].min()
                 pp_height = mx - mn
                 # filter on bi-polar pulse characteristics
                 if trgFalling:
@@ -114,11 +114,13 @@ def runDAQ():
                 print(f"{count}, {t_evt}, {pp_height}", file=csvfile)
                 if count % 5:
                     csvfile.flush()
+                    
             # show oscillogram of raw wave form
             if showosci and osciProc.is_alive():
                 if (now - t_lastupd) > osc_wait_time and osciQ.empty():
                     t_lastupd = now
                     osciQ.put(_d)
+                    
         except Exception:
             # ignore occasional errors
             pass
