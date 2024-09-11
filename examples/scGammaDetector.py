@@ -52,6 +52,7 @@ def showOsci(mpQ, confdict):
 
 def runDAQ():
     """run data acquistion as thread"""
+    count = 0
     t_start = time.time()
     t_lastupd = t_start
     osc_wait_time = 0.1
@@ -66,7 +67,7 @@ def runDAQ():
             # got valid data
             now = time.time()
             t_evt = now - t_start
-            count, trg_idx, data = _d
+            trg_count, trg_idx, data = _d
             #
             # find signal around trigger point
             slen = 100  # length of sample around signal
@@ -98,10 +99,8 @@ def runDAQ():
                 signal_data = None
                 pp_height = -1
             #
-            # filter data
-            # detector signal is bi-polar, request peak-to-peak 1.25
-            #
-            # show events
+            # event is accepted, proceed
+            count += 1
             if showevents:
                 if signal_data is not None:
                     if flasherQ.empty():
