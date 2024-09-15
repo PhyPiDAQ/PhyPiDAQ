@@ -23,7 +23,7 @@ from phypidaq.mplhelpers import run_controlGUI
 
 
 def keyboard_input(cmd_queue):
-    """Read keyboard input and send to Qeueu, runing as background-thread to avoid blocking"""
+    """Read keyboard input and send to Queue, running as background-thread to avoid blocking"""
 
     while active:
         cmd = input()
@@ -51,7 +51,7 @@ def showOsci(mpQ, confdict):
 
 
 def runDAQ():
-    """run data acquistion as thread"""
+    """run data acquisition as thread"""
     count = 0
     t_start = time.time()
     t_lastupd = t_start
@@ -114,17 +114,17 @@ def runDAQ():
                 print(f"{count}, {t_evt}, {pp_height}", file=csvfile)
                 if count % 5:
                     csvfile.flush()
-                    
+
             # show oscillogram of raw wave form
             if showosci and osciProc.is_alive():
                 if (now - t_lastupd) > osc_wait_time and osciQ.empty():
                     t_lastupd = now
                     osciQ.put(_d)
-                    
+
         except Exception:
             # ignore occasional errors
             pass
-    # signal end to background processes by sening None
+    # signal end to background processes by sending None
     if showevents:
         flasherQ.put(-1)
     if showosci:
@@ -205,7 +205,7 @@ if __name__ == "__main__":
         timestamp = time.strftime("%y%m%d-%H%M", time.localtime())
         fn = filename + "_" + timestamp + ".csv"
         csvfile = open(fn, "w")
-        csvfile.write("event_numer, event_time[s], pp_height[adc]\n")
+        csvfile.write("event_number, event_time[s], pp_height[adc]\n")
 
     # initialze sound card interface
     scO = SoundCardOsci(confdict=confd)
@@ -235,7 +235,7 @@ if __name__ == "__main__":
     active = True
     cmdQ = mp.SimpleQueue()  # Queue for command input from keyboard
 
-    # set up control, eihther keyboard, GUI or both
+    # set up control, either keyboard, GUI or both
     if kbd_control:
         kbdthread = threading.Thread(name="kbdInput", target=keyboard_input, args=(cmdQ,))
         kbdthread.start()
