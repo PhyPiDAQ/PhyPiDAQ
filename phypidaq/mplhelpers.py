@@ -104,7 +104,7 @@ class controlGUI:
         self.t_start = time.time()
         timer.start()
 
-        print("sarting event loop - click 'end' to stop")
+        print("starting event loop - click 'end' to stop")
         plt.show()
 
 
