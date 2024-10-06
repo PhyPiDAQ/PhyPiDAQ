@@ -2,6 +2,7 @@
 #
 # script to install libraries PhyPiDAQ depends on
 #
+#       requires a Python virtuel environment 
 # -----------------------------------------------
 
 # Print info message
@@ -20,22 +21,22 @@ sudo apt install libglib2.0-dev --yes  # needed for bluepy
 sudo apt install portaudio19-dev --yes  # for pyaudio
 
 # install this package (phypidaq) 
-sudo pip3 install .
+python -m pip install .
 
 while true; do
     read -p "Do you wish to install sensor drivers (y/n)? " yn
     case $yn in
         [Yy]* ) echo "Installing drivers";
           # some python packages for IO
-          sudo pip3 install i2cdev;
-          sudo pip3 install spidev;
-          sudo pip3 install pyusb;
-          sudo pip3 install smbus2;
+          python -m pip install i2cdev;
+          python -m pip install spidev;
+          python -m pip install pyusb;
+          python -m pip install smbus2;
 
-          sudo pip3 install installlibs/whl/*.whl; # python wheels
+          python -m pip install installlibs/whl/*.whl; # python wheels
 
           # Install all sensor drivers specified in the
-          sudo pip3 install -r requirements.txt;
+          python -m pip install -r requirements.txt;
 
           sudo usermod -a -G tty $USER; # grant access to USB for the current user
 
