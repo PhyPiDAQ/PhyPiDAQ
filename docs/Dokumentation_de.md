@@ -800,6 +800,13 @@ z. B. dem Steckernetzteil des Raspberry Pi.
 - `examples/poissonFlash.py`
     erzeugt zufällige Poisson-Ereignisse, Anzeige als kurzer Blitz sowie als History-Graph
 
+- `examples/oscilloscope/soundcardOsci.py`
+    Lesen und Anzeigen von Wellenformdaten von einer Soundkarte (Anwendunbeispiel für Klasse SouncCardOsci)
+
+- `examples/scOsciGammaDetector.py`
+    Lesen und Anzeigen von getriggerten Wellenformdaten von einer Soundkarte mit angeschlossenem
+    Teilchendetektor (CERN DIY particle detector)
+
 
 ### Konfigurationsdateien für *run_phypi.py*
 
@@ -827,10 +834,3 @@ z. B. dem Steckernetzteil des Raspberry Pi.
     Erzeugung und Anzeige von simulierten Daten 
 - `examples/ReplayData.daq`  
     Daten aus Datei (für Demo-Zwecke)
-- `examples/poissonFlash.py`
-    Zufallsereignisse entsprechend einem Poisson-Prozes und Anzeige als Blitz
-- `examples/oscilloscope/soundcardOsci.py`
-    Lesen und Anzeigen von Wellenformdaten von einer Soundkarte (Anwendunbeispiel für Klasse SouncCardOsci)
-- `examples/scOsciGammaDetector.py`
-    Lesen und Anzeigen von getriggerten Wellenformdaten von einer Soundkarte mit angeschlossenem
-    Teilchendetektor (CERN DIY particle detector)
