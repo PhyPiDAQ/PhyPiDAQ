@@ -20,6 +20,22 @@ sudo apt install libatlas-base-dev --yes  # needed to build numpy
 sudo apt install libglib2.0-dev --yes  # needed for bluepy
 sudo apt install portaudio19-dev --yes  # for pyaudio
 
+# check for virtual python environment and create if not present
+PHYPYENV="/usr/local/share/phypy"
+if [ -d "$PHYPYENV" ];
+    then
+      echo "installing in virtual environment $PHYPYENV"
+    else
+      echo "creating Python virtual environment in directory $PHYPYENV"
+      sudo mkdir $PHYPYENV
+      sudo chown $USER $PHYPYENV
+      sudo chmod a+rwx $PHYPYENV  # would be better to use separate group phypi
+      python3 -m venv "$PHYPYENV" --system-site-packages 
+
+fi
+# activate virtual environment
+source "$PHYPYENV"/bin/activate
+
 # install this package (phypidaq) 
 python -m pip install .
 
