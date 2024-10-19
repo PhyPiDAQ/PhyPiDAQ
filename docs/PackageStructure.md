@@ -14,13 +14,13 @@ The directory structure is as follows:
                | --> EducatorsGuide            # general introduction for Educators
                | --> Hardware_Case             # build instructions for hardware
                | --> Sensor_Documentation      # features of supported sensors
-               | --> PhyPiDAQ              |
-	                                   | --> phypidaq       # code and sensor library
-	                                   | --> installibs     # vendor-specific sensor libraries
-					   | --> config         # sensor configuration files
-                                           | --> examples       # scripts illustrating the usage
-					   | --> doc            # documentation
-					   | --> package installation files (.whl and .tar.gz)
+               | --> PhyPiDAQ
+	                    | --> phypidaq       # code and sensor library
+	                    | --> installibs     # vendor-specific sensor libraries
+					    | --> config         # sensor configuration files
+                        | --> examples       # scripts illustrating the usage
+					    | --> doc            # documentation
+					    | --> package installation files (.whl and .tar.gz)
 
 ```
 
