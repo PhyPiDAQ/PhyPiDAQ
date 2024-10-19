@@ -25,37 +25,29 @@ mkdir -p $DIR
 if [ -d $DIR ]; then
 # enter here, if directory exists
 
-  # Create the new desktop icons dynamically
+  # Create desktop icons dynamically
   printf "[Desktop Entry]\nType=Application\nEncoding=UTF-8\nName=PhyPi\nComment=PhyPi Configuration\nIcon=" > $HOME/Desktop/phypi.desktop
-  printf $SCRIPT_PATH >> $HOME/Desktop/phypi.desktop
-  printf "/phypidaq/images/PhiPi_icon.png\nExec=lxterminal -t \"PhyPiDAQ\" -e " >> $HOME/Desktop/phypi.desktop
-  printf $SCRIPT_PATH >> $HOME/Desktop/phypi.desktop
-  printf "/phypi.py\nTerminal=false\n" >> $HOME/Desktop/phypi.desktop
+  printf $DIR >> $HOME/Desktop/phypi.desktop
+  printf "/PhiPi_icon.png\nExec=lxterminal -t \"PhyPiDAQ\" -e \"" >> $HOME/Desktop/phypi.desktop
+  printf "source ~/activate_phypi.sh; phypi.py\"\nTerminal=false\n" >> $HOME/Desktop/phypi.desktop
 
   printf "[Desktop Entry]\nType=Application\nEncoding=UTF-8\nName=PhyPi Demo\nComment=PhyPi Configuration\nIcon=" > $HOME/Desktop/phypi_demo.desktop
-  printf $SCRIPT_PATH >> $HOME/Desktop/phypi_demo.desktop
-  printf "/phypidaq/images/PhiPi_icon.png\nExec=lxterminal -t \"PhyPiDAQ\" -e " >> $HOME/Desktop/phypi_demo.desktop
-  printf $SCRIPT_PATH >> $HOME/Desktop/phypi_demo.desktop
-  printf "/phypi.py " >> $HOME/Desktop/phypi_demo.desktop
-  printf $SCRIPT_PATH >> $HOME/Desktop/phypi_demo.desktop
-  printf "/PhyPiDemo.daq\nTerminal=false\n" >> $HOME/Desktop/phypi_demo.desktop
+  printf $DIR >> $HOME/Desktop/phypi_demo.desktop
+  printf "/PhiPi_icon.png\nExec=lxterminal -t \"PhyPiDAQ\" -e \"" >> $HOME/Desktop/phypi_demo.desktop
+  printf "source ~/activate_phypi.sh; phypi.py " >> $HOME/Desktop/phypi_demo.desktop
+  printf $DIR >> $HOME/Desktop/phypi_demo.desktop
+  printf "/PhyPiDemo.daq\"\nTerminal=false\n" >> $HOME/Desktop/phypi_demo.desktop
 
   # Ensure, that the desktop links have the correct permissions
   chmod a+x $HOME/Desktop/*.desktop
 
-  # copy documentation
-  # mkdir -p $DIR/doc
-  # cp -auv doc/*.pdf $DIR/doc/
-  # cp -auv README_de.pdf $DIR
-
+  # copy script to activate virtual Python environment
+  cp -auv activate_phypi $HOME
+  
   #copy python code
   cp -auv phypi.py $DIR
   cp -auv run_phypi.py $DIR
   cp -auv phypidaq/images/PhiPi_icon.png $DIR
-
-  # mkdir $DIR/phypidaq # no longer needed with new Qt set-up
-  # cp -auv phypidaq/images $DIR/phypidaq/
-  # cp -auv phypidaq/doc    $DIR/phypidaq/
 
   #copy config examples
   cp -auv config/ $DIR
