@@ -58,8 +58,8 @@ The following requirements need to be met to work
 - Python 3.6 runtime or newer
 - `git`-package installed
 
-Installation runs on Raspberry Pi with Debian 11 (bullseye), however, not all
-sensor libraries could be fully tested. 
+Installation runs on Raspberry Pi with Debian 11 (bullseye) or 12 (bookworm),
+however, not all sensor libraries could be fully tested. 
 
 1. Open a terminal and go to the folder where the software should be installed.
 2. Download the latest release using the following command
@@ -68,26 +68,48 @@ sensor libraries could be fully tested.
      git clone https://github.com/PhyPiDAQ/PhyPiDAQ
    ```
 
-3. Now we need to install all required dependencies. Access the folder and execute the `installlibs.sh`. During the
-   installation process you will be promoted, if you want to install the sensor drivers. They are not required to run
-   the demo, but helpful for further use. As some drivers work exclusively on the Raspberry Pi, we recommend answering
-   it only with `Y` if you are running on a Raspberry Pi and with `n` in all other cases.
-   Additionally, you will be asked if you want to install the PicoScope drivers, where you need to enter a `Y` for yes
-   or `n` for no.
+3. Now we need to install all required dependencies. Access the folder and execute  the shell
+   script `installlibs.sh`. During the installation process you will be promoted whether 
+   to install the sensor drivers. They are not required to ru the demo and some applications,
+  but they are required for sensors connected to the GPIO pins of the Raspberry Pi. Therefore,
+  we recommend answering `y` only if needed and `n` in all other cases. Additionally, you will
+  be asked if you want to install the PicoScope drivers. Answering `y`is only needed on the
+  Raspberry Pi, as on other systems the libraries are installed together with the PicoScope
+  Software. 
 
    ```shell
      cd PhyPiDAQ
      ./installlibs.sh
    ```
-
-4. Run the demo by starting the script `run_phypi.py`. This will start the application and replay some recorded data in a window, as specified in the configuration file `PhyPiDemo.daq`: 
+4. On the latest Linux version, a virtual *Python* environment is needed. For PhyPiDAQ this is
+  set up and provided system-wide for every user in the directory `/usr/local/share/phypy/` by
+  executing   
 
    ```shell
-     ./run_phypi.py
+      cd PhyPiDAQ
+      ./install_user.sh 
    ```
 
+   This script also initializes a work directory in the user's home directory with local copies
+   of configuration files from the install directory. On a Raspberry Pi,  desktop icons are
+   also created.   
+   
+   It is also necessary to activate the virtual *Python* environment at every login by executing  
+   
+     ```shell
+       cd 
+       source activate_phypi.sh
+     ```
+  If exclusive use of PhyPiDAQ is foreseen on a system, the command for activation can also
+  be included in the users `.bashrc` file. 
+   
+5. Now everything is ready to run the PhyPiDAQ demo by either typing `phypi.py` or by
+  double-clicking the `phypi_demo`icon.    
+  This starts the application to replay some recorded data in a window, as specified in the configuration file `PhyPiDemo.daq`.
+
 For further information on the installation process, on sensors and hardware needs or
-on educational examples see the detailed documentation in the repositories under the link [http://github.com/PhyPiDAQ](http://github.com/PhyPiDAQ).
+on educational examples see the detailed documentation in the repositories under the
+link [http://github.com/PhyPiDAQ](http://github.com/PhyPiDAQ).
 
 
 ## Supported sensors
