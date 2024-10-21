@@ -1,15 +1,15 @@
 """
 .. module:: _version_info
    :platform: python 3.6+
-   :synopsis: Version 1.4.1 of phypidaq, released Aug. 2024
+   :synopsis: Version 1.5.0rc0 of phypidaq, released Aug. 2024
 
 .. moduleauthor:: Guenter Quast <guenter.quast@online.de>
 """
 
 major = 1
-minor = 4
-revision = 1
-suffix = ''  # for suffixes such as 'rc' or 'beta' or 'alpha'
+minor = 5
+revision = 0
+suffix = 'rc0'  # for suffixes such as 'rc' or 'beta' or 'alpha'
 
 
 def _get_version_tuple():
