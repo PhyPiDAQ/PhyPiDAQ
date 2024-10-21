@@ -168,7 +168,6 @@ DAQfifo: null
 ```
 
 
-
 ### Gerätekonfigurationen 
 
 Die Gerätekonfiguration für den sehr flexibel einsetzbaren Analog-Digital-Wandler **ADS1115** mit 16 Bit Auflösung und Ausleseraten bis zu 860 Hz gibt die aktiven Kanäle und deren Wertebereiche an.
@@ -243,11 +242,13 @@ Beispiele für andere Geräte, wie den Analog-Digital-Wandler MCP3008, für Rate
 
 **Beziehen des PhyPiDAQ Codes und einfache Installation**
 
-Achtung, diese Anleitung setzt voraus, dass auf dem Raspberry Pi
-die "legacy Version (Debian 11, bullseye) des Betriebssystems installiert ist !
+Die Installation funktioniert auf Raspberry Pis  mit Debian 11 (Bullseye) oder 
+12 (Bookworm) als Betriebssystem. Bitte beachten Sie , dass Ihr Raspberry Pi für 
+die folgenden Schritte mit dem Internet verbunden sein muss. 
 
-Bitte beachten Sie , dass Ihr Raspberry Pi für die folgenden Schritte mit dem Internet verbunden sein muss. Mit dem Befehl *git* lassen sich alle Dateien des Pakets `PhyPiDAQ` herunter laden. 
-Zur Installation von *git* geben Sie nach dem Einrichten Ihres Raspberry Pi mit dem aktuellen Debian-Release *stretch* im Konsolenfenster folgenden Befehl ein : 
+Mit dem Befehl *git* lassen sich alle Dateien des Pakets `PhyPiDAQ` herunter laden. 
+Zur Installation von *git* geben Sie nach dem Einrichten Ihres Raspberry Pi im
+Konsolenfenster folgenden Befehl ein : 
 
 ```bash
 sudo apt-get install git
@@ -255,46 +256,72 @@ sudo apt-get install git
 
 Zur Installation von `PhyPiDAQ` geben Sie folgende Befehle ein : 
 
-```bash
-mkdir ~/git
-cd ~/git
-git clone https://github.com/PhyPiDAQ/PhyPiDAQ
-```
+1. DAten von github transferieren: 
+     ```bash
+        mkdir ~/git
+        cd ~/git
+        git clone https://github.com/PhyPiDAQ/PhyPiDAQ
+      ```
 
-PhyPiDAQ* basiert auf Code aus anderen Paketen, die die Treiber für die unterstützten Geräte und  Bibliotheken für die Visualisierung bereitstellen. Die notwendigen Befehle zu deren Installation sind im Scritp `installlibs.sh` zusammengefasst.  Geben Sie auf der Kommandozeile folgende Befehle ein (ohne den erklärenden Text nachdem `#`-Zeichen):
+2.   PhyPiDAQ* basiert auf Code aus anderen Paketen, die die Treiber für die unterstützten Geräte
+     und Bibliotheken für die Visualisierung bereitstellen. Die notwendigen Befehle zu deren Installation sind im Scritp `installlibs.sh` zusammengefasst.  Geben Sie auf der Kommandozeile folgende Befehle ein (ohne den erklärenden Text nachdem `#`-Zeichen):
 
-```bash
-cd ~/git/PhyPiDAQ  # ins Installationsverzeichnis wechseln
-git pull           # optional, falls Sie PhyPiDAQ aktualisieren möchten
-./installlibs.sh   # Installations-Script ausführen
-```
+     ```bash
+        cd ~/git/PhyPiDAQ  # ins Installationsverzeichnis wechseln
+        git pull           # optional, falls Sie PhyPiDAQ aktualisieren möchten
+       ./installlibs.sh   # Installations-Script ausführen
+     ```
 
+     Während des Installationsprozesses werden Sie gefragt, ob die Sensortreiber installiert werden
+     sollen. Sie sind nicht erforderlich, um die Demo und einige Anwendungen auszuführen, werden aber
+     für Sensoren benötigt, die an die GPIO-Pins des Raspberry Pi angeschlossen sind. Zusätzlich wird
+     anschließend abgefragt, ob die PicoScope-Treiber installiert werden sollen. Dies ist nur   
+     auf dem Raspberry Pi notwendig, da auf anderen Systemen die Bibliotheken zusammen mit der
+     PicoScope Software installiert werden. 
+
+3.  Bei der neuesten Linux-Version wird eine virtuelle *Python*-Umgebung benötigt. Für PhyPiDAQ wird 
+    diese systemweit für jeden Benutzer im Verzeichnis `/usr/local/share/phypy/` bereitgestellt. Dazu
+    das folgende Skript ausführen:
+
+    ```bash
+       # Erzeugen eines Arbeitsverzeichnissen PhyPi und Kopieren von Beispielen und 
+       # Konfigurationsdateien in das neu erzeugte Verzeichnis.
+       cd ~/git/PhyPiDAQ
+       ./install_user.sh [<Verzeichnisname>]  
+       #   die Eingabe eines Verzeichnisnamens ist optional; voreingestellt ist "PhyPi"
+    ```
+    Dieses Skript initialisiert auch ein Arbeitsverzeichnis im Heimatverzeichnis des Benutzers
+    mit lokalen Kopien der Konfigurationsdateien aus dem Installationsverzeichnis. Auf einem
+    Raspberry Pi werden auch Desktop-Symbole erstellt.   
+   
+4.  Es ist weiter auch notwendig, die virtuelle *Python*-Umgebung bei jeder Anmeldung zu aktivieren, 
+    indem man Folgendes ausführt  
+   
+    ```shell
+       cd 
+       source activate_phypi.sh
+    ```
+
+    Wenn die ausschließliche Nutzung von PhyPiDAQ auf einem System vorgesehen ist, kann der Befehl
+    zur Aktivierung auch in die in die Datei `.bashrc` des Benutzers aufgenommen werden. 
+  
 Damit ist die Installation schon abgeschlossen und `PhyPiDAQ` ist bereit für den ersten Einsatz. 
+Die PhyPiDAQ-Demo auszufuehren, entweder durch Eingabe von `phypi.py` oder durch Doppelklick auf 
+das `phypi_demo`-Icon. Dies startet die Anwendung, um aufgezeichnete Daten in einem Fenster wiederzugeben, wie in der Konfigurationsdatei `PhyPiDemo.daq` angegeben.
 
-Die letzten Zeilen der Installationsvorschrift gelten auch, wenn eine schon installierte Version 
-von `PhyPiDAQ` aktualisiert werden soll.
-
-
-Um die Installation auch ohne angeschlossene Hardware oder auf einem anderen System als dem 
-Raspberry Pi zu testen, kann PhyPiDAQ im Demo-Modus gestartet werden:
-
-```bash
-cd ~/git/PhyPiDAQ  # ins Installationsverzeichnis wechseln
-./run_phypi.py     # run_phypi.py mit PhyPiDemo.daq ausführen
-```
-
-
+Wenn auf einem System PhyPiDAQ bereits installiert ist, aber aktualisiert werden soll, bitte
+Folgendes eingeben:
+  ```bash
+    cd ~/git/PhyPiDAQ
+    git pull
+  ```
+und dann die Schritte 2 bis 4 ausführen.  
 
 **Anmerkung**
 
 Schüler oder Studierende zu Beginn mit dem vollen Umfang des Pakets *PhyPiDAQ* zu konfrontieren, ist aus didaktischer Sicht wenig angebracht. Stattdessen wird empfohlen, ein Arbeitsverzeichnis zu erstellen und benötigte Beispiele von dort in ein eigenes Arbeitsverzeichnis zu kopieren. Dies wird durch folgende Befehle erreicht:
 
-```bash
-# Erzeugen eines Arbeitsverzeichnissen PhyPi und Kopieren von Beispielen und Konfigurationsdateien in das neu erzeugte Verzeichnis.
-cd ~/git/PhyPiDAQ
-./install_user.sh [<Verzeichnisname>]  
-#   die Eingabe eines Verzeichnisnamens ist optional; voreingestellt ist "PhyPi"
-```
+
 
 Um versehentliches Überschreiben von Dateien im Paket *PhyPiDAQ* zu vermeiden, sollte eine Verschiebung bzw. Kopieren in den Systembereich in Erwägung gezogen werden, z. B. nach  /usr/local/:
 
