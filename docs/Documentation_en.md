@@ -24,7 +24,8 @@ The package provides an abstraction layer for measurement devices and sensors co
 
 The script `run_phypi.py` allows users to perform very general measurement tasks without the need to write custom code. The options for configuration of input devices and their channels as well as for the display and data storage modules are specified in a global configuration file of type `.daq` (in `yaml` markup language), which contains references to device configuration files of type `.yaml`.
 
-### Main configuration file
+### Main configuration filelt36gb00
+
 
 A typical, commented example of the main configuration file is shown below.
 Note that text following a ''#''-sign is ignored and contains descriptive comments or alternatives.
@@ -204,6 +205,87 @@ frqSG: 0.
 Examples of other devices like the analog-to-digital converter MCP3008, of rate measurements via the GPIO pins of the Raspberry Pi or temperature measurements with the 1-wire digital thermometer DS18B20,   PT100 sensors and the resistance-to-digital converter MAX31865 or thermocouples and the thermocouple-to-digital converter MAX31855 are also contained in the configuration directory, see files `MCP3008Config.yaml`, `GPIOcount.yaml`, `DS18B20Config.yaml` , `MAX31865Config.yaml` or `MAX31855Config.yaml`, respectively.
 
 ## Installation of PhyPiDAQ on a Raspberry Pi
+
+
+**Obtaining the PhyPiDAQ code and simple installation**
+
+The installation works on Raspberry Pis with Debian 11 (Bullseye) or 
+12 (Bookworm) as operating system. Please note that your Raspberry Pi must be 
+connected to the must be connected to the Internet for the following steps. 
+
+With the command *git* you can download all files of the package `PhyPiDAQ`. 
+To install *git*, after setting up your Raspberry Pi, enter the following command 
+in the console window:
+
+```bash
+sudo apt-get install git
+```
+
+To install `PhyPiDAQ`, enter the following commands : 
+
+1. transfer files from github: 
+     ```bash
+        mkdir ~/git
+        cd ~/git
+        git clone https://github.com/PhyPiDAQ/PhyPiDAQ
+      ```
+
+2. *PhyPiDAQ* is based on code from other packages that provide the drivers for the supported
+   devices and libraries for visualization. The commands required to install them are 
+   summarized in the `installlibs.sh` script.  Enter the following on the command line 
+   (without the explanatory text after the `#` sign):
+
+     ```bash
+        cd ~/git/PhyPiDAQ # change to the installation directory
+        git pull # optional, if you want to update PhyPiDAQ
+       ./installlibs.sh # execute installation script
+     ```
+
+     During the installation process, you will be asked whether the sensor drivers should be installed. They are not required to run the demo and some applications, but are needed
+     to use sensors connected to the GPIO pins of the Raspberry Pi. In addition, the script
+     prompts whether the PicoScope drivers should be installed. This is only necessary   
+     on the Raspberry Pi, as on other systems the libraries are installed together with the
+     PicoScope software.
+
+3. A virtual *Python* environment is required for the latest Linux version. For PhyPiDAQ 
+    this is provided system-wide for each user in the directory `/usr/local/share/phypy/`. 
+    This script also initializes a working directory in the user's home directory
+    with local copies of the configuration files from the installation directory. 
+    On a Raspberry Pi, desktop icons are also created. Type  
+
+    ```bash
+       # Create a working directory PhyPi and copy examples and 
+       # configuration files into the newly created directory.
+       cd ~/git/PhyPiDAQ
+       ./install_user.sh [<directory name>]  
+       # the entry of a directory name is optional; the default is “PhyPi”
+    ```
+
+4. It is also necessary to activate the virtual *Python* environment at each login, 
+    by executing the following  
+   
+    ```shell
+       cd 
+       source activate_phypi.sh
+    ```
+
+    If the exclusive use of *PhyPiDAQ* is intended on a system, the command
+    command can also be included in the user's `.bashrc` file. 
+  
+This completes the installation and *PhyPiDAQ* is ready for its first use. 
+Execute the *PhyPiDAQ* demo, either by entering `phypi.py` or by double-clicking 
+on the `phypi_demo` icon. This will start the application to play back recorded 
+data in a window as specified in the configuration file `PhyPiDemo.daq`.
+
+If PhyPiDAQ is already installed on a system but needs to be updated, please
+enter the following:
+  ```bash
+    cd ~/git/PhyPiDAQ
+    git pull
+  ```
+and then carry out steps 2 to 4.  
+
+
 
 **Get PhyPiDAQ code and dependencies**
 

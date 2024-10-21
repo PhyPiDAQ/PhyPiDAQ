@@ -305,32 +305,18 @@ Zur Installation von `PhyPiDAQ` geben Sie folgende Befehle ein :
     Wenn die ausschließliche Nutzung von PhyPiDAQ auf einem System vorgesehen ist, kann der Befehl
     zur Aktivierung auch in die in die Datei `.bashrc` des Benutzers aufgenommen werden. 
   
-Damit ist die Installation schon abgeschlossen und `PhyPiDAQ` ist bereit für den ersten Einsatz. 
-Die PhyPiDAQ-Demo auszufuehren, entweder durch Eingabe von `phypi.py` oder durch Doppelklick auf 
-das `phypi_demo`-Icon. Dies startet die Anwendung, um aufgezeichnete Daten in einem Fenster wiederzugeben, wie in der Konfigurationsdatei `PhyPiDemo.daq` angegeben.
+Damit ist die Installation schon abgeschlossen und *PhyPiDAQ* ist bereit für den ersten Einsatz. 
+Die *PhyPiDAQ*-Demo auszufuehren, entweder durch Eingabe von `phypi.py` oder durch Doppelklick auf 
+das `phypi_demo`-Icon. Dies startet die Anwendung, um aufgezeichnete Daten in einem Fenster
+wiederzugeben, wie in der Konfigurationsdatei `PhyPiDemo.daq` angegeben.
 
-Wenn auf einem System PhyPiDAQ bereits installiert ist, aber aktualisiert werden soll, bitte
-Folgendes eingeben:
+Wenn *PhyPiDAQ* auf einem System bereits installiert ist, aber aktualisiert werden soll,
+bitte Folgendes eingeben:
   ```bash
     cd ~/git/PhyPiDAQ
     git pull
   ```
 und dann die Schritte 2 bis 4 ausführen.  
-
-**Anmerkung**
-
-Schüler oder Studierende zu Beginn mit dem vollen Umfang des Pakets *PhyPiDAQ* zu konfrontieren, ist aus didaktischer Sicht wenig angebracht. Stattdessen wird empfohlen, ein Arbeitsverzeichnis zu erstellen und benötigte Beispiele von dort in ein eigenes Arbeitsverzeichnis zu kopieren. Dies wird durch folgende Befehle erreicht:
-
-
-
-Um versehentliches Überschreiben von Dateien im Paket *PhyPiDAQ* zu vermeiden, sollte eine Verschiebung bzw. Kopieren in den Systembereich in Erwägung gezogen werden, z. B. nach  /usr/local/:
-
-```bash
-sudo cp -a ~/git/PhyPiDAQ /usr/local/
-```
-
-Die Pfade in *~/Desktop/phypi.desktop* müssen dann ebenfalls entsprechend angepasst werden. Dies wird am einfachsten durch Klicken mit der rechten Maustaste auf das *phypi*-Symbol erreicht. Im sich dann öffnenden Menü den Dialog "Eigenschaften" wählen und alle Pfade von  *~/git/*  ->  */usr/local/* ändern.
-
 
 
 ### Dokumentation der Abhängigkeiten von externen Paketen
