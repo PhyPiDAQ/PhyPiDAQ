@@ -218,7 +218,7 @@ To install *git*, after setting up your Raspberry Pi, enter the following comman
 in the console window:
 
 ```bash
-sudo apt-get install git
+  sudo apt-get install git
 ```
 
 To install `PhyPiDAQ`, enter the following commands : 
@@ -273,8 +273,9 @@ To install `PhyPiDAQ`, enter the following commands :
     command can also be included in the user's `.bashrc` file. 
   
 This completes the installation and *PhyPiDAQ* is ready for its first use. 
-Execute the *PhyPiDAQ* demo, either by entering `phypi.py` or by double-clicking 
-on the `phypi_demo` icon. This will start the application to play back recorded 
+To test it, change to the working directory, `cd PhyPi` and execute the 
+*PhyPiDAQ* demo, either by entering `phypi.py` or by double-clicking on 
+the `phypi_demo` icon. This will start the application to play back recorded 
 data in a window as specified in the configuration file `PhyPiDemo.daq`.
 
 If PhyPiDAQ is already installed on a system but needs to be updated, please
