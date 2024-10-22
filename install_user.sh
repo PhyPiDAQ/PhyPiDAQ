@@ -42,7 +42,7 @@ if [ -d $DIR ]; then
   chmod a+x $HOME/Desktop/*.desktop
 
   # copy script to activate virtual Python environment
-  cp -auv activate_phypi $HOME
+  cp -auv activate_phypi.sh $HOME
   
   #copy python code
   cp -auv phypi.py $DIR

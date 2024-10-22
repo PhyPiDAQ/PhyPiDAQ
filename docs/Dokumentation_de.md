@@ -298,17 +298,17 @@ Zur Installation von `PhyPiDAQ` geben Sie folgende Befehle ein :
     indem man Folgendes ausführt  
    
     ```shell
-       cd 
-       source activate_phypi.sh
+       source ~/activate_phypi.sh
     ```
 
     Wenn die ausschließliche Nutzung von PhyPiDAQ auf einem System vorgesehen ist, kann der Befehl
     zur Aktivierung auch in die in die Datei `.bashrc` des Benutzers aufgenommen werden. 
   
-Damit ist die Installation schon abgeschlossen und *PhyPiDAQ* ist bereit für den ersten Einsatz. 
-Die *PhyPiDAQ*-Demo auszufuehren, entweder durch Eingabe von `phypi.py` oder durch Doppelklick auf 
-das `phypi_demo`-Icon. Dies startet die Anwendung, um aufgezeichnete Daten in einem Fenster
-wiederzugeben, wie in der Konfigurationsdatei `PhyPiDemo.daq` angegeben.
+Damit ist die Installation schon abgeschlossen und *PhyPiDAQ* ist bereit für den ersten Einsatz. Dazu ins mit `cd PhyPi` in das oben angelegte Arbeitsverzeichnis
+wechlsen und dann die *PhyPiDAQ*-Demo ausfuehren, entweder durch Eingabe von 
+`phypi.py` oder durch Doppelklick auf das `phypi_demo`-Icon. Dies startet die
+Anwendung, um aufgezeichnete Daten in einem Fenster wiederzugeben, wie in der
+Konfigurationsdatei `PhyPiDemo.daq` angegeben.
 
 Wenn *PhyPiDAQ* auf einem System bereits installiert ist, aber aktualisiert werden soll,
 bitte Folgendes eingeben:
@@ -385,7 +385,6 @@ sudo apt-get install libps2000a
 # Benutzer pi Zugriff auf den USB-Port ermoeglichen
 sudo usermod -a -G tty pi
 ```
-
 
 
 ## Experimente und Messungen mit PhyPiDAQ
@@ -485,7 +484,6 @@ except KeyboardInterrupt:
   device.closeDevice()
   display.close()
 ```
-
 
 
 **Datenaufnamhe mit _phypi.py oder  _run_phypi.py_**
