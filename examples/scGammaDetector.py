@@ -3,11 +3,16 @@
 """script scGammaDetector.py
 
 read data from soundcard and
- - display oscillogram of raw wave forms
- - disply individual events as flash and show wave form data (if available)
- - store time stamps in file
+  - display oscillogram of raw wave forms
+  - disply individual events as flash and show wave form data (if available)
+  - store time stamps in file
 
 This is an application example for the class phypidaq.SoundCardOsci.
+
+modifications:
+
+  gq: added code to stor wave form data
+
 """
 
 import sys
@@ -20,6 +25,7 @@ from phypidaq.soundcardOsci import SoundCardOsci, scOsciDisplay
 from phypidaq.DisplayPoissonEvent import DisplayPoissonEvent
 from phypidaq.helpers import DAQwait
 from phypidaq.mplhelpers import run_controlGUI
+import yaml
 
 
 def keyboard_input(cmd_queue):
@@ -83,7 +89,9 @@ def runDAQ():
                     else:
                         i0 -= slen - _l
                         it += slen - _l
+
                 signal_data = np.float32(data[0][i0:i1])
+
                 # peak-to-peak pulse height
                 mx = signal_data[it:].max()
                 mn = signal_data[it:].min()
@@ -115,6 +123,9 @@ def runDAQ():
                 if count % 5:
                     csvfile.flush()
 
+            if rawf is not None:  # write raw waveforms
+                print(' - ' + yaml.dump(signal_data.tolist(), default_flow_style=True), file=rawf)
+
             # show oscillogram of raw wave form
             if showosci and osciProc.is_alive():
                 if (now - t_lastupd) > osc_wait_time and osciQ.empty():
@@ -139,12 +150,15 @@ if __name__ == "__main__":
     kbd_control = False
     gui_control = True
 
+    datetime = time.strftime('%y%m%d-%H%M', time.localtime())
+
     # parse command line arguments
     parser = argparse.ArgumentParser(description="Read waveforms from soundcard and display and optionally store data")
     parser.add_argument("-q", "--quiet", action="store_true", help="no status output to terminal")
     parser.add_argument("-o", "--oscilloscope", action="store_true", help="oscilloscope display")
     parser.add_argument("-n", "--noeventdisplay", action="store_true", help="deactivate event display")
     parser.add_argument("-f", "--file", type=str, default="", help="base filename to store results")
+    parser.add_argument("-w", "--write_raw", action="store_true", help="write raw wave forms")
     parser.add_argument("-t", "--time", type=int, default=3600, help="run time in seconds")
     #
     # sound card sampling parameters
@@ -175,6 +189,7 @@ if __name__ == "__main__":
     showosci = args.oscilloscope
     showevents = not args.noeventdisplay
     filename = args.file
+    write_raw = args.write_raw
     run_seconds = args.time
     # - set-up of class phyipdaq.SoundCardOsci
     sampling_rate = args.samplingrate
@@ -187,6 +202,13 @@ if __name__ == "__main__":
     overshoot_fraction = args.overshoot
     # - parameter for DisplayPoissonEvent
     interval = args.interval
+
+    if write_raw:
+        rawf = open(filename + '_raw_' + datetime + '.yml', 'w', 1)
+        print("--- #raw waveforms", file=rawf)  # header line
+        print('data: ', file=rawf)  # data tag
+    else:
+        rawf = None
 
     # create a configuration dictionary for SoundCardOsci
     confd = {
@@ -202,8 +224,7 @@ if __name__ == "__main__":
 
     csvfile = None
     if filename != "":
-        timestamp = time.strftime("%y%m%d-%H%M", time.localtime())
-        fn = filename + "_" + timestamp + ".csv"
+        fn = filename + "_" + datetime + ".csv"
         csvfile = open(fn, "w")
         csvfile.write("event_number, event_time[s], pp_height[adc]\n")
 
