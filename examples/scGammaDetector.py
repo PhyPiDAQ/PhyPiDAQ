@@ -156,7 +156,7 @@ def runDAQ():
                     csvfile.flush()
 
             if rawf is not None:  # write raw waveforms
-                print(' - ' + yaml.dump(signal_data.tolist(), default_flow_style=True), file=rawf)
+                print(" - " + yaml.dump(signal_data.tolist(), default_flow_style=True), file=rawf)
 
             # show oscillogram of raw wave form
             if showosci and osciProc.is_alive():
@@ -182,7 +182,7 @@ if __name__ == "__main__":
     kbd_control = False
     gui_control = True
 
-    datetime = time.strftime('%y%m%d-%H%M', time.localtime())
+    datetime = time.strftime("%y%m%d-%H%M", time.localtime())
 
     # parse command line arguments
     parser = argparse.ArgumentParser(description="Read waveforms from soundcard and display and optionally store data")
@@ -225,7 +225,7 @@ if __name__ == "__main__":
     run_seconds = args.time
     # - set-up of class phyipdaq.SoundCardOsci
     sampling_rate = args.samplingrate
-    sampling_factor = int(sampling_rate / 48000)
+    sampling_factor = max(1, int(sampling_rate / 48000))
     sample_size = args.samplesize
     channels = args.channels
     display_range = args.range  # maximum is 2**15 for 16bit sound card
@@ -237,9 +237,9 @@ if __name__ == "__main__":
     interval = args.interval
 
     if write_raw:
-        rawf = open(filename + '_raw_' + datetime + '.yml', 'w', 1)
+        rawf = open(filename + "_raw_" + datetime + ".yml", "w", 1)
         print("--- #raw waveforms", file=rawf)  # header line
-        print('data: ', file=rawf)  # data tag
+        print("data: ", file=rawf)  # data tag
     else:
         rawf = None
 
