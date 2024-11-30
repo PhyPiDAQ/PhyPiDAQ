@@ -4,8 +4,9 @@
 
 read data from soundcard and
   - display oscillogram of raw wave forms
-  - disply individual events as flash and show wave form data (if available)
-  - store time stamps in file
+  - display individual events as flash and show wave form data (if available)
+  - store time stamps an signal features in a file
+  - optionally, store raw wave-form data
 
 This is an application example for the class phypidaq.SoundCardOsci.
 
@@ -41,29 +42,67 @@ def keyboard_input(cmd_queue):
 def showFlash(mpQ, interval):
     """Background process to show Poisson event as a flashing circle and waveform
 
-    relies on class DisplayPoissionEvent
+    relies on class DisplayPoissonEvent
     """
     flasher = DisplayPoissonEvent(mpQ, interval=interval)
     flasher()
 
 
 def showOsci(mpQ, confdict):
-    """Background process to show oscillogram
-
-    relies on class DisplayPoissionEvent
-    """
+    """Background process to show oscillogram"""
     scosci = scOsciDisplay(mpQ, confdict)
     scosci()
 
 
+def get_signalParameters(signal_data, it):
+    """Parameterize bipolar pulse, assuming negative initial peak
+    Args:
+        signal_data: pulse wave form data
+        it:  index of trigger point
+    Returns:
+        pp_height, p_ratio, p_dist, fwhm1, fwhm2
+    """
+    fwhm1 = -1
+    fwhm2 = -1
+    # find 1st zero-crossing after trigger point
+    _positive = signal_data[it:] > 0.0
+    _tst0 = np.where(np.bitwise_xor(_positive[1:], _positive[:-1]))[0]
+    if len(_tst0) == 0:
+        # give up, return
+        return 0.0, 0.0, 0.0, 0.0, 0.0
+    else:
+        i0 = _tst0[0] + it
+    # get minimum after trigger point
+    i1p = signal_data[it:i0].argmin() + it
+    p_min = signal_data[i1p]
+    # get maximum after zero crossing within range 10*sampling_factor
+    i2p = signal_data[i0 + 1 : min(i0 + sampling_factor * 10, len(signal_data))].argmax() + i0 + 1
+    p_max = signal_data[i2p]
+    pp_height = p_max - p_min
+    p_ratio = abs(p_max / p_min)
+    p_dist = i2p - i1p
+    # fwhm of negative peak before zero-crossing (find zero-crossings of shifted 1st peak)
+    _pos = signal_data[: i0 + 1] - p_min / 2.0 > 0.0
+    _zc1 = np.where(np.bitwise_xor(_pos[1:], _pos[:-1]))[0]
+    if len(_zc1) >= 2:
+        fwhm1 = _zc1[-1] - _zc1[-2]
+    # fwhm of positive peak after zero-crossing (find zero-crossings of shifted 2nd peak)
+    _neg = signal_data[i0 - 1 :] - p_max / 2.0 < 0.0
+    _zc2 = np.where(np.bitwise_xor(_neg[1:], _neg[:-1]))[0]
+    if len(_zc2) >= 2:
+        fwhm2 = _zc2[1] - _zc2[0]
+    #
+    return pp_height, p_ratio, p_dist, fwhm1, fwhm2
+
+
 def runDAQ():
     """run data acquisition as thread"""
+    global err_count
     count = 0
     t_start = time.time()
     t_lastupd = t_start
     osc_wait_time = 0.1
     maxADC = np.float32(display_range)
-    ppFactor = 1.0 + overshoot_fraction
     while active:
         try:
             # get data
@@ -89,20 +128,13 @@ def runDAQ():
                     else:
                         i0 -= slen - _l
                         it += slen - _l
-
                 signal_data = np.float32(data[0][i0:i1])
-
-                # peak-to-peak pulse height
-                mx = signal_data[it:].max()
-                mn = signal_data[it:].min()
-                pp_height = mx - mn
+                _f = 1 if trgFalling else -1
+                pp_height, p_ratio, p_dist, fwhm1, fwhm2 = get_signalParameters(_f * signal_data, it)
                 # filter on bi-polar pulse characteristics
-                if trgFalling:
-                    if pp_height < ppFactor * abs(mn):
-                        continue
-                else:
-                    if pp_height < ppFactor * abs(mx):
-                        continue
+                if p_ratio < overshoot_fraction:
+                    # no bi-polar pulse, reject
+                    continue
             else:
                 signal_data = None
                 pp_height = -1
@@ -119,7 +151,7 @@ def runDAQ():
 
             # save to file
             if csvfile is not None:
-                print(f"{count}, {t_evt}, {pp_height}", file=csvfile)
+                print(f"{count},{t_evt},{pp_height},{p_ratio:.3f},{p_dist},{fwhm1},{fwhm2}", file=csvfile)
                 if count % 5:
                     csvfile.flush()
 
@@ -134,7 +166,7 @@ def runDAQ():
 
         except Exception:
             # ignore occasional errors
-            pass
+            err_count += 1
     # signal end to background processes by sending None
     if showevents:
         flasherQ.put(-1)
@@ -193,6 +225,7 @@ if __name__ == "__main__":
     run_seconds = args.time
     # - set-up of class phyipdaq.SoundCardOsci
     sampling_rate = args.samplingrate
+    sampling_factor = int(sampling_rate / 48000)
     sample_size = args.samplesize
     channels = args.channels
     display_range = args.range  # maximum is 2**15 for 16bit sound card
@@ -226,7 +259,7 @@ if __name__ == "__main__":
     if filename != "":
         fn = filename + "_" + datetime + ".csv"
         csvfile = open(fn, "w")
-        csvfile.write("event_number, event_time[s], pp_height[adc]\n")
+        csvfile.write("event_number,event_time,pp_height,p_ratio,p_dist,fwhm1,fwhm2\n")
 
     # initialze sound card interface
     scO = SoundCardOsci(confdict=confd)
@@ -276,6 +309,7 @@ if __name__ == "__main__":
     t_start = time.time()
     t0 = t_start
     runtime = 0.0
+    err_count = 0
     print("\n --> start reading from Soundcard ... ")
     osciThread = threading.Thread(target=runDAQ, args=(), daemon=True)
     osciThread.start()
@@ -318,6 +352,8 @@ if __name__ == "__main__":
         if runtime >= run_seconds:
             input(30 * " " + "Runtime ended - type <ret> to close graphics windows -> ")
         active = False
+        if err_count != 0:
+            print(f"!!! {err_count} errors in event loop !!!")
         scO.close()  # stop reading soundcard
         if csvfile is not None:
             csvfile.close()
