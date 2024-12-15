@@ -1,4 +1,4 @@
-"""module SoundCardOsci to read data from a sound card"""
+"""module SoundCardOsci to read wave data from a sound card"""
 
 import pyaudio
 import time
@@ -18,8 +18,8 @@ class SoundCardOsci:
 
 
     This class reads data from one or two channels of a sound card.
-    Basic trigger requirements can be activated to record only samples
-    selected samples, e.g. containing a pulse occuring at random times,
+    Basic trigger requirements can be activated to record only selected
+    samples, e.g. containing a pulse occurring at random times,
     e. g. as produced by a radiation detector.
     """
 
@@ -41,7 +41,7 @@ class SoundCardOsci:
         # set reasonable default for format
         self.sample_format = pyaudio.paInt16  # 16 bits per sample
         self.maxADC = 2**15  # for 16 bit soundcard
-        self.pretrg_frac = 0.5
+        self.pretrg_frac = 0.375  # 3/8 of a frame for samples before trigger point
         self.Npretrg = int(self.pretrg_frac * self.NSamples)
 
         # create  interface to PortAudio
@@ -71,7 +71,7 @@ class SoundCardOsci:
         self.firstcall = True
 
     def __call__(self):
-        """read data stream and return data if trigger condition is met"""
+        """read data stream and return data, depending on trigger condition"""
 
         if self.firstcall and not self.trgActive:
             # read two frames
