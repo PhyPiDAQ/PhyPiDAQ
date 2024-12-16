@@ -1,4 +1,4 @@
-"""module SoundCardOsci to read wave data from a sound card"""
+"""module SoundCardOsci to read data from a sound card"""
 
 import pyaudio
 import time
@@ -18,9 +18,9 @@ class SoundCardOsci:
 
 
     This class reads data from one or two channels of a sound card.
-    Basic trigger requirements can be activated to record only selected
-    samples, e.g. containing a pulse occurring at random times,
-    e. g. as produced by a radiation detector.
+    Basic trigger requirements can be activated to record only selected 
+    samples, e.g. containing a pulse occuring at random times as produced 
+    for example by a radiation detector.
     """
 
     def __init__(self, confdict=None, verbose=0):
@@ -41,7 +41,7 @@ class SoundCardOsci:
         # set reasonable default for format
         self.sample_format = pyaudio.paInt16  # 16 bits per sample
         self.maxADC = 2**15  # for 16 bit soundcard
-        self.pretrg_frac = 0.375  # 3/8 of a frame for samples before trigger point
+        self.pretrg_frac = 0.375
         self.Npretrg = int(self.pretrg_frac * self.NSamples)
 
         # create  interface to PortAudio
@@ -68,12 +68,13 @@ class SoundCardOsci:
             if self.NChannels == 1
             else np.array([np.zeros(self.blen), np.zeros(self.blen)])
         )
+        # flag to initiate filling of buffers in  __call__() on first call
         self.firstcall = True
 
     def __call__(self):
-        """read data stream and return data, depending on trigger condition"""
+        """read data stream and return data, depending on if trigger condition"""
 
-        if self.firstcall and not self.trgActive:
+        if self.firstcall and self.trgActive:
             # read two frames
             __d = np.frombuffer(self.stream.read(self.NSamples), dtype=np.int16)
             _d = [__d] if self.NChannels == 1 else [__d[0::2], __d[1::2]]
@@ -85,59 +86,70 @@ class SoundCardOsci:
             self.buf[0, 2 * self.NSamples :] = _d[0]
             if self.NChannels == 2:
                 self.buf[1, 2 * self.NSamples :] = _d[1]
+            # set initial buffer segment to 1 of (0, 1, 2)
+            self._iwp = 1
             self.firstcall = False
 
-        # read data
+        # read new data
         __d = np.frombuffer(self.stream.read(self.NSamples), dtype=np.int16)
         _d = [__d] if self.NChannels == 1 else [__d[0::2], __d[1::2]]
 
+        # return if trigger inactive
         if not self.trgActive:
-            data = _d[0]
+            data = [_d[0]]
             if self.NChannels == 2:
                 data.append(_d[1])
             self.event_count += 1
             return (self.event_count, None, data)
 
         # else put data in buffer and check for valid trigger condition in analysis sample
-        #  - roll buffer
-        # self.buf[0] = np.roll(self.buf[0], -self.NSamples)
-        self.buf[0, : 2 * self.NSamples] = self.buf[0, self.NSamples :]
-        if self.NChannels == 2:
-            # self.buf[1] = np.roll(self.buf[1], -self.NSamples)
-            self.buf[1, : 2 * self.NSamples] = self.buf[1, self.NSamples :]
-        #  - put new data in last segment
-        self.buf[0, 2 * self.NSamples :] = _d[0]
-        if self.NChannels == 2:
-            self.buf[1, 2 * self.NSamples :] = _d[1]
-
-        # else check for valid trigger condition in sample
+        self._iap = self._iwp             # buffer segment to analyze
+        self._iwp = (self._iwp + 1) % 3   # next buffer segment to write
         _triggered = False
+        self.buf[0, self._iwp * self.NSamples : (self._iwp + 1) * self.NSamples] = _d[0]
+        if self.NChannels == 2:
+            self.buf[1, self._iwp * self.NSamples : (self._iwp + 1) * self.NSamples] = _d[1]
         while not _triggered:
             if self.trgFalling:
-                idx = np.argwhere(self.buf[self.trgChan - 1, self.NSamples : 2 * self.NSamples] < self.trgThreshold)
+                idx = np.argwhere(
+                    self.buf[self.trgChan - 1, self._iap * self.NSamples : (self._iap + 1) * self.NSamples]
+                    < self.trgThreshold
+                ) 
             else:
-                idx = np.argwhere(self.buf[self.trgChan - 1, self.NSamples : 2 * self.NSamples] > self.trgThreshold)
+                idx = np.argwhere(
+                    self.buf[self.trgChan - 1, self._iap * self.NSamples : (self._iap + 1) * self.NSamples]
+                    > self.trgThreshold
+                )
             if len(idx) > 0:
                 _triggered = True
                 self.event_count += 1
-                it = idx[0][0] + self.NSamples  # trigger point in large buffer
-                it0 = it - self.Npretrg
-                data = [self.buf[0, it0 : it0 + self.NSamples]]
+                it = idx[0][0] + self._iap * self.NSamples  # trigger point in large buffer
+                id0 = it - self.Npretrg
+                id1 = id0 + self.NSamples
+                if id0 >= 0 and id1 <= self.blen:
+                    data = [self.buf[0, id0:id1]]
+                elif id0 < 0:
+                    data = [np.concatenate((self.buf[0, id0:], self.buf[0, :id1]))]
+                else:
+                    data = [np.concatenate((self.buf[0, id0:], self.buf[0, : id1 - self.blen]))]
+
                 if self.NChannels == 2:
-                    data.append(self.buf[1, it0 : it0 + self.NSamples])
+                    if id0 >= 0 and id1 <= self.blen:
+                        data.append(self.buf[1, id0:id1])
+                    elif id0 < 0:
+                        data.append(np.concatenate((self.buf[1, id0:], self.buf[1, :id1])))
+                    else:
+                        data.append(np.concatenate((self.buf[1, id0:], self.buf[1, : id1 - self.blen])))
                 return (self.event_count, self.Npretrg, data)
 
             # read next frame if no trigger
-            # self.buf[0] = np.roll(self.buf[0], -self.NSamples)
-            self.buf[0, : 2 * self.NSamples] = self.buf[0, self.NSamples :]
-            if self.NChannels == 2:
-                # self.buf[1] = np.roll(self.buf[1], -self.NSamples)
-                self.buf[1, : 2 * self.NSamples] = self.buf[1, self.NSamples :]
+            self._iap = self._iwp
+            self._iwp = (self._iwp + 1) % 3
             __d = np.frombuffer(self.stream.read(self.NSamples), dtype=np.int16)
             _d = [__d] if self.NChannels == 1 else [__d[0::2], __d[1::2]]
-            self.buf[0, 2 * self.NSamples :] = _d[0]
+            self.buf[0, self._iwp * self.NSamples : (self._iwp + 1) * self.NSamples] = _d[0]
             if self.NChannels == 2:
-                self.buf[1, 2 * self.NSamples :] = _d[1]
+                self.buf[1, self._iwp * self.NSamples : (self._iwp + 1) * self.NSamples] = _d[1]
 
     def close(self):
         self.active = False
