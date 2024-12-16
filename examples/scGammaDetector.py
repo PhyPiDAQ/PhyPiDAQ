@@ -348,6 +348,8 @@ if __name__ == "__main__":
         print("\n               ... stop reading data")
     except KeyboardInterrupt:
         print("\n" + " !!! keyboard interrupt - ending ...")
+    except Exception as e:
+        print("\n" + " !!! general exception: ", str(e))
     finally:
         if runtime >= run_seconds:
             input(30 * " " + "Runtime ended - type <ret> to close graphics windows -> ")
