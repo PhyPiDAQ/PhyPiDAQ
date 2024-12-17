@@ -18,9 +18,13 @@ class SoundCardOsci:
 
 
     This class reads data from one or two channels of a sound card.
-    Basic trigger requirements can be activated to record only selected 
-    samples, e.g. containing a pulse occuring at random times as produced 
+    Basic trigger requirements can be activated to record only selected
+    samples, e.g. containing a pulse occurring at random times as produced
     for example by a radiation detector.
+
+    Basic trigger functionality is also implemented:
+          - rising (default) or falling edge at an adjustable level
+          - trigger hysteresis at a level of 7 * trigger level / 8
     """
 
     def __init__(self, confdict=None, verbose=0):
@@ -38,12 +42,12 @@ class SoundCardOsci:
         self.trgChan = 1 if "trgChan" not in confdict else confdict["trgChan"]
         self.trgFalling = 0 if "trgFalling" not in confdict else confdict["trgFalling"]
         self.trgThreshold = 100 if "trgThreshold" not in confdict else confdict["trgThreshold"]
-        self.trgHysteresis = self.trgThreshold//8 # hysteresis for trigger
-        # set reasonable default for format
-        self.sample_format = pyaudio.paInt16  # 16 bits per sample
-        self.maxADC = 2**15  # for 16 bit soundcard
         self.pretrg_frac = 0.375
         self.Npretrg = int(self.pretrg_frac * self.NSamples)
+        self.trgHysteresis = 7 * self.trgThreshold // 8  # hysteresis level for trigger
+        # set default audio format
+        self.sample_format = pyaudio.paInt16  # 16 bits per sample
+        self.maxADC = 2**15  # for 16 bit soundcard
 
         # create  interface to PortAudio
         self.pyaudio = pyaudio.PyAudio()
@@ -61,32 +65,26 @@ class SoundCardOsci:
         self.event_count = 0
         self.active = True
 
-        # set-up data buffer for three frames
-        self.nframes = 3
-        self.blen = self.nframes * self.NSamples
+        # set-up data buffer for three buffer segments
+        self.NSegments = 3
+        self.blen = self.NSegments * self.NSamples
         self.buf = (
             np.array([np.zeros(self.blen)])
             if self.NChannels == 1
             else np.array([np.zeros(self.blen), np.zeros(self.blen)])
         )
-        # flag to initiate filling of buffers in  __call__() on first call
+        # flag to initiate filling of buffer segments in  __call__() on first call
         self.firstcall = True
 
     def __call__(self):
         """read data stream and return data, depending on if trigger condition"""
 
         if self.firstcall and self.trgActive:
-            # read two frames
+            # read audio data for first two buffer segments
             __d = np.frombuffer(self.stream.read(self.NSamples), dtype=np.int16)
-            _d = [__d] if self.NChannels == 1 else [__d[0::2], __d[1::2]]
-            self.buf[0, self.NSamples : 2 * self.NSamples] = _d[0]
-            if self.NChannels == 2:
-                self.buf[1, self.NSamples : 2 * self.NSamples] = _d[1]
+            self.buf[:, self.NSamples : 2 * self.NSamples] = [__d] if self.NChannels == 1 else [__d[0::2], __d[1::2]]
             __d = np.frombuffer(self.stream.read(self.NSamples), dtype=np.int16)
-            _d = [__d] if self.NChannels == 1 else [__d[0::2], __d[1::2]]
-            self.buf[0, 2 * self.NSamples :] = _d[0]
-            if self.NChannels == 2:
-                self.buf[1, 2 * self.NSamples :] = _d[1]
+            self.buf[:, 2 * self.NSamples :] = [__d] if self.NChannels == 1 else [__d[0::2], __d[1::2]]
             # set initial buffer segment to 1 of (0, 1, 2)
             self._iwp = 1
             self.firstcall = False
@@ -104,26 +102,26 @@ class SoundCardOsci:
             return (self.event_count, None, data)
 
         # else put data in buffer and check for valid trigger condition in analysis sample
-        self._iap = self._iwp             # buffer segment to analyze
-        self._iwp = (self._iwp + 1) % 3   # next buffer segment to write
+        self._iap = self._iwp  # buffer segment to analyze
+        self._iwp = (self._iwp + 1) % 3  # next buffer segment to write
         _triggered = False
-        self.buf[0, self._iwp * self.NSamples : (self._iwp + 1) * self.NSamples] = _d[0]
-        if self.NChannels == 2:
-            self.buf[1, self._iwp * self.NSamples : (self._iwp + 1) * self.NSamples] = _d[1]
+        self.buf[:, self._iwp * self.NSamples : (self._iwp + 1) * self.NSamples] = (
+            [__d] if self.NChannels == 1 else [__d[0::2], __d[1::2]]
+        )
 
         while not _triggered:
-            _b= self.buf[self.trgChan - 1, self._iap * self.NSamples : (self._iap + 1) * self.NSamples]
+            _b = self.buf[self.trgChan - 1, self._iap * self.NSamples : (self._iap + 1) * self.NSamples]
             if self.trgFalling:
                 idx0 = np.argwhere(_b > self.trgHysteresis)
-                idx = np.argwhere(_b < self.trgThreshold) 
+                idx = np.argwhere(_b < self.trgThreshold)
             else:
                 idx0 = np.argwhere(_b < self.trgHysteresis)
                 idx = np.argwhere(_b > self.trgThreshold)
             # check hysteresis threshold
-            if len(idx0) > 0 and len(idx) > 0 :
+            if len(idx0) > 0 and len(idx) > 0:
                 ih = idx0[0][0] + self._iap * self.NSamples  # point where hysteresis threshold is exceeded
                 it = idx[0][0] + self._iap * self.NSamples  # trigger point in large buffer
-                if it > ih: # hysteresis point must lie before trigger point
+                if it > ih:  # hysteresis point must lie before trigger point
                     _triggered = True
                     self.event_count += 1
                     id0 = it - self.Npretrg
@@ -148,10 +146,9 @@ class SoundCardOsci:
             self._iap = self._iwp
             self._iwp = (self._iwp + 1) % 3
             __d = np.frombuffer(self.stream.read(self.NSamples), dtype=np.int16)
-            _d = [__d] if self.NChannels == 1 else [__d[0::2], __d[1::2]]
-            self.buf[0, self._iwp * self.NSamples : (self._iwp + 1) * self.NSamples] = _d[0]
-            if self.NChannels == 2:
-                self.buf[1, self._iwp * self.NSamples : (self._iwp + 1) * self.NSamples] = _d[1]
+            self.buf[:, self._iwp * self.NSamples : (self._iwp + 1) * self.NSamples] = (
+                [__d] if self.NChannels == 1 else [__d[0::2], __d[1::2]]
+            )
 
     def close(self):
         self.active = False
