@@ -38,6 +38,7 @@ class SoundCardOsci:
         self.trgChan = 1 if "trgChan" not in confdict else confdict["trgChan"]
         self.trgFalling = 0 if "trgFalling" not in confdict else confdict["trgFalling"]
         self.trgThreshold = 100 if "trgThreshold" not in confdict else confdict["trgThreshold"]
+        self.trgHysteresis = self.trgThreshold//8 # hysteresis for trigger
         # set reasonable default for format
         self.sample_format = pyaudio.paInt16  # 16 bits per sample
         self.maxADC = 2**15  # for 16 bit soundcard
@@ -109,38 +110,39 @@ class SoundCardOsci:
         self.buf[0, self._iwp * self.NSamples : (self._iwp + 1) * self.NSamples] = _d[0]
         if self.NChannels == 2:
             self.buf[1, self._iwp * self.NSamples : (self._iwp + 1) * self.NSamples] = _d[1]
-        while not _triggered:
-            if self.trgFalling:
-                idx = np.argwhere(
-                    self.buf[self.trgChan - 1, self._iap * self.NSamples : (self._iap + 1) * self.NSamples]
-                    < self.trgThreshold
-                ) 
-            else:
-                idx = np.argwhere(
-                    self.buf[self.trgChan - 1, self._iap * self.NSamples : (self._iap + 1) * self.NSamples]
-                    > self.trgThreshold
-                )
-            if len(idx) > 0:
-                _triggered = True
-                self.event_count += 1
-                it = idx[0][0] + self._iap * self.NSamples  # trigger point in large buffer
-                id0 = it - self.Npretrg
-                id1 = id0 + self.NSamples
-                if id0 >= 0 and id1 <= self.blen:
-                    data = [self.buf[0, id0:id1]]
-                elif id0 < 0:
-                    data = [np.concatenate((self.buf[0, id0:], self.buf[0, :id1]))]
-                else:
-                    data = [np.concatenate((self.buf[0, id0:], self.buf[0, : id1 - self.blen]))]
 
-                if self.NChannels == 2:
+        while not _triggered:
+            _b= self.buf[self.trgChan - 1, self._iap * self.NSamples : (self._iap + 1) * self.NSamples]
+            if self.trgFalling:
+                idx0 = np.argwhere(_b > self.trgHysteresis)
+                idx = np.argwhere(_b < self.trgThreshold) 
+            else:
+                idx0 = np.argwhere(_b < self.trgHysteresis)
+                idx = np.argwhere(_b > self.trgThreshold)
+            # check hysteresis threshold
+            if len(idx0) > 0 and len(idx) > 0 :
+                ih = idx0[0][0] + self._iap * self.NSamples  # point where hysteresis threshold is exceeded
+                it = idx[0][0] + self._iap * self.NSamples  # trigger point in large buffer
+                if it > ih: # hysteresis point must lie before trigger point
+                    _triggered = True
+                    self.event_count += 1
+                    id0 = it - self.Npretrg
+                    id1 = id0 + self.NSamples
                     if id0 >= 0 and id1 <= self.blen:
-                        data.append(self.buf[1, id0:id1])
+                        data = [self.buf[0, id0:id1]]
                     elif id0 < 0:
-                        data.append(np.concatenate((self.buf[1, id0:], self.buf[1, :id1])))
+                        data = [np.concatenate((self.buf[0, id0:], self.buf[0, :id1]))]
                     else:
-                        data.append(np.concatenate((self.buf[1, id0:], self.buf[1, : id1 - self.blen])))
-                return (self.event_count, self.Npretrg, data)
+                        data = [np.concatenate((self.buf[0, id0:], self.buf[0, : id1 - self.blen]))]
+
+                    if self.NChannels == 2:
+                        if id0 >= 0 and id1 <= self.blen:
+                            data.append(self.buf[1, id0:id1])
+                        elif id0 < 0:
+                            data.append(np.concatenate((self.buf[1, id0:], self.buf[1, :id1])))
+                        else:
+                            data.append(np.concatenate((self.buf[1, id0:], self.buf[1, : id1 - self.blen])))
+                    return (self.event_count, self.Npretrg, data)
 
             # read next frame if no trigger
             self._iap = self._iwp
