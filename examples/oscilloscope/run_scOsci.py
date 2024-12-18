@@ -22,13 +22,14 @@ import time
 from phypidaq.soundcardOsci import SoundCardOsci, scOsciDisplay
 
 # set parameters
-sampling_rate = 48000  # 44100, 48000, 96000 or 192000
-sample_size = 2048
+sampling_rate = 96000  # 44100, 48000, 96000 or 192000
+sample_size = 1024
 channels = 1  # 1 or 2
 display_range = 2**13  # maximum is 2**15 for 16bit sound card
-trgActive = False  # activate (software) trigger
-trgLevel = 250  # trigger level
-trgFalling: False  # mode falling, False means rising
+trgActive = True  # activate (software) trigger
+trgLevel = 2000   # trigger level
+trgFalling = False  # mode falling, False means rising
+trgChan= 1          # trigger channel
 run_seconds = 60  # run-time in seconds
 upd_interval = 1.0  # update interval for status line
 
@@ -39,6 +40,7 @@ confd = {
     "channels": [i + 1 for i in range(channels)],
     "range": display_range,
     "trgActive": trgActive,
+    "trgChan": trgChan,
     "trgThreshold": trgLevel,
     "trgFalling": False,
 }
