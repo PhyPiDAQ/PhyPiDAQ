@@ -222,8 +222,21 @@ A list of all programs, classes, configuration files and examples is listed in t
 - `examples/oscilloscope/runOsci.py`
     run an oscilloscope display, configuration as specified in *.yaml* file (default is `PSOsci.yaml`)
 
+- `examples/poissonFlash.py`
+    generates random Poisson events, displayed as a short flash and as a 
+    history graph. 
+
+- `examples/oscilloscope/run_scOsci.py`
+    reads and displays waveform data from a sound card (application example 
+    for class SouncCardOsci)
+
+- `examples/scOsciGammaDetector.py`
+    reads and displays triggered waveform data from a sound card
+    with connected particle detector (CERN DIY particle detector)
+
 - `examples/utils/burnIn_BME680.py`
     script to automatically to burn in the sensor before first usage to ensure accurate VOC data
+
 
 ### Configuration files for *run_phypi.py*
 

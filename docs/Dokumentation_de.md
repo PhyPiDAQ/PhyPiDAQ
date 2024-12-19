@@ -36,7 +36,6 @@ Aktuelle Präsentationen zum Projekt PhyPiDAQ finden sich unter dem Link
  https://www.etp.kit.edu/~quast/Projects/PhyPiDAQ).
 
 
-
 ## Schnellstart
 
 Nach der Installation - siehe unten - steht eine Reihe von einheitlichen Klassen für die Datenerfassung, Visualisierung und Aufzeichnung aus dem Unterverzeichnis `./phypidaq/` zur Verfügung. Jedes unterstützte Gerät benötigt eine spezifische Konfiguration, die aus Konfigurationsdateien im Unterverzeichnis `./config/` gelesen wird. Die Gesamtkonfiguration wird in Konfigurationsdateien vom Typ `.daq` angegeben, die spezifizieren, welche Geräte und Anzeigemodule verwendet werden sollen, welche Ausleserate, Kalibrierungen oder analytische Formeln für aufgezeichnete Daten gelten sollen, oder auch Bereiche und Achsenbeschriftungen der grafischen Ausgabe.
@@ -695,7 +694,7 @@ z. B. dem Steckernetzteil des Raspberry Pi.
 - `phypidaq/PSConfig.py`  
     Klasse für PicoScope USB-Oszilloskope
 - `phypidaq/soundcardOsci.py`  
-    Klasse zur Aufzweichnung von Wellenformen mit der Soundkarte
+    Klasse zur Aufzeichnung von Wellenformen mit der Soundkarte
 - `phypidaq/PL1000Config.py`  
     Klasse für PicoLog 1000 series USB data logger
 - `phypidaq/VL53L1XConfig`  
@@ -809,14 +808,16 @@ z. B. dem Steckernetzteil des Raspberry Pi.
     Beispiel zum Setzen des Spannungswerts für Analog-Digital-Wandler MCP4725
 
 - `examples/poissonFlash.py`
-    erzeugt zufällige Poisson-Ereignisse, Anzeige als kurzer Blitz sowie als History-Graph
+    erzeugt zufällige Poisson-Ereignisse, Anzeige als kurzer Blitz sowie als 
+    History-Graph
 
 - `examples/oscilloscope/soundcardOsci.py`
-    Lesen und Anzeigen von Wellenformdaten von einer Soundkarte (Anwendunbeispiel für Klasse SouncCardOsci)
+    Lesen und Anzeigen von Wellenformdaten von einer Soundkarte (Anwendunbeispiel 
+    für Klasse SouncCardOsci)
 
 - `examples/scOsciGammaDetector.py`
-    Lesen und Anzeigen von getriggerten Wellenformdaten von einer Soundkarte mit angeschlossenem
-    Teilchendetektor (CERN DIY particle detector)
+    Lesen und Anzeigen von getriggerten Wellenformdaten von einer Soundkarte
+    mit angeschlossenem Teilchendetektor (CERN DIY particle detector)
 
 
 ### Konfigurationsdateien für *run_phypi.py*
