@@ -811,7 +811,7 @@ z. B. dem Steckernetzteil des Raspberry Pi.
     erzeugt zufällige Poisson-Ereignisse, Anzeige als kurzer Blitz sowie als 
     History-Graph
 
-- `examples/oscilloscope/soundcardOsci.py`
+- `examples/oscilloscope/run_scOsci.py`
     Lesen und Anzeigen von Wellenformdaten von einer Soundkarte (Anwendunbeispiel 
     für Klasse SouncCardOsci)
 
