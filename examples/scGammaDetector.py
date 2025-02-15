@@ -26,7 +26,6 @@ from phypidaq.soundcardOsci import SoundCardOsci, scOsciDisplay
 from phypidaq.DisplayPoissonEvent import DisplayPoissonEvent
 from phypidaq.helpers import DAQwait
 from phypidaq.mplhelpers import run_controlGUI
-import yaml
 
 
 def keyboard_input(cmd_queue):
@@ -71,23 +70,23 @@ def get_signalParameters(signal_data, it):
         # give up, return
         return 0.0, 0.0, 0.0, 0.0, 0.0
     else:
-        i0 = _tst0[0] + it
+        iz = _tst0[0] + it
     # get minimum after trigger point
-    i1p = signal_data[it:i0].argmin() + it
+    i1p = signal_data[it:iz].argmin() + it
     p_min = signal_data[i1p]
     # get maximum after zero crossing within range 10*sampling_factor
-    i2p = signal_data[i0 + 1 : min(i0 + sampling_factor * 10, len(signal_data))].argmax() + i0 + 1
+    i2p = signal_data[iz + 1 : min(iz + sampling_factor * 10, len(signal_data))].argmax() + iz + 1
     p_max = signal_data[i2p]
     pp_height = p_max - p_min
     p_ratio = abs(p_max / p_min)
     p_dist = i2p - i1p
     # fwhm of negative peak before zero-crossing (find zero-crossings of shifted 1st peak)
-    _pos = signal_data[: i0 + 1] - p_min / 2.0 > 0.0
+    _pos = signal_data[: iz + 1] - p_min / 2.0 > 0.0
     _zc1 = np.where(np.bitwise_xor(_pos[1:], _pos[:-1]))[0]
     if len(_zc1) >= 2:
         fwhm1 = _zc1[-1] - _zc1[-2]
     # fwhm of positive peak after zero-crossing (find zero-crossings of shifted 2nd peak)
-    _neg = signal_data[i0 - 1 :] - p_max / 2.0 < 0.0
+    _neg = signal_data[iz - 1 :] - p_max / 2.0 < 0.0
     _zc2 = np.where(np.bitwise_xor(_neg[1:], _neg[:-1]))[0]
     if len(_zc2) >= 2:
         fwhm2 = _zc2[1] - _zc2[0]
@@ -151,12 +150,14 @@ def runDAQ():
 
             # save to file
             if csvfile is not None:
-                print(f"{count},{t_evt},{pp_height},{p_ratio:.3f},{p_dist},{fwhm1},{fwhm2}", file=csvfile)
-                if count % 5:
+                if write_raw is not None:  # write raw waveforms
+                    # save features and wave data - 8 samples before and 16 samples after zero crossing
+                    print(f"{count},{t_evt},{pp_height},{p_ratio:.3f},{p_dist},{fwhm1},{fwhm2}", end='', file=csvfile)
+                    np.savetxt(csvfile, signal_data.reshape(1, -1), fmt="%.8g", delimiter=',')
+                else:
+                    print(f"{count},{t_evt},{pp_height},{p_ratio:.3f},{p_dist},{fwhm1},{fwhm2}", file=csvfile)
+                if count % 10:
                     csvfile.flush()
-
-            if rawf is not None:  # write raw waveforms
-                print(" - " + yaml.dump(signal_data.tolist(), default_flow_style=True), file=rawf)
 
             # show oscillogram of raw wave form
             if showosci and osciProc.is_alive():
@@ -189,8 +190,8 @@ if __name__ == "__main__":
     parser.add_argument("-q", "--quiet", action="store_true", help="no status output to terminal")
     parser.add_argument("-o", "--oscilloscope", action="store_true", help="oscilloscope display")
     parser.add_argument("-n", "--noeventdisplay", action="store_true", help="deactivate event display")
-    parser.add_argument("-f", "--file", type=str, default="", help="base filename to store results")
-    parser.add_argument("-w", "--write_raw", action="store_true", help="write raw wave forms")
+    parser.add_argument("-f", "--file", type=str, default="", help="filename to store results in csv format")
+    parser.add_argument("-w", "--write_raw", action="store_true", help="write also raw waveforms to csv")
     parser.add_argument("-t", "--time", type=int, default=3600, help="run time in seconds")
     #
     # sound card sampling parameters
@@ -236,13 +237,6 @@ if __name__ == "__main__":
     # - parameter for DisplayPoissonEvent
     interval = args.interval
 
-    if write_raw:
-        rawf = open(filename + "_raw_" + datetime + ".yml", "w", 1)
-        print("--- #raw waveforms", file=rawf)  # header line
-        print("data: ", file=rawf)  # data tag
-    else:
-        rawf = None
-
     # create a configuration dictionary for SoundCardOsci
     confd = {
         "sampling_rate": sampling_rate,
@@ -259,7 +253,11 @@ if __name__ == "__main__":
     if filename != "":
         fn = filename + "_" + datetime + ".csv"
         csvfile = open(fn, "w")
-        csvfile.write("event_number,event_time,pp_height,p_ratio,p_dist,fwhm1,fwhm2\n")
+        if write_raw:
+            csvfile.write("event_number,event_time,pp_height,p_ratio,p_dist,fwhm1,fwhm2,")
+            np.savetxt(csvfile, np.array(range(100)).reshape(1, -1), fmt="%i", delimiter=',')
+        else:
+            csvfile.write("event_number,event_time,pp_height,p_ratio,p_dist,fwhm1,fwhm2\n")
 
     # initialze sound card interface
     scO = SoundCardOsci(confdict=confd)
