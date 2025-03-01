@@ -150,7 +150,7 @@ def runDAQ():
 
             # save to file
             if csvfile is not None:
-                if write_raw is not None:  # write raw waveforms
+                if write_raw:  # write raw waveforms
                     # save features and wave data - 8 samples before and 16 samples after zero crossing
                     print(f"{count},{t_evt},{pp_height},{p_ratio:.3f},{p_dist},{fwhm1},{fwhm2},", end='', file=csvfile)
                     np.savetxt(csvfile, signal_data.reshape(1, -1), fmt="%.8g", delimiter=',')
