@@ -190,7 +190,7 @@ class scOsciDisplay:
         self.fig.subplots_adjust(left=0.15, bottom=0.12, right=0.98, top=0.90, wspace=None, hspace=0.1)  #
         self.ax.grid(linestyle="dotted", color="blue")
         self.ax.set_ylabel("aplitude (counts)")
-        self.ax.set_xlabel("time (ms)")
+        self.ax.set_xlabel("time (s)")
         self.ax.axhline(self.trgThreshold, xmin=0, xmax=1, linestyle="dashed", color="red")
         if self.trgActive:
             trg_txt = (
