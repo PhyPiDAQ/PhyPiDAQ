@@ -2,7 +2,7 @@
 #
 # script to install libraries PhyPiDAQ depends on
 #
-#       requires a Python virtuel environment 
+#       requires a Python virtual environment 
 # -----------------------------------------------
 
 # Print info message
