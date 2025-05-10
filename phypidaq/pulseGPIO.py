@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import print_function, division, unicode_literals
-from __future__ import absolute_import
-
 import time
 import sys
 import RPi.GPIO as gpio
@@ -30,7 +26,7 @@ class PulseGPIO(object):
 
     def __init__(self, pin=None):
         """Args: pin: GPIO pin number
-        cmdQ: multiprocessing queue"""
+        """
         gpio.setmode(gpio.BCM)
         if pin is None:
             print("pulseGPIO config error: no GPIO Pin specified - exiting")
@@ -66,5 +62,4 @@ class PulseGPIO(object):
         for p in self.subprocs:
             if p.is_alive():
                 p.terminate()
-        self.cmdQ.close()
         gpio.cleanup(self.pin)
