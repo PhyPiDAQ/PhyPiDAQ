@@ -379,13 +379,13 @@ class runPhyPiDAQ(object):
 
         # LED indicators on GPIO pins
         if "RunLED" in PhyPiConfDict or "ReadoutLED" in PhyPiConfDict:
-            from .pulseGPIO import pulseGPIO
+            from .pulseGPIO import PulseGPIO
         if "RunLED" in PhyPiConfDict:
-            self.RunLED = pulseGPIO(PhyPiConfDict["RunLED"])
+            self.RunLED = PulseGPIO(PhyPiConfDict["RunLED"])
         else:
             self.RunLED = None
         if "ReadoutLED" in PhyPiConfDict:
-            self.ReadoutLED = pulseGPIO(PhyPiConfDict["ReadoutLED"])
+            self.ReadoutLED = PulseGPIO(PhyPiConfDict["ReadoutLED"])
         else:
             self.ReadoutLED = None
 
