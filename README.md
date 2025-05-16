@@ -98,7 +98,7 @@ however, not all sensor libraries could be fully tested.
    
      ```shell
        cd 
-       source activate_phypi.sh
+       source activate_phypy.sh
      ```
   If exclusive use of PhyPiDAQ is foreseen on a system, the command for activation can also
   be included in the users `.bashrc` file. 

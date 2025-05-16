@@ -266,7 +266,7 @@ To install `PhyPiDAQ`, enter the following commands :
    
     ```shell
        cd 
-       source activate_phypi.sh
+       source activate_phypy.sh
     ```
 
     If the exclusive use of *PhyPiDAQ* is intended on a system, the command

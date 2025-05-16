@@ -29,12 +29,12 @@ if [ -d $DIR ]; then
   printf "[Desktop Entry]\nType=Application\nEncoding=UTF-8\nName=PhyPi\nComment=PhyPi Configuration\nIcon=" > $HOME/Desktop/phypi.desktop
   printf $DIR >> $HOME/Desktop/phypi.desktop
   printf "/PhiPi_icon.png\nExec=lxterminal -t \"PhyPiDAQ\" -e \"" >> $HOME/Desktop/phypi.desktop
-  printf "source ~/activate_phypi.sh; phypi.py\"\nTerminal=false\n" >> $HOME/Desktop/phypi.desktop
+  printf "source ~/activate_phypy.sh; phypi.py\"\nTerminal=false\n" >> $HOME/Desktop/phypi.desktop
 
   printf "[Desktop Entry]\nType=Application\nEncoding=UTF-8\nName=PhyPi Demo\nComment=PhyPi Configuration\nIcon=" > $HOME/Desktop/phypi_demo.desktop
   printf $DIR >> $HOME/Desktop/phypi_demo.desktop
   printf "/PhiPi_icon.png\nExec=lxterminal -t \"PhyPiDAQ\" -e \"" >> $HOME/Desktop/phypi_demo.desktop
-  printf "source ~/activate_phypi.sh; phypi.py " >> $HOME/Desktop/phypi_demo.desktop
+  printf "source ~/activate_phypy.sh; phypi.py " >> $HOME/Desktop/phypi_demo.desktop
   printf $DIR >> $HOME/Desktop/phypi_demo.desktop
   printf "/PhyPiDemo.daq\"\nTerminal=false\n" >> $HOME/Desktop/phypi_demo.desktop
 
@@ -42,7 +42,7 @@ if [ -d $DIR ]; then
   chmod a+x $HOME/Desktop/*.desktop
 
   # copy script to activate virtual Python environment
-  cp -auv activate_phypi.sh $HOME
+  cp -auv activate_phypy.sh $HOME
   
   #copy python code
   cp -auv phypi.py $DIR

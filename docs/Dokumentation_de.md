@@ -297,7 +297,7 @@ Zur Installation von `PhyPiDAQ` geben Sie folgende Befehle ein :
     indem man Folgendes ausführt  
    
     ```shell
-       source ~/activate_phypi.sh
+       source ~/activate_phypy.sh
     ```
 
     Wenn die ausschließliche Nutzung von PhyPiDAQ auf einem System vorgesehen ist, kann der Befehl
