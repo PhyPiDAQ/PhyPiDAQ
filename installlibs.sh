@@ -37,7 +37,7 @@ fi
 source "$PHYPYENV"/bin/activate
 
 # install this package (phypidaq) 
-python -m pip install .
+python -m pip install --no-build-isolation .
 
 while true; do
     read -p "Do you wish to install sensor drivers (y/n)? " yn
