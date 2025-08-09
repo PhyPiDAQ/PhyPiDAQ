@@ -356,6 +356,7 @@ if __name__ == "__main__":
             print(f"!!! {err_count} errors in event loop !!!")
         scO.close()  # stop reading soundcard
         if csvfile is not None:
+            csvfile.flush()
             csvfile.close()
         time.sleep(0.9)
         if showevents and flasherProc.is_alive():
