@@ -8,7 +8,7 @@ DisplayModule: DataLogger
 NHistoryPoints: 250 
 
 # dose as given by sensor
-Title: 'Gamma Ray Dose'
+#Title: 'Gamma Ray Dose'
 #ChanLabels: [Dosis, Dosis]        # names and units for channels 
 #ChanLimits: [[0., 5.],[0., 5.]]   # range
 #ChanColors: [darkblue, darkgreen] # channel colours for display
@@ -17,7 +17,7 @@ Title: 'Gamma Ray Dose'
 ## or ##
 
 # translate to detected gamma rate in Hz
-#Title: 'Gamma Rate'
+Title: 'Gamma Rate'
 ChanLabels: ['Rate', 'Rate']        # names and units for channels 
 ChanColors: [darkblue, darkgreen] # channel colours for display
 
