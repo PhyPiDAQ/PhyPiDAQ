@@ -157,7 +157,7 @@ def runDAQ():
                     )
                     np.savetxt(csvfile, signal_data.reshape(1, -1), fmt="%.8g", delimiter=',')
                 else:
-                    print(f"{count},{t_evt},{pp_height},{p_ratio:.3f},{p_dist},{fwhm1},{fwhm2}", file=csvfile)
+                    print(f"{count},{t_evt:.3f},{pp_height},{p_ratio:.3f},{p_dist},{fwhm1},{fwhm2}", file=csvfile)
                 if count % 10:
                     csvfile.flush()
 
