@@ -55,11 +55,12 @@ This is a quick-start guide on how to install the software package and run a dem
 The following requirements need to be met to work
 
 - Linux/Unix operating system
-- Python 3.6 runtime or newer
+- Python 3.7 or newer
 - `git`-package installed
 
 Installation runs on Raspberry Pi with Debian 11 (bullseye) or 12 (bookworm),
-however, not all sensor libraries could be fully tested. 
+however, not all sensor libraries could be fully tested.
+OS 13 (Trixie) is not yet supported!
 
 1. Open a terminal and go to the folder where the software should be installed.
 2. Download the latest release using the following command
