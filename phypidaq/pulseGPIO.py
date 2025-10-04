@@ -25,8 +25,7 @@ class PulseGPIO(object):
                 gpio.output(self.pin, 0)
 
     def __init__(self, pin=None):
-        """Args: pin: GPIO pin number
-        """
+        """Args: pin: GPIO pin number"""
         gpio.setmode(gpio.BCM)
         if pin is None:
             print("pulseGPIO config error: no GPIO Pin specified - exiting")
