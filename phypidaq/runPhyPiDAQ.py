@@ -228,10 +228,8 @@ class runPhyPiDAQ(object):
             if self.verbose:
                 print("  configuring device " + DEVNames[i])
             # import device class ...
-            exec("from ." + DEVNames[i] + " import " + DEVNames[i])
-            # ...  and instantiate device handler
-            #      exec('global DEVs;  DEVs.append(' + DEVNames[i] + '(DEVconfDicts[i]) )' )
-            exec("DEVs.append(" + DEVNames[i] + "(DEVconfDicts[i]) )")
+            exec("from ." + DEVNames[i] + " import " + DEVNames[i], globals(), globals())
+            exec("DEVs.append(" + DEVNames[i] + "(DEVconfDicts[i]) ), globals(), locals()")
             DEVs[i].init()
             ChanIdx_ofDevice.append(NHWChannels)
             nC = DEVs[i].NChannels

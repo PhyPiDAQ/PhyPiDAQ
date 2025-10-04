@@ -121,7 +121,7 @@ class Display(QMainWindow):
         # import relevant library
         try:
             command = "from ." + module_name + " import *"
-            exec(command, globals(), locals())
+            exec(command, globals(), globals())
         except Exception as e:
             print(" !!! Display: failed to import module - exiting")
             print(str(e))
