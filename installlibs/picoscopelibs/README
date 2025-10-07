@@ -2,9 +2,3 @@
 sudo dpkg -i *.deb
 # grant acces to USB port for user pi
 sudo usermod -a -G tty pi
-
-
-# Nov. 2021:
-# applied fix to libpicoipp.deb
-#    removed fist line from DEBIAN/conffiles
-#       (not an absoulte path)

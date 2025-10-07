@@ -1,1 +1,5 @@
-https://labs.picotech.com/debian/pool/main/
+picoscope 7:
+https://labs.picotech.com/rc/picoscope7/debian/pool/main/libp/
+
+old:
+https://labs.picotech.com/debian/pool/main/libp/

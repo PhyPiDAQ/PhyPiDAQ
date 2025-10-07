@@ -46,5 +46,5 @@ setup(
     license='MIT BSD 2-Clause',
     description='Data AcQuisition and analysis for Physics education with Raspberry Pi',
     long_description=open('README.md').read(),
-    setup_requires=["NumPy >= 1.13.3", "SciPy >= 0.18.1", "matplotlib >= 2.0.0"],
+    setup_requires=["NumPy >= 1.13.3", "SciPy >= 0.18.1", "matplotlib >= 2.0.0", "pyaudio",],
 )
