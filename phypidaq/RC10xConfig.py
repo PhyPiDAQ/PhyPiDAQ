@@ -41,6 +41,9 @@ class RC10xConfig:
             print("Exception: ", e)
             sys.exit(" !!! error !!!   failed to setup device")
 
+        device_serial = self.rc.serial_number()
+        device_type = device_serial.split('-')[1]
+
         self.show_spectrum = False if "show_spectrum" not in self.confdict else self.confdict["show_spectrum"]
 
         # number of spectrum channels is 1024 fixed
@@ -63,8 +66,13 @@ class RC10xConfig:
 
         # some constants
         rho_CsJ = 4.51  # density of CsJ in g/cm^3
-        m_sensor = rho_CsJ * 1e-3  # Volume is 1 cm^3, mass in kg
+        rho_GAGG = 6.63  # density of gadolinium aluminum gallium garnet
+        volume_10x = 1.0e-3  # crystal volume of 10x devices
+        volume_110 = 2.74e-3  # crystal volume of 110 device
         keV2J = 1.602e-16
+        rho = rho_GAGG if 'G' in device_type else rho_CsJ
+        volume = volume_110 if device_type == '110' else volume_10x
+        m_sensor = rho * volume
         self.depE2dose = keV2J * 3600 * 1e6 / m_sensor  # dose rate in µGy/h
 
         # RC102 delivers accumulated counts, prepare array for previous readings
