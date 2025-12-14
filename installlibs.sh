@@ -66,7 +66,8 @@ while true; do
     read -p "Do you wish to install the PicoScope drivers? " yn
     case $yn in
         [Yy]* ) echo "Installing PicoScope drivers";
-          sudo dpkg -i installlibs/picoscopelibs/*.deb; # picoscope
+	  sudo dpkg -i installlibs/picoscopelibs/*.deb; # picoscope
+	  sudo apt -f install # install all dependencies 	
           sudo usermod -a -G tty $USER; # grant access to USB for the current user
           break;;
         [Nn]* ) echo "Skipping PicoScope driver installation"; break;;
