@@ -112,30 +112,30 @@ class ADS1115Config(object):
             if self.DifModeChan[i]:
                 # Set up the channels in diff mode
                 if self.ADCChannels[i] == 0:
-                    channel = AnalogIn(self.adc, ADS.P0, ADS.P1)
+                    channel = AnalogIn(self.adc, 0, 1)
                     self.channels[i] = channel
                 if self.ADCChannels[i] == 1:
-                    channel = AnalogIn(self.adc, ADS.P0, ADS.P3)
+                    channel = AnalogIn(self.adc, 0, 3)
                     self.channels[i] = channel
                 if self.ADCChannels[i] == 2:
-                    channel = AnalogIn(self.adc, ADS.P1, ADS.P3)
+                    channel = AnalogIn(self.adc, 1, 3)
                     self.channels[i] = channel
                 if self.ADCChannels[i] == 3:
-                    channel = AnalogIn(self.adc, ADS.P2, ADS.P3)
+                    channel = AnalogIn(self.adc, 2, 3)
                     self.channels[i] = channel
             else:
                 # Set up the regular channels
                 if self.ADCChannels[i] == 0:
-                    channel = AnalogIn(self.adc, ADS.P0)
+                    channel = AnalogIn(self.adc, 0)
                     self.channels[i] = channel
                 elif self.ADCChannels[i] == 1:
-                    channel = AnalogIn(self.adc, ADS.P1)
+                    channel = AnalogIn(self.adc, 1)
                     self.channels[i] = channel
                 elif self.ADCChannels[i] == 2:
-                    channel = AnalogIn(self.adc, ADS.P2)
+                    channel = AnalogIn(self.adc, 2)
                     self.channels[i] = channel
                 elif self.ADCChannels[i] == 3:
-                    channel = AnalogIn(self.adc, ADS.P3)
+                    channel = AnalogIn(self.adc, 3)
                     self.channels[i] = channel
 
     def acquireData(self, buf):
