@@ -19,6 +19,7 @@ sudo apt install python3-pyqt5 --yes
 sudo apt install libatlas-base-dev --yes  # needed to build numpy
 sudo apt install libglib2.0-dev --yes  # needed for bluepy
 sudo apt install portaudio19-dev --yes  # for pyaudio
+sudo apt install python3-all-dev --yes # needed for portaudio
 
 # check for virtual python environment and create if not present
 PHYPYENV="/usr/local/share/phypy"
