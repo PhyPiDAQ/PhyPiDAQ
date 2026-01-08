@@ -53,7 +53,7 @@ __all__ = [
     "BME680Config",
     "BMP388Config",
     "TSL45315Config",
-    "RC10xConfig",
+    "RC1xxConfig",
     "DataSpectrum",
     "DisplayPoissonEvent",
     "PL1000Config",

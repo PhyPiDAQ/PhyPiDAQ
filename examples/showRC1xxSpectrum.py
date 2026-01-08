@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""show_RC102Spectrum.py
+"""show_RC1xxSpectrum.py
 
 Command-line example to read and display data from
-RadiaCode 102 Spectrometer with PhyPiDAQ
+RadiaCode Gamma Spectrometer with PhyPiDAQ
 """
 
 import argparse
 import sys
 import time
 import numpy as np
-from phypidaq.RC10xConfig import RC10xConfig
+from phypidaq.RC1xxConfig import RC1xxConfig
 from phypidaq.DisplayManager import DisplayManager
 
 # parse command line arguments
-parser = argparse.ArgumentParser(description="read and display spectrum from RadioCode 102")
+parser = argparse.ArgumentParser(description="read and display spectrum from RadioCode Gamma Spectrometer")
 parser.add_argument("--bluetooth-mac", type=str, required=False, help="bluetooth MAC address of radiascan device")
 parser.add_argument(
     "-n", "--noreset", action="store_const", const=True, default=False, help="do not reset spectrum stored in device"
@@ -33,7 +33,7 @@ confdict["reset"] = not args.noreset
 confdict["Interval"] = args.interval
 
 # initialize RadiaCode device
-device = RC10xConfig(confdict)
+device = RC1xxConfig(confdict)
 # this updats the dictionary with default parameters
 
 # initialize data processing

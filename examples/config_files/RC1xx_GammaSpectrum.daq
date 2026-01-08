@@ -1,13 +1,13 @@
 # configuration for PhyPiDAQ 
-#  read and display gamma spectrum from Radiacode 102
+#  read and display gamma spectrum from Radiacode 10x/110
 
 #Title: 'Gamma Ray Rate and Dose'
-#DeviceFile: RC10x.yaml  
+#DeviceFile: RC1xx.yaml  
 #DisplayModule: DataLogger
 #NHistoryPoints: 250 
 
 Title: 'Gamma Ray Spectrum'
-DeviceFile: RC10x_spectrum.yaml  
+DeviceFile: RC1xx_spectrum.yaml  
 DisplayModule: DataSpectrum  # needs extra parameters, not yet read from driver 
 Chan2Val: [-5.7, 2.38, 0.00048] # factory calibration MCA Channel to E(gamma)
 xName: Energy

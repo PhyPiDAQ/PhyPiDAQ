@@ -707,8 +707,8 @@ z. B. dem Steckernetzteil des Raspberry Pi.
     Klasse für 18-Kanal Spektralsensor AS7265x  
 - `phypidaq/GDK101Config`  
     Klasse für Gamma-Detektor GDK101 von FTLAB
-- `phypidaq/RC10xConfig`  
-    Klasse für Gamma-Spectrometer RadiaCode101/102
+- `phypidaq/RC1xxConfig`  
+    Klasse für Gamma-Spectrometer RadiaCode10x/110
 - `phypidaq/ToyDataConfig`  
     Klasse zur Erzeugung simulierter Daten (für Test, Fehlersuche oder Übungsaufgaben)
 - `phypidaq/ReplayConfig`  
@@ -759,7 +759,7 @@ z. B. dem Steckernetzteil des Raspberry Pi.
 - `config/AS7265xConfig.yaml` 18-Kanal Spektralsensor
 - `config/VL53LxConfig.yaml` Abstandssensor
 - `config/GDK101.yaml` Detektor für Gammastrahlung
-- `config/RC10x.yaml` Spektrometer für Gammastrahlung
+- `config/RC1xx.yaml` Spektrometer für Gammastrahlung
 - `config/PSConfig.yaml`  PicoScope USB-Oszilloskop
 
 

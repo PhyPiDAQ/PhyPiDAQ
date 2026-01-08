@@ -1,8 +1,8 @@
 # configuration for PhyPiDAQ 
-#  read gamma spectrum from Radiacode 102 and calculate rate and dose
+#  read gamma spectrum from Radiacode 10x/110 and calculate rate and dose
 
 # device configuration file
-DeviceFile: RC10x.yaml  
+DeviceFile: RC1xx.yaml  
 
 Title: 'Gamma Ray Rate and Dose'
 DisplayModule: DataLogger
