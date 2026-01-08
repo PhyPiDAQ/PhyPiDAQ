@@ -1,13 +1,11 @@
-"""Driver for RadiaCode 101/102 gamma spectrometer
+"""Driver for RadiaCode 101/102/103/110 gamma spectrometer
 
 relies on library *radiacode* by Maxim Andreev,
 
 https://github.com/cdump/radiacode
 
-needs pyhon dependecy and packaging tool poetry.
 Installation of package radiacode:
 
-  > `pip3 install poetry`
   > `pip3 install radiacode`
 
 RETURNS:
@@ -22,11 +20,11 @@ import sys
 import numpy as np
 from radiacode import RadiaCode
 
-cname = "RC10xConfig"
+cname = "RC1xxConfig"
 
 
-class RC10xConfig:
-    """CsJ(Tl) Gamma Detector RadiaCode 101/102"""
+class RC1xxConfig:
+    """CsJ(Tl) Gamma Detectors RadiaCode 101/102/103 and 110 and GAAG detector 103G"""
 
     def __init__(self, confdict=None):
         # initialize device and set default parameters
