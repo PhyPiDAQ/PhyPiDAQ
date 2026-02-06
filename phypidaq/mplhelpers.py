@@ -41,6 +41,7 @@ class controlGUI:
         self.mpl_active = True
         self.interval = 100  # update for timer
 
+        mpl.rcParams['toolbar'] = 'None'
         # create a figure
         self.f = plt.figure("control Gui", figsize=(6, 1.5))
         move_figure(self.f, 1200, 0)
