@@ -34,7 +34,7 @@ class controlGUI:
     def __init__(self, cmdQ, appName="TestApp", statQ=None, confdict=None):
         self.cmdQ = cmdQ
         self.statQ = statQ
-        self.button_dict = {'x', [7, ' ']} if confdict is None else confdict
+        self.button_dict = {'x': [7, ' ']} if confdict is None else confdict
         self.button_names = list(self.button_dict.keys())
         self.button_values = list(self.button_dict.values())
 
@@ -85,7 +85,7 @@ class controlGUI:
 
     def update(self, ax):
         """called by timer"""
-        if not self.statQ.empty():
+        if self.statQ and not self.statQ.empty():
             self.status_txt.set_text(self.statQ.get())
         ax.figure.canvas.draw()
 
