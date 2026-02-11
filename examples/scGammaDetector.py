@@ -295,7 +295,7 @@ if __name__ == "__main__":
         kbdthread.start()
     if gui_control:
         # define dict for up to 8 buttons, key=name, values = [position, command]
-        button_dict = {"End": [7, "E"]}
+        button_dict = {"End": [5, "E"]}
         statQ = mp.Queue()
         guiProc = mp.Process(
             name="ControlGUI", target=run_controlGUI, args=(cmdQ, "Gamma Detector DAQ", statQ, button_dict)

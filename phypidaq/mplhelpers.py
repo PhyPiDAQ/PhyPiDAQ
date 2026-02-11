@@ -25,16 +25,16 @@ class controlGUI:
 
     Args:
 
-      - cmdQ: a multiprocesing Queue to accept commands
+      - cmdQ: a multiprocessing Queue to accept commands
       - appName: name of app to be controlled
       - statQ: mp Queue to show status data
-      - confdict: a configuration dictionary for buttons, format {name: [position 0-7, command]}
+      - confdict: a configuration dictionary for buttons, format {name: [position 0-5, command]}
     """
 
     def __init__(self, cmdQ, appName="TestApp", statQ=None, confdict=None):
         self.cmdQ = cmdQ
         self.statQ = statQ
-        self.button_dict = {'x': [7, ' ']} if confdict is None else confdict
+        self.button_dict = {'x': [5, ' ']} if confdict is None else confdict
         self.button_names = list(self.button_dict.keys())
         self.button_values = list(self.button_dict.values())
 
@@ -43,12 +43,12 @@ class controlGUI:
 
         mpl.rcParams['toolbar'] = 'None'
         # create a figure
-        self.f = plt.figure("control Gui", figsize=(6, 1.5))
+        self.f = plt.figure("control Gui", figsize=(5.0, 1.0))
         move_figure(self.f, 1200, 0)
         self.f.canvas.mpl_connect("close_event", self.on_mpl_window_closed)
 
-        self.f.subplots_adjust(left=0.1, bottom=0.1, right=0.95, top=0.95, wspace=None, hspace=0.15)
-        gs = self.f.add_gridspec(nrows=5, ncols=1)
+        self.f.subplots_adjust(left=0.025, bottom=0.025, right=0.975, top=0.975, wspace=None, hspace=0.1)
+        gs = self.f.add_gridspec(nrows=7, ncols=1)
         # 1st subplot for text
         self.ax0 = self.f.add_subplot(gs[:-2, :])
         # no axes or labels
@@ -56,9 +56,9 @@ class controlGUI:
         self.ax0.yaxis.set_tick_params(labelleft=False)
         self.ax0.set_xticks([])
         self.ax0.set_yticks([])
-        self.ax0.text(0.05, 0.8, "Process control:", size=10)
-        self.ax0.text(0.15, 0.5, f"{appName}", color="goldenrod", size=15)
-        self.status_txt = self.ax0.text(0.05, 0.075, "active:          ")
+        self.ax0.text(0.01, 0.78, "Process control:", size=12)
+        self.ax0.text(0.15, 0.45, f"{appName}", color="goldenrod", size=15)
+        self.status_txt = self.ax0.text(0.05, 0.1, "", color="ivory")
 
     # call-back functions
     def on_mpl_window_closed(self, ax):
@@ -95,7 +95,7 @@ class controlGUI:
         self.baxes = []
         self.buttons = []
         for i, key in enumerate(self.button_names):
-            self.baxes.append(self.f.add_axes([self.button_values[i][0] * 0.12 + 0.05, 0.05, 0.08, 0.16]))
+            self.baxes.append(self.f.add_axes([self.button_values[i][0] * 0.15 + 0.04, 0.05, 0.12, 0.20]))
             self.buttons.append(Button(self.baxes[-1], key, color="0.25", hovercolor="0.5"))
             self.buttons[-1].on_clicked(self.on_button_clicked)
 
@@ -105,7 +105,7 @@ class controlGUI:
         self.t_start = time.time()
         timer.start()
 
-        print("starting event loop - click 'end' to stop")
+        print("*==* GUI for process control started")
         plt.show()
 
 
