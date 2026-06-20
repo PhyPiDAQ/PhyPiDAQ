@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+
+
+- added script grun.py in examples/ to start python scripts (incl. parameter settings) via GUI
+- picoscope libs Oct. 2025
+
+
+## [1.5.0rc0] - 2024-11-13
+
+### Added
+
+- introduced virtual Python environment /usr/local/share/phypy and activation script activate_phypy.sh
+- optimization of scGammaDetector and scOsci
+
 ## [1.4.1] - 2024-08-25
 
 ### Fixed

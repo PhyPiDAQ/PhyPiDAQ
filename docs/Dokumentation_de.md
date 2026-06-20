@@ -766,6 +766,15 @@ z. B. dem Steckernetzteil des Raspberry Pi.
 
 ### Beispiele
 
+Das Verzeichnis 'examples/' enthält einige *Python*-Programme, die als Beispiele für eigene Anwendungen
+der PhyPiDAQ-Frameworks oder auch zur Nutzung einiger Geräte gedacht sind. Für Nutzer, die mit der Kommandozeile
+nicht gut vertraut sind, gibt es ein kleines Programm `grun.py`, mit dem *Phython*-Programme über eine grafische
+Oberfläche gesatartet und Parameter gesezt werden können. 
+
+- `examples/grun.py`  
+   Grafische Oberfläche zum Starten von *Python*-Programmen  
+   > ```pyhton grun <name des Pyhton.Programms>```  
+
 - `examples/read_analog.py`  
     sehr minimalistisches Beispiel zum Auslesen eines Kanals von einem Analog-Digital-Wandler
 
