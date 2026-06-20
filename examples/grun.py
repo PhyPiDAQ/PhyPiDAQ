@@ -47,8 +47,71 @@ from PyQt5.QtWidgets import (
     QFileDialog,
     QScrollArea,
 )
-from PyQt5.QtCore import Qt, QProcess
-from PyQt5.QtGui import QFont
+from PyQt5.QtCore import Qt, QProcess, pyqtSignal
+from PyQt5.QtGui import QFont, QTextCursor
+
+
+class TerminalPlainTextEdit(QPlainTextEdit):
+    """
+    QPlainTextEdit, das sich wie ein einfaches Terminal verhält:
+    - Programmausgabe wird angehängt (read-only Teil)
+    - der Nutzer kann dahinter tippen; Enter sendet die Zeile als stdin
+      an den laufenden Prozess (Signal line_entered)
+    - Bearbeitung ist auf den Bereich NACH der letzten Ausgabe beschränkt
+    """
+
+    line_entered = pyqtSignal(str)
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._input_start = 0
+        self.input_enabled = False
+
+    def append_output(self, text: str):
+        """Programmausgabe anhängen und Eingabebereich neu verankern."""
+        cursor = self.textCursor()
+        cursor.movePosition(QTextCursor.End)
+        self.setTextCursor(cursor)
+        self.insertPlainText(text)
+        self._input_start = self.textCursor().position()
+        self.ensureCursorVisible()
+
+    def set_input_enabled(self, enabled: bool):
+        self.input_enabled = enabled
+        if not enabled:
+            self._input_start = self.textCursor().position()
+
+    def keyPressEvent(self, event):
+        if not self.input_enabled:
+            return  # solange kein Prozess läuft: keine Tastatureingabe
+
+        cursor = self.textCursor()
+        if cursor.position() < self._input_start:
+            cursor.movePosition(QTextCursor.End)
+            self.setTextCursor(cursor)
+
+        if event.key() == Qt.Key_Backspace:
+            if self.textCursor().position() <= self._input_start:
+                return
+            super().keyPressEvent(event)
+            return
+
+        if event.key() == Qt.Key_Left:
+            if self.textCursor().position() <= self._input_start:
+                return
+            super().keyPressEvent(event)
+            return
+
+        if event.key() in (Qt.Key_Return, Qt.Key_Enter):
+            cursor.movePosition(QTextCursor.End)
+            self.setTextCursor(cursor)
+            line = self.toPlainText()[self._input_start :]
+            super().keyPressEvent(event)  # sichtbaren Zeilenumbruch einfügen
+            self._input_start = self.textCursor().position()
+            self.line_entered.emit(line)
+            return
+
+        super().keyPressEvent(event)
 
 
 # --------------------------------------------------------------------------
@@ -284,7 +347,6 @@ class MainWindow(QMainWindow):
         top_box = QGroupBox("Zielskript")
         top_layout = QHBoxLayout(top_box)
         self.path_edit = QLineEdit()
-#        self.path_edit.setPlaceholderText("Pfad zu einem Python-Skript mit argparse ...")
         self.path_edit.setPlaceholderText(self.pythonscript)
         browse_btn = QPushButton("Durchsuchen...")
         browse_btn.clicked.connect(self._browse_script)
@@ -330,8 +392,8 @@ class MainWindow(QMainWindow):
         # Log-Bereich
         log_box = QGroupBox("Ausgabe")
         log_layout = QVBoxLayout(log_box)
-        self.log_view = QPlainTextEdit()
-        self.log_view.setReadOnly(True)
+        self.log_view = TerminalPlainTextEdit()
+        self.log_view.line_entered.connect(self._send_input)
         mono = QFont("Monospace")
         mono.setStyleHint(QFont.TypeWriter)
         self.log_view.setFont(mono)
@@ -407,7 +469,7 @@ class MainWindow(QMainWindow):
             return
 
         self.log_view.clear()
-        self.log_view.appendPlainText(f"$ {sys.executable} {self.script_path} {' '.join(argv)}\n")
+        self.log_view.append_output(f"$ {sys.executable} {self.script_path} {' '.join(argv)}\n")
 
         self.process = QProcess(self)
         self.process.setProcessChannelMode(QProcess.MergedChannels)
@@ -417,22 +479,31 @@ class MainWindow(QMainWindow):
 
         self.run_btn.setEnabled(False)
         self.stop_btn.setEnabled(True)
+        self.log_view.set_input_enabled(True)
+        self.log_view.setFocus()
         self.statusBar().showMessage("Läuft ...")
 
     def _on_output(self):
         if self.process:
             data = bytes(self.process.readAllStandardOutput()).decode("utf-8", errors="replace")
-            self.log_view.appendPlainText(data.rstrip("\n"))
+            self.log_view.append_output(data)
 
     def _on_finished(self, exit_code, _exit_status):
-        self.log_view.appendPlainText(f"\n[Prozess beendet mit Exit-Code {exit_code}]")
+        self.log_view.set_input_enabled(False)
+        self.log_view.append_output(f"\n[Prozess beendet mit Exit-Code {exit_code}]\n")
         self.run_btn.setEnabled(True)
         self.stop_btn.setEnabled(False)
         self.statusBar().showMessage(f"Fertig (Exit-Code {exit_code})", 5000)
 
+    def _send_input(self, line: str):
+        """Im Terminal eingegebene Zeile an stdin des Subprozesses senden."""
+        if self.process and self.process.state() == QProcess.Running:
+            self.process.write((line + "\n").encode("utf-8"))
+
     def _stop_script(self):
         if self.process:
             self.process.kill()
+        self.log_view.set_input_enabled(False)
 
 
 def main():
@@ -452,3 +523,4 @@ def main():
 if __name__ == "__main__":
     default_script = "scGammaDetector.py"
     main()
+    
