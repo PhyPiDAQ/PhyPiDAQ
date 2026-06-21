@@ -42,7 +42,6 @@ from PyQt5.QtWidgets import (
     QComboBox,
     QCheckBox,
     QLabel,
-    QPlainTextEdit,
     QTextEdit,
     QGroupBox,
     QSplitter,
@@ -352,7 +351,7 @@ def extract_parser(script_path: str) -> argparse.ArgumentParser:
         raise RuntimeError(
             "Im Skript wurde kein ArgumentParser.parse_args()-Aufruf "
             "gefunden (evtl. wird er nicht unter "
-            "`if __name__ == \"__main__\":` aufgerufen)."
+            '`if __name__ == "__main__":` aufgerufen).'
         )
     finally:
         sys.argv = old_argv
@@ -727,4 +726,3 @@ def main():
 if __name__ == "__main__":  # --------------------------------------
     default_script = "scGammaDetector.py"
     main()
-    
