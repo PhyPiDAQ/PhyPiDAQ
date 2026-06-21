@@ -17,7 +17,7 @@ Start:
     pip install PyQt5
     python grun.py
 
-    
+
             Code generated with Claude AI, June 2026
 """
 
@@ -27,6 +27,8 @@ import runpy
 import argparse
 import shlex
 from typing import Optional, List
+
+import re
 
 from PyQt5.QtWidgets import (
     QApplication,
@@ -41,6 +43,7 @@ from PyQt5.QtWidgets import (
     QCheckBox,
     QLabel,
     QPlainTextEdit,
+    QTextEdit,
     QGroupBox,
     QSplitter,
     QMessageBox,
@@ -48,13 +51,161 @@ from PyQt5.QtWidgets import (
     QScrollArea,
 )
 from PyQt5.QtCore import Qt, QProcess, pyqtSignal
-from PyQt5.QtGui import QFont, QTextCursor
+from PyQt5.QtGui import QFont, QTextCursor, QTextCharFormat, QColor, QPalette
 
 
-class TerminalPlainTextEdit(QPlainTextEdit):
+# --------------------------------------------------------------------------
+# 0) Minimaler ANSI-Interpreter (SGR-Farben/Stile + \r + \b + einfaches
+#    Line-Erase \x1b[K), reicht für die meisten CLI-Tools (tqdm, colorama,
+#    click, rich "basic" Output, ...).
+# --------------------------------------------------------------------------
+
+_ANSI_RE = re.compile(r"\x1b\[([0-9;]*)([A-Za-z])")
+
+# Standard 16-Farben-Palette (etwas an gängige dunkle Terminalthemes angelehnt)
+_ANSI_COLORS = {
+    30: "#000000",
+    31: "#cc0000",
+    32: "#4e9a06",
+    33: "#c4a000",
+    34: "#3465a4",
+    35: "#75507b",
+    36: "#06989a",
+    37: "#d3d7cf",
+    90: "#555753",
+    91: "#ef2929",
+    92: "#8ae234",
+    93: "#fce94f",
+    94: "#729fcf",
+    95: "#ad7fa8",
+    96: "#34e2e2",
+    97: "#eeeeec",
+}
+_ANSI_BG_COLORS = {k + 10: v for k, v in _ANSI_COLORS.items()}
+
+
+class AnsiTextParser:
     """
-    QPlainTextEdit, das sich wie ein einfaches Terminal verhält:
-    - Programmausgabe wird angehängt (read-only Teil)
+    Wandelt einen Strom von Text mit ANSI-Escape-Sequenzen in eine Folge
+    von Steueranweisungen um, die per insertText() in ein QTextEdit
+    eingefügt werden können. Hält den aktuellen SGR-Zustand zwischen
+    Aufrufen (für den Fall, dass eine Sequenz über zwei readyRead-Häppchen
+    verteilt ankommt).
+    """
+
+    def __init__(self, base_color="#d3d7cf", base_bg="#1e1e1e"):
+        self.base_color = base_color
+        self.base_bg = base_bg
+        self._pending = ""  # unvollständige Escape-Sequenz vom letzten Aufruf
+        self.reset_state()
+
+    def reset_state(self):
+        self.fmt = QTextCharFormat()
+        self.fmt.setForeground(QColor(self.base_color))
+        self.bold = False
+
+    def _apply_sgr(self, codes):
+        if not codes:
+            codes = [0]
+        i = 0
+        while i < len(codes):
+            c = codes[i]
+            if c == 0:
+                self.reset_state()
+            elif c == 1:
+                self.bold = True
+                f = self.fmt.font()
+                f.setBold(True)
+                self.fmt.setFont(f)
+            elif c == 22:
+                self.bold = False
+                f = self.fmt.font()
+                f.setBold(False)
+                self.fmt.setFont(f)
+            elif c == 4:
+                self.fmt.setFontUnderline(True)
+            elif c == 24:
+                self.fmt.setFontUnderline(False)
+            elif c == 39:
+                self.fmt.setForeground(QColor(self.base_color))
+            elif c == 49:
+                self.fmt.clearBackground()
+            elif c in _ANSI_COLORS:
+                self.fmt.setForeground(QColor(_ANSI_COLORS[c]))
+            elif c in _ANSI_BG_COLORS:
+                self.fmt.setBackground(QColor(_ANSI_BG_COLORS[c]))
+            elif c == 38 and i + 2 < len(codes) and codes[i + 1] == 5:
+                # 256-Farben, vereinfachend: nur grobe Zuordnung
+                idx = codes[i + 2]
+                self.fmt.setForeground(QColor(_ANSI_COLORS.get(30 + (idx % 8), self.base_color)))
+                i += 2
+            elif c == 38 and i + 4 < len(codes) and codes[i + 1] == 2:
+                r, g, b = codes[i + 2], codes[i + 3], codes[i + 4]
+                self.fmt.setForeground(QColor(r, g, b))
+                i += 4
+            i += 1
+
+    def feed(self, chunk: str):
+        """
+        Liefert eine Liste von Steueranweisungen:
+          ("text", str, QTextCharFormat)
+          ("cr",)            -> Cursor an Zeilenanfang (carriage return)
+          ("erase_line",)    -> aktuelle Zeile löschen (\\x1b[2K / [K)
+          ("backspace",)
+        """
+        ops = []
+        data = self._pending + chunk
+        self._pending = ""
+        pos = 0
+        for m in _ANSI_RE.finditer(data):
+            if m.start() > pos:
+                ops.extend(self._split_controls(data[pos : m.start()]))
+            params, final = m.group(1), m.group(2)
+            codes = [int(p) for p in params.split(";") if p != ""] if params else []
+            if final == "m":
+                self._apply_sgr(codes)
+            elif final == "K":
+                ops.append(("erase_line",))
+            elif final in ("H", "f", "A", "B", "C", "D", "J"):
+                pass  # Cursor-Bewegung/Screen-Clear: ignorieren (kein Full-TUI-Support)
+            pos = m.end()
+
+        tail = data[pos:]
+        # mögliche unvollständige Escape-Sequenz am Ende zurückhalten
+        esc_idx = tail.rfind("\x1b")
+        if esc_idx != -1 and not _ANSI_RE.search(tail[esc_idx:]):
+            self._pending = tail[esc_idx:]
+            tail = tail[:esc_idx]
+        ops.extend(self._split_controls(tail))
+        return ops
+
+    def _split_controls(self, text):
+        ops = []
+        buf = ""
+        for ch in text:
+            if ch == "\r":
+                if buf:
+                    ops.append(("text", buf, QTextCharFormat(self.fmt)))
+                    buf = ""
+                ops.append(("cr",))
+            elif ch == "\b":
+                if buf:
+                    ops.append(("text", buf, QTextCharFormat(self.fmt)))
+                    buf = ""
+                ops.append(("backspace",))
+            else:
+                buf += ch
+        if buf:
+            ops.append(("text", buf, QTextCharFormat(self.fmt)))
+        return ops
+
+
+class TerminalPlainTextEdit(QTextEdit):
+    """
+    ANSI-kompatibles Mini-Terminal auf Basis von QTextEdit:
+    - Programmausgabe wird angehängt und dabei interpretiert (Farben/Stile
+      via SGR-Escapecodes, \\r für Carriage-Return/Progressbars, \\x1b[K
+      zum Löschen der aktuellen Zeile, \\b als Backspace)
     - der Nutzer kann dahinter tippen; Enter sendet die Zeile als stdin
       an den laufenden Prozess (Signal line_entered)
     - Bearbeitung ist auf den Bereich NACH der letzten Ausgabe beschränkt
@@ -66,15 +217,54 @@ class TerminalPlainTextEdit(QPlainTextEdit):
         super().__init__(parent)
         self._input_start = 0
         self.input_enabled = False
+        self._ansi = AnsiTextParser()
+
+        # klassisches dunkles Terminal-Theme
+        self.setReadOnly(False)
+        self.setUndoRedoEnabled(False)
+        self.setLineWrapMode(QTextEdit.WidgetWidth)
+        pal = self.palette()
+        pal.setColor(QPalette.Base, QColor("#1e1e1e"))
+        pal.setColor(QPalette.Text, QColor("#d3d7cf"))
+        self.setPalette(pal)
 
     def append_output(self, text: str):
-        """Programmausgabe anhängen und Eingabebereich neu verankern."""
+        """Programmausgabe (inkl. ANSI-Escapecodes) anhängen und interpretieren."""
         cursor = self.textCursor()
         cursor.movePosition(QTextCursor.End)
         self.setTextCursor(cursor)
-        self.insertPlainText(text)
+
+        for op in self._ansi.feed(text):
+            if op[0] == "text":
+                _, chunk, fmt = op
+                self.textCursor().insertText(chunk, fmt)
+            elif op[0] == "cr":
+                # Cursor an den Anfang der aktuellen Zeile setzen (nachfolgender
+                # Text überschreibt damit die Zeile, wie bei Progressbars üblich)
+                c = self.textCursor()
+                c.movePosition(QTextCursor.StartOfLine)
+                self.setTextCursor(c)
+            elif op[0] == "erase_line":
+                c = self.textCursor()
+                c.movePosition(QTextCursor.StartOfLine)
+                c.movePosition(QTextCursor.EndOfLine, QTextCursor.KeepAnchor)
+                c.removeSelectedText()
+                self.setTextCursor(c)
+            elif op[0] == "backspace":
+                c = self.textCursor()
+                c.deletePreviousChar()
+                self.setTextCursor(c)
+
+        cur = self.textCursor()
+        cur.movePosition(QTextCursor.End)
+        self.setTextCursor(cur)
         self._input_start = self.textCursor().position()
         self.ensureCursorVisible()
+
+    def clear(self):
+        super().clear()
+        self._ansi.reset_state()
+        self._input_start = 0
 
     def set_input_enabled(self, enabled: bool):
         self.input_enabled = enabled
@@ -328,7 +518,7 @@ class MainWindow(QMainWindow):
         self.pythonscript = script
 
         self.setWindowTitle("argparse GUI-Runner")
-        self.resize(750, 1000)
+        self.resize(850, 950)
 
         self.script_path: Optional[str] = None
         self.parser: Optional[argparse.ArgumentParser] = None
@@ -394,6 +584,8 @@ class MainWindow(QMainWindow):
         log_layout = QVBoxLayout(log_box)
         self.log_view = TerminalPlainTextEdit()
         self.log_view.line_entered.connect(self._send_input)
+        self.log_view = TerminalPlainTextEdit()
+        self.log_view.line_entered.connect(self._send_input)
         mono = QFont("Monospace")
         mono.setStyleHint(QFont.TypeWriter)
         self.log_view.setFont(mono)
@@ -414,8 +606,8 @@ class MainWindow(QMainWindow):
         if not path or not os.path.isfile(path):
             # set default path
             path = self.pythonscript
-#            QMessageBox.warning(self, "Fehler", "Bitte einen gültigen Skriptpfad angeben.")
-#            return
+        #            QMessageBox.warning(self, "Fehler", "Bitte einen gültigen Skriptpfad angeben.")
+        #            return
         try:
             parser = extract_parser(path)
         except Exception as e:
@@ -470,6 +662,7 @@ class MainWindow(QMainWindow):
 
         self.log_view.clear()
         self.log_view.append_output(f"$ {sys.executable} {self.script_path} {' '.join(argv)}\n")
+        self.log_view.append_output(f"$ {sys.executable} {self.script_path} {' '.join(argv)}\n")
 
         self.process = QProcess(self)
         self.process.setProcessChannelMode(QProcess.MergedChannels)
@@ -481,14 +674,19 @@ class MainWindow(QMainWindow):
         self.stop_btn.setEnabled(True)
         self.log_view.set_input_enabled(True)
         self.log_view.setFocus()
+        self.log_view.set_input_enabled(True)
+        self.log_view.setFocus()
         self.statusBar().showMessage("Läuft ...")
 
     def _on_output(self):
         if self.process:
             data = bytes(self.process.readAllStandardOutput()).decode("utf-8", errors="replace")
             self.log_view.append_output(data)
+            self.log_view.append_output(data)
 
     def _on_finished(self, exit_code, _exit_status):
+        self.log_view.set_input_enabled(False)
+        self.log_view.append_output(f"\n[Prozess beendet mit Exit-Code {exit_code}]\n")
         self.log_view.set_input_enabled(False)
         self.log_view.append_output(f"\n[Prozess beendet mit Exit-Code {exit_code}]\n")
         self.run_btn.setEnabled(True)
@@ -500,17 +698,23 @@ class MainWindow(QMainWindow):
         if self.process and self.process.state() == QProcess.Running:
             self.process.write((line + "\n").encode("utf-8"))
 
+    def _send_input(self, line: str):
+        """Im Terminal eingegebene Zeile an stdin des Subprozesses senden."""
+        if self.process and self.process.state() == QProcess.Running:
+            self.process.write((line + "\n").encode("utf-8"))
+
     def _stop_script(self):
         if self.process:
             self.process.kill()
         self.log_view.set_input_enabled(False)
+        self.log_view.set_input_enabled(False)
 
 
 def main():
-    # set (default) input file 
+    # set (default) input file
     if len(sys.argv) > 1:
         script = sys.argv[1]
-    else: 
+    else:
         script = default_script
 
     print(f" script {sys.argv[0]}: wrapping {script} with GUI ...")
@@ -520,7 +724,7 @@ def main():
     sys.exit(app.exec_())
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # --------------------------------------
     default_script = "scGammaDetector.py"
     main()
     
