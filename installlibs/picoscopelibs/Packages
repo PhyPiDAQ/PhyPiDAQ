@@ -1,0 +1,208 @@
+Package: libpl1000
+Version: 2.0.66-1r2664
+Architecture: armhf
+Maintainer: Pico Support <support@picotech.com>
+Installed-Size: 268
+Depends: debconf (>= 0.5) | debconf-2.0, libc6 (>= 2.3.2), libgcc1 (>= 1:4.1.1), libstdc++6 (>= 4.1.1), libusb-1.0-0 (>= 2:1.0.8)
+Homepage: <http://www.picotech.com>
+Priority: extra
+Section: libs
+Filename: pool/main/libp/libpl1000/libpl1000_2.0.66-1r2664_armhf.deb
+Size: 91498
+SHA256: de6de0703f03aba58840e60b4d746092183a0d7bbd2131215384b681fc01e7b4
+SHA1: 203627b75ea581e94d9e40631e9eca4bbdabdc0f
+MD5sum: 9ca86b9066deab126215c3c2cc2e2c44
+Description: PicoScope PicoLog PL1000 Linux driver
+
+Package: libps2000
+Version: 3.0.66-3r2664
+Architecture: armhf
+Maintainer: Pico Support <support@picotech.com>
+Installed-Size: 860
+Depends: debconf (>= 0.5) | debconf-2.0, libc6 (>= 2.3.2), libgcc1 (>= 1:4.1.1), libstdc++6 (>= 4.1.1), libusb-1.0-0 (>= 2:1.0.8)
+Homepage: <http://www.picotech.com>
+Priority: extra
+Section: libs
+Filename: pool/main/libp/libps2000/libps2000_3.0.66-3r2664_armhf.deb
+Size: 256100
+SHA256: 8bf2db2652da0c3aa50266ec827742b6785c9b40cc49735f4f3e316ed4c7c36b
+SHA1: e09ac7aec8ac710da3c776fa500443102bf6049c
+MD5sum: 14b755e055e7dc0e6f53cd2d4b030dd5
+Description: PicoScope 2000 Linux driver
+
+Package: libps2000a
+Version: 2.1.66-5r2664
+Architecture: armhf
+Maintainer: Pico Support <support@picotech.com>
+Installed-Size: 3122
+Depends: debconf (>= 0.5) | debconf-2.0, libc6 (>= 2.3.2), libgcc1 (>= 1:4.1.1), libstdc++6 (>= 4.1.1), libusb-1.0-0 (>= 2:1.0.8), libpicoipp (>= 1.3.0-4r78)
+Homepage: <http://www.picotech.com>
+Priority: extra
+Section: libs
+Filename: pool/main/libp/libps2000a/libps2000a_2.1.66-5r2664_armhf.deb
+Size: 2365394
+SHA256: b9cecfdadfd5f0601e8c028de2ebff2c00ec35bf369002796a02d1f972861fef
+SHA1: 6067e16e507a1759787e38f8937fe11a381f676e
+MD5sum: 089cb8c705779e0f9dbce04825dda0cf
+Description: PicoScope 2000A Linux driver
+
+Package: libps3000
+Version: 4.0.66-3r2664
+Architecture: armhf
+Maintainer: Pico Support <support@picotech.com>
+Installed-Size: 510
+Depends: debconf (>= 0.5) | debconf-2.0, libc6 (>= 2.3.2), libgcc1 (>= 1:4.1.1), libstdc++6 (>= 4.1.1), libusb-1.0-0 (>= 2:1.0.8)
+Homepage: <http://www.picotech.com>
+Priority: extra
+Section: libs
+Filename: pool/main/libp/libps3000/libps3000_4.0.66-3r2664_armhf.deb
+Size: 200480
+SHA256: 0458fbc8100ebf959f03e5a9b02150e29cecf8d930dd6df6218259eaae716962
+SHA1: 0cb5f97cf10d92f089b9c65037c69051beec43cc
+MD5sum: 84de7b271b7af0cc908061a117a66755
+Description: PicoScope 3000 Linux driver
+
+Package: libps3000a
+Version: 2.1.66-6r2664
+Architecture: armhf
+Maintainer: Pico Support <support@picotech.com>
+Installed-Size: 2660
+Depends: debconf (>= 0.5) | debconf-2.0, libc6 (>= 2.3.2), libgcc1 (>= 1:4.1.1), libstdc++6 (>= 4.1.1), libusb-1.0-0 (>= 2:1.0.8), libpicoipp (>= 1.3.0-4r78)
+Homepage: <http://www.picotech.com>
+Priority: extra
+Section: libs
+Filename: pool/main/libp/libps3000a/libps3000a_2.1.66-6r2664_armhf.deb
+Size: 2007714
+SHA256: 7045e229efef69d57a679872c6ae18bb10d615c743bbc5bc88b7f26dc5c0ba68
+SHA1: 66715b9dc005dc5b340fc5fb3b08a9ae12ef71fe
+MD5sum: 39661ada64d1fd9ea0cc62ca1cd916bc
+Description: PicoScope 3000A Linux driver
+
+Package: libps4000
+Version: 2.1.66-2r2664
+Architecture: armhf
+Maintainer: Pico Support <support@picotech.com>
+Installed-Size: 799
+Depends: debconf (>= 0.5) | debconf-2.0, libc6 (>= 2.3.2), libgcc1 (>= 1:4.1.1), libstdc++6 (>= 4.1.1), libusb-1.0-0 (>= 2:1.0.8), libpicoipp (>= 1.3.0-4r78)
+Homepage: <http://www.picotech.com>
+Priority: extra
+Section: libs
+Filename: pool/main/libp/libps4000/libps4000_2.1.66-2r2664_armhf.deb
+Size: 514204
+SHA256: f48b49ac2c58d1d17823fc58859e42f4a79185472c654badc5dcde03ebd24092
+SHA1: 7c3d75979d9fb6da84792087ed83bc95d2d0bcb9
+MD5sum: f346c2407e1310383cd2cdce587860ac
+Description: PicoScope 4000 Linux driver
+
+Package: libps4000a
+Version: 2.1.66-2r2664
+Architecture: armhf
+Maintainer: Pico Support <support@picotech.com>
+Installed-Size: 3769
+Depends: debconf (>= 0.5) | debconf-2.0, libc6 (>= 2.3.2), libgcc1 (>= 1:4.1.1), libstdc++6 (>= 4.1.1), libusb-1.0-0 (>= 2:1.0.8), libpicoipp (>= 1.3.0-4r78)
+Homepage: <http://www.picotech.com>
+Priority: extra
+Section: libs
+Filename: pool/main/libp/libps4000a/libps4000a_2.1.66-2r2664_armhf.deb
+Size: 2753708
+SHA256: a45dc516fda7fd5f9133e6a40ddbaf636ab6161dcf617e7740e93edd2edc6c38
+SHA1: 25058c51727526e92812fe427b71d79a05099147
+MD5sum: f5f7d4048224c4add763b8e247746f34
+Description: PicoScope 4000a Linux driver
+
+Package: libps5000
+Version: 2.1.66-3r2664
+Architecture: armhf
+Maintainer: Pico Support <support@picotech.com>
+Installed-Size: 569
+Depends: libc6 (>= 2.3.2), libgcc1 (>= 1:4.1.1), libstdc++6 (>= 4.1.1), libusb-1.0-0 (>= 2:1.0.8)
+Homepage: <http://www.picotech.com>
+Priority: extra
+Section: libs
+Filename: pool/main/libp/libps5000/libps5000_2.1.66-3r2664_armhf.deb
+Size: 304964
+SHA256: 9e0701073deddd4f41f01fb4f33bf6e92997f6f8a0633e33bdfd5782b46f9191
+SHA1: c4c2c8cb1350fcc6fa732050d6044a6c13268c95
+MD5sum: 559b421f1f4656d2070a7cc07848efd2
+Description: PicoScope 5000 Linux driver
+
+Package: libps5000a
+Version: 2.1.66-5r2664
+Architecture: armhf
+Maintainer: Pico Support <support@picotech.com>
+Installed-Size: 4659
+Depends: libc6 (>= 2.3.2), libgcc1 (>= 1:4.1.1), libstdc++6 (>= 4.1.1), libusb-1.0-0 (>= 2:1.0.8), libpicoipp (>= 1.3.0-4r78)
+Homepage: <http://www.picotech.com>
+Priority: extra
+Section: libs
+Filename: pool/main/libp/libps5000a/libps5000a_2.1.66-5r2664_armhf.deb
+Size: 2201908
+SHA256: 2e2c0af40a8179078176f4804faee72b74adddc9d06a839859a69e278067de89
+SHA1: 18fa5937d8dacd8de359c255cdf8302125c71b9f
+MD5sum: c4cf141cdd4f038161e7017a38f6af7c
+Description: PicoScope 5000A Linux driver
+
+Package: libps6000
+Version: 2.1.66-6r2664
+Architecture: armhf
+Maintainer: Pico Support <support@picotech.com>
+Installed-Size: 1907
+Depends: libc6 (>= 2.3.2), libgcc1 (>= 1:4.1.1), libstdc++6 (>= 4.1.1), libusb-1.0-0 (>= 2:1.0.8), libpicoipp (>= 1.3.0-4r78)
+Homepage: <http://www.picotech.com>
+Priority: extra
+Section: libs
+Filename: pool/main/libp/libps6000/libps6000_2.1.66-6r2664_armhf.deb
+Size: 1612020
+SHA256: bea1d79a42092b6916a573efad382cdfacaece8fd6db074197c284db9d9a5b09
+SHA1: 95fca92db38e375ca52e28601791b59b133d1763
+MD5sum: 4dd44d4f01bc8af5f4708f206ef0134d
+Description: PicoScope 6000 series Linux driver
+
+Package: libps6000a
+Version: 1.0.66-0r2664
+Architecture: armhf
+Maintainer: Pico Support <support@picotech.com>
+Installed-Size: 28562
+Depends: libc6 (>= 2.3.2), libgcc1 (>= 1:4.1.1), libstdc++6 (>= 4.1.1), libusb-1.0-0 (>= 2:1.0.8), libpicoipp (>= 1.3.0-4r78)
+Homepage: <http://www.picotech.com>
+Priority: extra
+Section: libs
+Filename: pool/main/libp/libps6000a/libps6000a_1.0.66-0r2664_armhf.deb
+Size: 7026982
+SHA256: 76bbbc42776071f13689177a055b037573d2fd7acb4ee88da08c67bd4dfc2adb
+SHA1: 1d0a04b8ee4e7b2f32e55f07038b18b74811b1ca
+MD5sum: 32a9951f5e70df6e1890fb6267565e08
+Description: PicoScope 6000 Series (A API) driver
+
+Package: libusbdrdaq
+Version: 2.0.66-1r2664
+Architecture: armhf
+Maintainer: Pico Support <support@picotech.com>
+Installed-Size: 307
+Depends: debconf (>= 0.5) | debconf-2.0, libc6 (>= 2.3.2), libgcc1 (>= 1:4.1.1), libstdc++6 (>= 4.1.1), libusb-1.0-0 (>= 2:1.0.8)
+Homepage: <http://www.picotech.com>
+Priority: extra
+Section: libs
+Filename: pool/main/libu/libusbdrdaq/libusbdrdaq_2.0.66-1r2664_armhf.deb
+Size: 110506
+SHA256: cb288c7485748b7115c779af3d392e1131e939b12254a5595dd57e1ecc999f59
+SHA1: 5add57eafc5978f55b6ec9973d03161de31657b8
+MD5sum: bd65fb9e5102354f346b029d69637893
+Description: PicoScope USBDrDAQ Linux driver
+
+Package: picoscope
+Version: 6.14.47-4r5899
+Architecture: all
+Maintainer: Pico Support <support@picotech.com>
+Installed-Size: 59188
+Depends: mono-complete, mono-mcs (>= 4.2.1), gtk-sharp2, libpicoipp (= 1.3.0-4r78), libpl1000 (= 2.0.66-1r2664), libps2000 (= 3.0.66-3r2664), libps2000a (= 2.1.66-5r2664), libps3000 (= 4.0.66-3r2664), libps3000a (= 2.1.66-6r2664), libps4000 (= 2.1.66-2r2664), libps4000a (= 2.1.66-2r2664), libps5000 (= 2.1.66-3r2664), libps5000a (= 2.1.66-5r2664), libps6000 (= 2.1.66-6r2664), libps6000a (= 1.0.66-0r2664), libusbdrdaq (= 2.0.66-1r2664)
+Homepage: <http://www.picotech.com>
+Priority: optional
+Section: electronics
+Filename: pool/main/p/picoscope/picoscope_6.14.47-4r5899_all.deb
+Size: 13429336
+SHA256: 638bd4f0f78417925b089ce23e867479d334ea18a5c47b70f4b03ee42e9c8cb3
+SHA1: a4a36671c0981c91bc953a689c7a3991c43259ed
+MD5sum: 6215a78ba025691ad32bd211fcbd8614
+Description: PicoScope GTK
+
