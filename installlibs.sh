@@ -68,7 +68,6 @@ while true; do
     case $yn in
         [Yy]* ) echo "Installing PicoScope drivers";
 	  _w=`python -c "import struct; print(struct.calcsize('P') *8)"`
-	  echo $_w
           if [[ "$_w" == "64" ]]; then
 	      echo " installing 64bit picoscope libraries"
 	      sudo dpkg -i installlibs/picoscope64libs/*.deb; # picoscope for arm64
