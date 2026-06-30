@@ -3,9 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 
-
+- added picoscope libs Apr. 2026 with suppoer for Debian 13
 - added script grun.py in examples/ to start python scripts (incl. parameter settings) via GUI
-- picoscope libs Oct. 2025
 
 
 ## [1.5.0rc0] - 2024-11-13

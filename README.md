@@ -58,9 +58,8 @@ The following requirements need to be met to work
 - Python 3.7 or newer
 - `git`-package installed
 
-Installation runs on Raspberry Pi with Debian 11 (bullseye) or 12 (bookworm),
+Installation runs on Raspberry Pi with Debian 11 (bullseye), 12 (bookworm) or 13 (trixie)
 however, not all sensor libraries could be fully tested.
-OS 13 (Trixie) is not yet supported!
 
 1. Open a terminal and go to the folder where the software should be installed.
 2. Download the latest release using the following command

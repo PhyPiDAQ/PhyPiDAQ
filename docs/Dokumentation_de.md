@@ -241,8 +241,8 @@ Beispiele für andere Geräte, wie den Analog-Digital-Wandler MCP3008, für Rate
 
 **Beziehen des PhyPiDAQ Codes und einfache Installation**
 
-Die Installation funktioniert auf Raspberry Pis  mit Debian 11 (Bullseye) oder 
-12 (Bookworm) als Betriebssystem. Bitte beachten Sie , dass Ihr Raspberry Pi für 
+Die Installation funktioniert auf Raspberry Pis  mit Debian 11 (Bullseye), 12 (Bookworm)
+oder 13 (Trixie) als Betriebssystem. Bitte beachten Sie , dass Ihr Raspberry Pi für 
 die folgenden Schritte mit dem Internet verbunden sein muss. 
 
 Mit dem Befehl *git* lassen sich alle Dateien des Pakets `PhyPiDAQ` herunter laden. 
