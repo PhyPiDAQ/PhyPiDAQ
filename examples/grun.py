@@ -115,10 +115,14 @@ def extract_parser(script_path: str) -> argparse.ArgumentParser:
 class FieldWidget:
     """Hält Widget + Action zusammen und weiß, wie man daraus CLI-Tokens baut."""
 
-    def __init__(self, action: argparse.Action, widget, kind: str):
+    def __init__(self, action: argparse.Action, widget, kind: str, row_widget=None):
         self.action = action
         self.widget = widget
         self.kind = kind  # 'bool' | 'choice' | 'text' | 'positional'
+        # Widget, das tatsächlich ins QFormLayout eingefügt wird. Bei einfachen
+        # Feldern identisch mit `widget`, bei kombinierten Feldern (z.B.
+        # Textfeld + "Durchsuchen..."-Button) ein umschließendes Container-Widget.
+        self.row_widget = row_widget if row_widget is not None else widget
 
     def primary_flag(self) -> Optional[str]:
         if not self.action.option_strings:
@@ -181,7 +185,7 @@ class ArgFormBuilder:
                 continue
             self.fields.append(field)
             label_text = self._label_for(action)
-            form.addRow(label_text, field.widget)
+            form.addRow(label_text, field.row_widget)
             if action.help:
                 help_lbl = QLabel(f"<i>{action.help}</i>")
                 help_lbl.setStyleSheet("color: #666; font-size: 11px;")
@@ -230,7 +234,42 @@ class ArgFormBuilder:
             placeholder_bits.append("mehrere Werte, leerzeichengetrennt")
         if placeholder_bits:
             edit.setPlaceholderText(" / ".join(placeholder_bits))
+
+        if self._looks_like_path(action):
+            row_widget = self._wrap_with_browse_button(edit)
+            return FieldWidget(action, edit, "text", row_widget=row_widget)
+
         return FieldWidget(action, edit, "text")
+
+    @staticmethod
+    def _looks_like_path(action: argparse.Action) -> bool:
+        """Erkennt anhand von Options-Namen, dest und Metavar, ob es sich um
+        einen Datei- oder Pfad-Parameter handelt ('file' oder 'path')."""
+        candidates = list(action.option_strings) + [action.dest or "", action.metavar or ""]
+        haystack = " ".join(candidates).lower()
+        return "file" in haystack or "path" in haystack
+
+    @staticmethod
+    def _wrap_with_browse_button(edit: QLineEdit) -> QWidget:
+        """Baut ein Container-Widget mit Textfeld + 'Durchsuchen...'-Button,
+        der einen Datei-Dialog öffnet und den gewählten Pfad ins Textfeld schreibt."""
+        container = QWidget()
+        layout = QHBoxLayout(container)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.addWidget(edit, 1)
+
+        browse_btn = QPushButton("...")
+        browse_btn.setFixedWidth(32)
+        browse_btn.setToolTip("Datei auswählen")
+
+        def _pick_file():
+            path, _ = QFileDialog.getOpenFileName(container, "Datei wählen", edit.text().strip())
+            if path:
+                edit.setText(path)
+
+        browse_btn.clicked.connect(_pick_file)
+        layout.addWidget(browse_btn)
+        return container
 
     def build_argv(self) -> List[str]:
         argv: List[str] = []
@@ -317,9 +356,12 @@ class MainWindow(QMainWindow):
         self.run_btn = QPushButton("▶ Ausführen")
         self.run_btn.clicked.connect(self._run_script)
         self.run_btn.setEnabled(False)
+        self.quit_btn = QPushButton("⏻ Beenden")
+        self.quit_btn.clicked.connect(self._quit_app)
         run_layout.addWidget(QLabel("Befehl:"))
         run_layout.addWidget(self.cmd_preview, 1)
         run_layout.addWidget(self.run_btn)
+        run_layout.addWidget(self.quit_btn)
         outer.addWidget(run_box)
 
         self.statusBar().showMessage("Bereit.")
@@ -361,7 +403,7 @@ class MainWindow(QMainWindow):
         self.form_scroll.setWidget(form_widget)
         self.run_btn.setEnabled(True)
         self.statusBar().showMessage(
-            f"Geladen: {os.path.basename(path)} " f"({len(self.form_builder.fields)} Argument(e) gefunden)", 5000
+            f"Geladen: {os.path.basename(path)} ({len(self.form_builder.fields)} Argument(e) gefunden)", 5000
         )
         self._update_preview()
 
@@ -380,6 +422,9 @@ class MainWindow(QMainWindow):
         self.cmd_preview.setText(" ".join(shlex.quote(c) for c in cmd))
 
     # --------------------------------------------------------- Ausführen ----
+    def _quit_app(self):
+        self.close()
+
     def _run_script(self):
         if not self.form_builder or not self.script_path:
             return
