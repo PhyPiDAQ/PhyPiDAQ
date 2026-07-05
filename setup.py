@@ -31,7 +31,7 @@ setup(
     ],
     include_package_data=True,
     package_data={pkg_name: ['PhyPiDemoData.csv', 'images/*', 'doc/*']},
-    scripts=['phypi.py', 'run_phypi.py'],
+    scripts=['phypi.py', 'run_phypi.py', 'grun.py'],
     classifiers=[
         'Development Status :: 5 - stable',
         # Specify the Python versions you support here. In particular, ensure
@@ -40,7 +40,10 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
-        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
+        'Programming Language :: Python :: 3.14',
     ],
     url='https://github.com/PhyPiDAQ',
     license='MIT BSD 2-Clause',
