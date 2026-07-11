@@ -3,9 +3,10 @@
 All notable changes to this project will be documented in this file.
 
 
-- added picoscope libs Apr. 2026 with suppoer for Debian 13
+## [1.5.0] - 2026-07-13
+- tested with python 3.13
+- added package scrpit grun.py as a graphical wrapper for python scripts with arparse arguments
 - added script grun.py in examples/ to start python scripts (incl. parameter settings) via GUI
-
 
 ## [1.5.0rc0] - 2024-11-13
 
@@ -13,6 +14,9 @@ All notable changes to this project will be documented in this file.
 
 - introduced virtual Python environment /usr/local/share/phypy and activation script activate_phypy.sh
 - optimization of scGammaDetector and scOsci
+
+## Fixed
+
 
 ## [1.4.1] - 2024-08-25
 
