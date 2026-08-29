@@ -151,7 +151,7 @@ def runDAQ():
             # save to file
             if csvfile is not None:
                 if write_raw:  # write raw waveforms
-                    # save features and wave data - 8 samples before and 16 samples after zero crossing
+                    # save features and wave data
                     print(
                         f"{count},{t_evt:.3f},{pp_height},{p_ratio:.3f},{p_dist},{fwhm1},{fwhm2},", end='', file=csvfile
                     )
@@ -253,6 +253,7 @@ if __name__ == "__main__":
 
     csvfile = None
     if filename != "":
+        # write csv header
         fn = filename + "_" + datetime + ".csv"
         csvfile = open(fn, "w")
         if write_raw:
@@ -260,12 +261,13 @@ if __name__ == "__main__":
             np.savetxt(csvfile, np.array(range(100)).reshape(1, -1), fmt="%i", delimiter=',')
         else:
             csvfile.write("event_number,event_time,pp_height,p_ratio,p_dist,fwhm1,fwhm2\n")
+        csvfile.flush()
 
     # initialze sound card interface
     scO = SoundCardOsci(confdict=confd)
     scO.init()
     # background process to show event in real-time as "flash"
-    flaherQ = None
+    flasherQ = None
     if showevents:
         flasherQ = mp.SimpleQueue()
         flasherProc = mp.Process(
